@@ -145,7 +145,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-# Additional locations of static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
@@ -320,3 +320,8 @@ LOGGING = {
         },
     },
 }
+
+# تنظیمات ادمین سفارشی
+ADMIN_SITE_HEADER = "پنل مدیریت لول هفت"
+ADMIN_SITE_TITLE = "لول هفت"
+ADMIN_INDEX_TITLE = "مدیریت سایت لول هفت"

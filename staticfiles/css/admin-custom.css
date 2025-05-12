@@ -1,0 +1,46 @@
+@font-face {
+    font-family: 'Aghdasi';
+    src: url('/static/aghdasi-typo/Aghdasi-Regular.woff2') format('woff2'),
+         url('/static/aghdasi-typo/Aghdasi-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aghdasi';
+    src: url('/static/aghdasi-typo/Aghdasi-Bold.woff2') format('woff2'),
+         url('/static/aghdasi-typo/Aghdasi-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* اعمال فونت به کل پنل ادمین */
+body {
+    font-family: 'Aghdasi', sans-serif !important;
+    direction: rtl;
+}
+
+/* اعمال فونت به عناوین */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Aghdasi', sans-serif !important;
+}
+
+/* اعمال فونت به دکمه‌ها */
+.button, input[type="submit"], input[type="button"], .submit-row input {
+    font-family: 'Aghdasi', sans-serif !important;
+}
+
+/* اعمال فونت به منوها */
+#header {
+    font-family: 'Aghdasi', sans-serif !important;
+}
+
+/* اعمال فونت به فرم‌ها */
+.form-row {
+    font-family: 'Aghdasi', sans-serif !important;
+}
+
+/* اعمال فونت به جداول */
+#changelist table {
+    font-family: 'Aghdasi', sans-serif !important;
+} 

@@ -20,6 +20,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from products.views import upload_file
 
+admin.site.site_header = settings.ADMIN_SITE_HEADER
+admin.site.site_title = settings.ADMIN_SITE_TITLE
+admin.site.index_title = settings.ADMIN_INDEX_TITLE 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ckeditor5/upload/', upload_file, name='custom_upload_file'),
