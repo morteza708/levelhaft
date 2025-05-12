@@ -37,11 +37,19 @@ class Line(models.Model):
             self.slug = create_persian_slug(self.name)
         super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = "لاین"
+        verbose_name_plural = "لاین‌ها"
+
 class UsageType(models.Model):
     name = models.CharField(max_length=50, verbose_name="نوع مصرف")
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "نوع مصرف"
+        verbose_name_plural = "انواع مصرف"
 
 class ProductModel(models.Model):
     name = models.CharField(max_length=50, verbose_name="مدل محصول")
@@ -49,11 +57,19 @@ class ProductModel(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "مدل محصول"
+        verbose_name_plural = "مدل‌های محصول"
+
 class SkinType(models.Model):
     name = models.CharField(max_length=50, verbose_name="ویژگی محصول")
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "ویژگی محصول"
+        verbose_name_plural = "ویژگی‌های محصول"
 
 class SkinCondition(models.Model):
     name = models.CharField(max_length=50, verbose_name="ویژگی درمانی محصول")
@@ -61,11 +77,19 @@ class SkinCondition(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "ویژگی درمانی محصول"
+        verbose_name_plural = "ویژگی‌های درمانی محصول"
+
 class VolumeUnit(models.Model):
     name = models.CharField(max_length=20, verbose_name="واحد حجم محصول")
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "واحد حجم"
+        verbose_name_plural = "واحدهای حجم"
 
 # --- محصول ---
 
@@ -103,6 +127,8 @@ class Product(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        verbose_name = "محصول"
+        verbose_name_plural = "محصولات"
 
     def __str__(self):
         return self.name
@@ -128,6 +154,10 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.image.name}"
+
+    class Meta:
+        verbose_name = "تصویر محصول"
+        verbose_name_plural = "تصاویر محصول"
 
 class Comment(models.Model):
     STATUS_CHOICES = (

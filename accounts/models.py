@@ -35,6 +35,10 @@ class CustomUser(AbstractUser):
             self.profile.is_beautician = self.is_beautician
             self.profile.save(update_fields=['is_beautician'])
 
+    class Meta:
+        verbose_name = "کاربر"
+        verbose_name_plural = "کاربرها"
+
 
 class CustomerProfile(models.Model):
     objects = models.Manager()
@@ -57,6 +61,10 @@ class CustomerProfile(models.Model):
     def __str__(self):
         return f"{self.first_name or ''} {self.last_name or ''} ({self.user.phone_number})"
 
+    class Meta:
+        verbose_name = "پروفایل مشتری"
+        verbose_name_plural = "پروفایل‌های مشتری"
+
 
 class Address(models.Model):
     objects = models.Manager()
@@ -74,6 +82,10 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.user.phone_number} - {self.city}"
+
+    class Meta:
+        verbose_name = "آدرس"
+        verbose_name_plural = "آدرس‌ها"
 
 
 

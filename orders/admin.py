@@ -24,26 +24,17 @@ class OrderStatusHistoryInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_number', 'user', 'status', 'payment_status', 'final_amount', 'get_jalali_created_at']
+    list_display = [
+        'order_number', 'user', 'status', 'payment_status', 'final_amount_display', 'created_at'
+    ]
     list_filter = ['status', 'payment_status', 'created_at']
-    search_fields = ['order_number', 'user__email', 'user__first_name', 'user__last_name', 'receiver_name', 'receiver_phone']
-    readonly_fields = ['order_number', 'created_at', 'updated_at', 'get_jalali_created_at', 'get_jalali_updated_at']
+    search_fields = ['order_number', 'user__phone_number', 'user__email']
     inlines = [OrderItemInline, OrderStatusHistoryInline]
-    
-    fieldsets = (
-        ('اطلاعات اصلی', {
-            'fields': ('order_number', 'user', 'status', 'payment_status')
-        }),
-        ('اطلاعات مالی', {
-            'fields': ('total_amount', 'discount_amount', 'final_amount')
-        }),
-        ('اطلاعات گیرنده', {
-            'fields': ('receiver_name', 'receiver_phone', 'receiver_address', 'receiver_city', 'receiver_postal_code')
-        }),
-        ('اطلاعات تکمیلی', {
-            'fields': ('notes', 'tracking_code', 'created_at', 'updated_at', 'get_jalali_created_at', 'get_jalali_updated_at')
-        }),
-    )
+    readonly_fields = ['order_number', 'created_at', 'updated_at']
+
+    def final_amount_display(self, obj):
+        return format_html('<span style="direction:ltr">{}</span>', f"{obj.final_amount:,}")
+    final_amount_display.short_description = "مبلغ نهایی (ریال)"
 
     def save_model(self, request, obj, form, change):
         if change:  # فقط برای به‌روزرسانی
