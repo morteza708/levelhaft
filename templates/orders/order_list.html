@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}سفارش‌های من{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">سفارش‌های من</h4>
+                </div>
+                <div class="card-body p-4">
+                    {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>شماره سفارش</th>
+                                    <th>تاریخ ثبت</th>
+                                    <th>وضعیت</th>
+                                    <th>وضعیت پرداخت</th>
+                                    <th class="text-end">مبلغ کل</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>{{ order.order_number }}</td>
+                                    <td>{{ order.get_jalali_created_at }}</td>
+                                    <td>
+                                        <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'processing' %}bg-info{% elif order.status == 'shipped' %}bg-primary{% elif order.status == 'delivered' %}bg-success{% else %}bg-danger{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if order.payment_status == 'paid' %}bg-success{% elif order.payment_status == 'pending' %}bg-warning{% elif order.payment_status == 'failed' %}bg-danger{% else %}bg-info{% endif %}">
+                                            {{ order.get_payment_status_display }}
+                                        </span>
+                                    </td>
+                                    <td class="text-end">{{ order.final_amount|intcomma:False }} ریال</td>
+                                    <td class="text-end">
+                                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
+                                            جزئیات
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <div class="mb-3">
+                            <i class="fas fa-shopping-bag fa-3x text-muted"></i>
+                        </div>
+                        <h5 class="text-muted">شما هنوز سفارشی ثبت نکرده‌اید</h5>
+                        <p class="text-muted mb-4">برای مشاهده محصولات و ثبت سفارش به فروشگاه مراجعه کنید</p>
+                        <a href="{% url 'products:product_list' %}" class="btn btn-primary">
+                            مشاهده محصولات
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jformat %}
+
+{% block title %}{{ post.title }} - لول هفت{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/blog.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- page-title -->
+<div class="tf-page-title">
+    <div class="container-full">
+        <div class="heading text-center">{{ post.title }}</div>
+        <div class="blog-meta text-center mt-4">
+            <span><i class="far fa-calendar-alt"></i> {{ post.created_at|jformat:"%Y/%m/%d" }}</span>
+            {% if post.category %}
+            <span><i class="fas fa-folder"></i> {{ post.category.name }}</span>
+            {% endif %}
+            {% if post.tags %}
+            <span><i class="fas fa-tags"></i> {{ post.tags }}</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!-- /page-title -->
+
+<!-- blog content -->
+<section class="flat-blog-detail my-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- main content -->
+            <div class="col-lg-9">
+                <article class="blog-post">
+                    {% if post.image %}
+                    <div class="blog-post-image">
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid rounded">
+                    </div>
+                    {% endif %}
+
+                    <div class="blog-post-content text-justify">
+                        {{ post.content|safe }}
+                    </div>
+
+                    <!-- share buttons -->
+                    <div class="share-buttons mt-5">
+                        <h4>اشتراک‌گذاری مقاله</h4>
+                        <div class="d-flex gap-3 mt-3">
+                            <a href="https://www.instagram.com/direct/inbox?text={{ post.title }} {{ request.build_absolute_uri }}"
+                                class="btn btn-outline-danger" target="_blank">
+                                <i class="fab fa-instagram"></i>
+                                اینستاگرام
+                            </a>
+                            <a href="https://api.whatsapp.com/send?text={{ post.title }} {{ request.build_absolute_uri }}"
+                                class="btn btn-outline-success" target="_blank">
+                                <i class="fab fa-whatsapp"></i>
+                                واتساپ
+                            </a>
+                            <a href="https://telegram.me/share/url?url={{ request.build_absolute_uri }}&text={{ post.title }}"
+                                class="btn btn-outline-primary" target="_blank">
+                                <i class="fab fa-telegram"></i>
+                                تلگرام
+                            </a>
+                        </div>
+                    </div>
+                    <!-- /share buttons -->
+                </article>
+            </div>
+            <!-- /main content -->
+        </div>
+    </div>
+</section>
+<!-- /blog content -->
+{% endblock %}

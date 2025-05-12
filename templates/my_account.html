@@ -1,0 +1,673 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load jformat %}
+{% load humanize %}
+
+{% block title %}
+    حساب کاربری 
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .account-page {
+        min-height: 60vh;
+        padding: 2rem 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .account-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .account-nav {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        padding: 1.5rem 1rem;
+        min-width: 180px;
+        border: none;
+    }
+    .account-nav .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        color: #444;
+        font-size: 1.05rem;
+        border: none;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        padding: 0.7rem 1rem;
+        background: none;
+        transition: background 0.2s, color 0.2s;
+    }
+    .account-nav .nav-link i {
+        font-size: 1.15rem;
+        margin-left: 0.5rem;
+    }
+    .account-nav .nav-link.active, .account-nav .nav-link:focus, .account-nav .nav-link:hover {
+        background: #28a7451a;
+        color: #28a745;
+        font-weight: 600;
+    }
+    .account-nav .nav-link.logout {
+        color: #dc3545;
+        background: none;
+    }
+    .account-nav .nav-link.logout:hover {
+        background: #dc354510;
+        color: #dc3545;
+    }
+    .account-nav .nav-item:last-child {
+        margin-top: 1.5rem;
+    }
+
+    .account-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+    }
+
+    .account-card-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .account-card-title {
+        font-size: 1.1rem;
+        color: #333;
+        margin: 0;
+    }
+
+    .account-card-body {
+        padding: 1.5rem;
+    }
+
+    .info-section {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .info-title {
+        color: #28a745;
+        font-size: 1rem;
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+    }
+
+    .info-title i {
+        margin-left: 0.5rem;
+    }
+
+    .info-row {
+        display: flex;
+        margin-bottom: 1rem;
+    }
+
+    .info-label {
+        min-width: 120px;
+        color: #666;
+        display: flex;
+        align-items: center;
+    }
+
+    .info-label i {
+        margin-left: 0.5rem;
+        color: #28a745;
+    }
+
+    .info-value {
+        color: #333;
+    }
+
+    .address-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .address-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .address-card.default {
+        border-color: #28a745;
+    }
+
+    .btn-account {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .btn-account.primary {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .btn-account.primary:hover {
+        background-color: #218838;
+        color: #fff;
+    }
+
+    .btn-account i {
+        margin-left: 0.5rem;
+    }
+
+    .user-type-badge {
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-type-badge i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .user-type-badge i.fa-user-md {
+        color: #28a745;
+    }
+
+    .user-type-badge i.fa-user {
+        color: #6c757d;
+    }
+
+    .badge-text {
+        display: inline-block;
+        padding: 0.5rem 1.2rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .badge-text.success {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .badge-text.secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .beautician-btn {
+        margin-top: 1.2rem;
+        padding: 0.8rem 1.8rem;
+        background: linear-gradient(45deg, #00b09b, #96c93d);
+        color: #fff;
+        border-radius: 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        box-shadow: 0 4px 15px rgba(0, 176, 155, 0.2);
+    }
+
+    .beautician-btn:hover {
+        background: linear-gradient(45deg, #009b87, #84b429);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 176, 155, 0.3);
+    }
+
+    .beautician-btn i {
+        margin: 0 0.8rem;
+        font-size: 1rem;
+    }
+
+    .beautician-btn i.fa-star-of-life {
+        color: rgba(255, 255, 255, 0.9);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 0.8;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .logout-btn {
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: right;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        color: #dc3545;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .logout-btn:hover {
+        background-color: rgba(220, 53, 69, 0.1);
+    }
+
+    .logout-btn i {
+        margin-left: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+        .account-nav {
+            margin-bottom: 2rem;
+        }
+        .orders-table {
+            display: block;
+        }
+        .orders-table thead {
+            display: none;
+        }
+        .orders-table tbody {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .orders-table tr {
+            display: block;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            padding: 1rem 0.7rem;
+            margin-bottom: 0.5rem;
+        }
+        .orders-table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0;
+            border: none;
+            font-size: 1rem;
+        }
+        .orders-table td:before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #888;
+            margin-left: 1rem;
+        }
+        .orders-table td:last-child {
+            justify-content: flex-end;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="account-page">
+    <div class="container">
+        <!-- User Type Badge -->
+        <div class="user-type-badge">
+            {% if profile.is_beautician %}
+                <i class="fas fa-user-md"></i>
+                <div>
+                    <span class="badge-text success">بیوتیشن فعال</span>
+                </div>
+            {% else %}
+                <i class="fas fa-user"></i>
+                <div>
+                    <span class="badge-text secondary">کاربر عادی</span>
+                    <div>
+                        <a href="{% url 'accounts:beautician_request' %}" class="beautician-btn">
+                            <i class="fas fa-star-of-life"></i>
+                            درخواست بیوتیشن شدن
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3 mb-4 mb-lg-0">
+                <ul class="nav nav-tabs flex-column account-nav" id="accountTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">
+                            <i class="fas fa-user"></i>
+                            پروفایل
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="addresses-tab" data-bs-toggle="tab" href="#addresses" role="tab" aria-controls="addresses" aria-selected="false">
+                            <i class="fas fa-map-marker-alt"></i>
+                            آدرس‌ها
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false">
+                            <i class="fas fa-shopping-bag"></i>
+                            سفارش‌ها
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <form action="{% url 'accounts:logout' %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link logout text-start border-0 bg-transparent w-100" style="cursor:pointer;">
+                                <i class="fas fa-sign-out-alt"></i>
+                                خروج
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <div class="tab-content" id="accountTabContent">
+                    <!-- Profile Tab -->
+                    <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <!-- Personal Information Card -->
+                        <div class="account-card">
+                            <div class="account-card-header">
+                                <h5 class="account-card-title">اطلاعات شخصی</h5>
+                                <a href="{% url 'accounts:update_profile' %}" class="btn-account primary">
+                                    <i class="fas fa-edit"></i>
+                                    ویرایش
+                                </a>
+                            </div>
+                            <div class="account-card-body">
+                                <!-- Identity Information -->
+                                <div class="info-section">
+                                    <div class="info-title">
+                                        <i class="fas fa-id-card"></i>
+                                        اطلاعات هویتی
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="info-row">
+                                                <div class="info-label">
+                                                    <i class="fas fa-user"></i>
+                                                    نام و نام خانوادگی:
+                                                </div>
+                                                <div class="info-value">
+                                                    {{ profile.first_name }} {{ profile.last_name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-row">
+                                                <div class="info-label">
+                                                    <i class="fas fa-venus-mars"></i>
+                                                    جنسیت:
+                                                </div>
+                                                <div class="info-value">
+                                                    {{ profile.get_gender_display|default:"ثبت نشده" }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-row">
+                                                <div class="info-label">
+                                                    <i class="fas fa-birthday-cake"></i>
+                                                    تاریخ تولد:
+                                                </div>
+                                                <div class="info-value">
+                                                    {{ profile.birth_date|jformat:"%Y/%m/%d"|default:"ثبت نشده" }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-row">
+                                                <div class="info-label">
+                                                    <i class="fas fa-user-clock"></i>
+                                                    سن:
+                                                </div>
+                                                <div class="info-value">
+                                                    {{ profile.age|default:"ثبت نشده" }} {% if profile.age %}سال{% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Contact Information -->
+                                <div class="info-section">
+                                    <div class="info-title">
+                                        <i class="fas fa-address-book"></i>
+                                        اطلاعات تماس
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="info-row">
+                                                <div class="info-label">
+                                                    <i class="fas fa-phone"></i>
+                                                    شماره تلفن:
+                                                </div>
+                                                <div class="info-value">
+                                                    {{ user.phone_number }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-row">
+                                                <div class="info-label">
+                                                    <i class="fas fa-envelope"></i>
+                                                    ایمیل:
+                                                </div>
+                                                <div class="info-value">
+                                                    {{ user.email|default:"ثبت نشده" }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Account Information -->
+                                <div class="info-section">
+                                    <div class="info-title">
+                                        <i class="fas fa-info-circle"></i>
+                                        اطلاعات حساب
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="info-row">
+                                                <div class="info-label">
+                                                    <i class="fas fa-calendar"></i>
+                                                    تاریخ عضویت:
+                                                </div>
+                                                <div class="info-value">
+                                                    {{ user.date_joined|jformat:"%Y/%m/%d" }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-row">
+                                                <div class="info-label">
+                                                    <i class="fas fa-user-tag"></i>
+                                                    نوع کاربری:
+                                                </div>
+                                                <div class="info-value">
+                                                    {% if profile.is_beautician %}
+                                                        <span class="badge-text success">بیوتیشن</span>
+                                                    {% else %}
+                                                        <span class="badge-text secondary">کاربر عادی</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Addresses Tab -->
+                    <div class="tab-pane fade" id="addresses" role="tabpanel" aria-labelledby="addresses-tab">
+                        <!-- Addresses Card -->
+                        <div class="account-card">
+                            <div class="account-card-header">
+                                <h5 class="account-card-title">آدرس‌های ثبت شده</h5>
+                                <a href="{% url 'accounts:add_address' %}" class="btn-account primary">
+                                    <i class="fas fa-plus"></i>
+                                    افزودن آدرس
+                                </a>
+                            </div>
+                            <div class="account-card-body">
+                                {% for address in addresses %}
+                                    <div class="address-card {% if address.is_default %}default{% endif %}">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-10">
+                                                <div class="info-row">
+                                                    <div class="info-label">
+                                                        <i class="fas fa-map-marker-alt"></i>
+                                                        استان و شهر:
+                                                    </div>
+                                                    <div class="info-value">
+                                                        {{ address.province }} - {{ address.city }}
+                                                    </div>
+                                                </div>
+                                                <div class="info-row">
+                                                    <div class="info-label">
+                                                        <i class="fas fa-map"></i>
+                                                        آدرس:
+                                                    </div>
+                                                    <div class="info-value">
+                                                        {{ address.address }}
+                                                    </div>
+                                                </div>
+                                                <div class="info-row mb-0">
+                                                    <div class="info-label">
+                                                        <i class="fas fa-envelope"></i>
+                                                        کد پستی:
+                                                    </div>
+                                                    <div class="info-value">
+                                                        {{ address.postal_code }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 text-end">
+                                                {% if address.is_default %}
+                                                    <span class="badge-text success">پیش‌فرض</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-map-marked-alt fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">هیچ آدرسی ثبت نشده است.</p>
+                                        <a href="{% url 'accounts:add_address' %}" class="btn-account primary">
+                                            <i class="fas fa-plus"></i>
+                                            افزودن آدرس جدید
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Orders Tab -->
+                    <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                        <div class="account-card">
+                            <div class="account-card-header">
+                                <h3 class="account-card-title">سفارش‌های من</h3>
+                            </div>
+                            <div class="account-card-body">
+                                {% if orders %}
+                                    <div class="table-responsive">
+                                        <table class="table orders-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>شماره سفارش</th>
+                                                    <th>تاریخ ثبت</th>
+                                                    <th>وضعیت</th>
+                                                    <th>وضعیت پرداخت</th>
+                                                    <th>مبلغ کل</th>
+                                                    <th>عملیات</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for order in orders %}
+                                                    <tr>
+                                                        <td data-label="شماره سفارش">{{ order.order_number }}</td>
+                                                        <td data-label="تاریخ ثبت">{{ order.created_at|jformat:"%Y/%m/%d" }}</td>
+                                                        <td data-label="وضعیت">
+                                                            {% if order.status == 'pending' %}
+                                                                <span class="badge bg-warning">در انتظار پرداخت</span>
+                                                            {% elif order.status == 'processing' %}
+                                                                <span class="badge bg-info">در حال پردازش</span>
+                                                            {% elif order.status == 'shipped' %}
+                                                                <span class="badge bg-primary">ارسال شده</span>
+                                                            {% elif order.status == 'delivered' %}
+                                                                <span class="badge bg-success">تحویل داده شده</span>
+                                                            {% elif order.status == 'cancelled' %}
+                                                                <span class="badge bg-danger">لغو شده</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td data-label="وضعیت پرداخت">
+                                                            {% if order.payment_status == 'pending' %}
+                                                                <span class="badge bg-warning">در انتظار پرداخت</span>
+                                                            {% elif order.payment_status == 'paid' %}
+                                                                <span class="badge bg-success">پرداخت شده</span>
+                                                            {% elif order.payment_status == 'failed' %}
+                                                                <span class="badge bg-danger">ناموفق</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td data-label="مبلغ کل">{{ order.total_amount|intcomma:False }} تومان</td>
+                                                        <td data-label="عملیات">
+                                                            <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-eye"></i>
+                                                                جزئیات
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">شما هنوز سفارشی ثبت نکرده‌اید.</p>
+                                        <a href="{% url 'products:product_list' %}" class="btn btn-primary mt-3">
+                                            <i class="fas fa-shopping-cart"></i>
+                                            مشاهده محصولات
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}جستجوی محصولات{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<style>
+    .search-page {
+        min-height: calc(100vh - 200px);
+        padding: 3rem 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .search-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .search-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .search-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .search-guide {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .search-guide::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(45deg, #28a745, #20c997);
+        opacity: 0.1;
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+    }
+
+    .guide-icon {
+        color: #28a745;
+        font-size: 1.2rem;
+        margin-left: 0.8rem;
+    }
+
+    .guide-text {
+        color: #2c3e50;
+        font-size: 1rem;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+
+    .example-text {
+        background: rgba(40, 167, 69, 0.1);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+
+    .example-text i {
+        color: #ffc107;
+        margin-left: 0.5rem;
+    }
+
+    .search-form {
+        position: relative;
+    }
+
+    .input-group {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .input-group:focus-within {
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.15);
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: none;
+    }
+
+    .btn-search {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        padding: 1rem 2rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-search:hover {
+        background: linear-gradient(45deg, #218838, #1aa179);
+        transform: translateY(-2px);
+    }
+
+    .btn-search i {
+        margin-left: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    /* Workshop Card Styles */
+    .workshop-card {
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-top: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .workshop-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+    }
+
+    .workshop-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .workshop-title i {
+        margin-left: 0.8rem;
+        font-size: 1.6rem;
+        color: #ffc107;
+    }
+
+    .workshop-description {
+        font-size: 1rem;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    .btn-workshop {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-workshop:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .btn-workshop i {
+        margin-left: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .search-page {
+            padding: 2rem 0;
+        }
+
+        .search-card {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-guide {
+            padding: 1.2rem;
+        }
+
+        .guide-text {
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+        }
+
+        .btn-search, .btn-workshop {
+            padding: 0.8rem 1.5rem;
+        }
+
+        .workshop-card {
+            padding: 1.5rem;
+        }
+
+        .workshop-title {
+            font-size: 1.2rem;
+        }
+
+        .workshop-description {
+            font-size: 0.95rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="search-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <!-- Product Search Card -->
+                <div class="search-card">
+                    <div class="search-guide">
+                        <div class="guide-text">
+                            <i class="fas fa-info-circle guide-icon"></i>
+                            شما می‌توانید محصولات را بر اساس نام محصول، برند، لاین یا بارکد جستجو کنید.
+                            برای جستجوی دقیق‌تر، می‌توانید از فیلترهای نوع مصرف٬ موجود در صفحه نتایج استفاده کنید.
+                        </div>
+                        <div class="example-text">
+                            <i class="fas fa-lightbulb"></i>
+                            مثال: "نام محصول مورد نظر"، "لاین intensa "، "برند دکتر بلتر" یا "بارکد 0211"
+                        </div>
+                    </div>
+                    <form method="get" action="{% url 'products:product_search' %}" class="search-form">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" 
+                                   placeholder="جستجوی محصول، برند، لاین یا بارکد..." 
+                                   value="{{ query }}" required>
+                            <button class="btn btn-search" type="submit">
+                                <i class="fas fa-search"></i>
+                                جستجو
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Workshop Card -->
+                <div class="workshop-card">
+                    <h3 class="workshop-title">
+                        <i class="fas fa-users"></i>
+                        استعلام شرکت‌کنندگان ورکشاپ
+                    </h3>
+                    <p class="workshop-description">
+                        امکان جستجو و مشاهده لیست شرکت‌کنندگان بر اساس نام، نام خانوادگی، عنوان ورکشاپ یا بارکد
+                    </p>
+                    <div class="text-center">
+                        <a href="{% url 'workshop:approved_registrations' %}" class="btn btn-workshop">
+                            <i class="fas fa-list-alt"></i>
+                            مشاهده لیست شرکت‌کنندگان
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,561 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{%block title%}
+    {{product.name}} - {{product.brand.name}}
+{%endblock%}
+
+{%block content%}
+        <!-- breadcrumb -->
+        <div class="tf-breadcrumb">
+            <div class="container">
+                <div class="tf-breadcrumb-wrap d-flex justify-content-between flex-wrap align-items-center">
+                    <div class="tf-breadcrumb-list">
+                        <a href="{% url 'pages:home' %}" class="text">صفحه اصلی</a>
+                        <i class="icon icon-arrow-right"></i>
+                        <div class="d-inline-flex align-items-center">
+                            {% if product.brand.image %}
+                                <img src="{{ product.brand.image.url }}" alt="{{ product.brand.name }}" class="brand-logo me-2" style="width: 25px; height: auto;">
+                            {% endif %}
+                            <a href="{% url 'products:line_products' product.line.slug %}" class="text">{{product.line.name}}</a>
+                        </div>
+                        <i class="icon icon-arrow-right"></i>
+                        <span class="text">{{product.name}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /breadcrumb -->
+        <!-- default -->
+        <section class="flat-spacing-4 pt_0">
+            <div class="tf-main-product section-image-zoom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="tf-product-media-wrap sticky-top">
+                                <div class="thumbs-slider">
+                                    <div class="swiper tf-product-media-thumbs other-image-zoom" data-direction="vertical">
+                                        <div class="swiper-wrapper stagger-wrap">
+                                            {% for image in product.images.all %}
+                                            <div class="swiper-slide stagger-item">
+                                                <div class="item">
+                                                    <img class="lazyload" data-src="{{ image.image.url }}" src="{{ image.image.url }}" alt="{{ product.name }}">
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="swiper tf-product-media-main" id="gallery-swiper-started">
+                                        <div class="swiper-wrapper">
+                                            {% for image in product.images.all %}
+                                            <div class="swiper-slide">
+                                                <a href="{{ image.image.url }}" target="_blank" class="item" data-pswp-width="770px" data-pswp-height="1075px">
+                                                    <img class="tf-image-zoom lazyload" data-zoom="{{ image.image.url }}" data-src="{{ image.image.url }}" src="{{ image.image.url }}" alt="{{ product.name }}">
+                                                </a>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="swiper-button-next button-style-arrow thumbs-next"></div>
+                                        <div class="swiper-button-prev button-style-arrow thumbs-prev"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="tf-product-info-wrap position-relative">
+                                <div class="tf-zoom-main"></div>
+                                <div class="tf-product-info-list other-image-zoom">
+                                    <div class="tf-product-info-title">
+                                        <h5>{{product.name}}</h5>
+                                        <div class="product-meta">
+                                            <div class="brand-info">
+                                                {% if product.brand.image %}
+                                                    <img src="{{ product.brand.image.url }}" alt="{{ product.brand.name }}" class="brand-logo me-2" style="width: 25px; height: auto;">
+                                                {% endif %}
+                                                <span class="brand-name">{{ product.brand.name }}</span>
+                                    </div>
+                                            {% if product.line %}
+                                                <div class="brand-line mt-1">
+                                                    <span class="label">لاین محصول:</span>
+                                                    <span class="value">{{ product.line.name }}</span>
+                                    </div>
+                                            {% endif %}
+                                            <div class="product-code mt-2">
+                                                <span class="label">کد محصول:</span>
+                                                <span class="value">{{product.barcode}}</span>
+                                            </div>
+                                            {% if product.usage_type %}
+                                            <div class="usage-type mt-2">
+                                                <span class="label">نوع مصرف:</span>
+                                                <span class="value">{{product.usage_type.name}}</span>
+                                            </div>
+                                            {% endif %}
+                                            {% if product.model %}
+                                                <div class="model-info mt-2">
+                                                    <span class="label">مدل محصول:</span>
+                                                    <span class="value">{{ product.model.name }}</span>
+                                                </div>
+                                            {% endif %}
+                                            {% if product.volume_value and product.volume_unit %}
+                                            <div class="volume-info mt-2">
+                                                <span class="label">حجم محصول:</span>
+                                                <span class="value">{{product.volume_value}} {{product.volume_unit.name}}</span>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="tf-product-info-price">
+                                        {% if product.usage_type.name == 'مصرف سالن (Cabin)' and not request.user.profile.is_beautician %}
+                                            <div class="beautician-request-section">
+                                                <a href="{% url 'accounts:beautician_request' %}" class="btn-beautician-request">
+                                                    <span class="icon">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                            <circle cx="9" cy="7" r="4"></circle>
+                                                            <line x1="19" y1="8" x2="19" y2="14"></line>
+                                                            <line x1="22" y1="11" x2="16" y2="11"></line>
+                                                        </svg>
+                                                    </span>
+                                                    <span class="text">برای مشاهده قیمت محصول فرم بیوتیشن را تکمیل و ارسال نمایید</span>
+                                                </a>
+                                                <p class="beautician-info-text">این محصول مخصوص مصرف سالن می‌باشد</p>
+                                            </div>
+                                        {% else %}
+                                            <div class="product-purchase-info">
+                                                <div class="price-section mb-4">
+                                                    {% if request.user.is_authenticated and request.user.profile.is_beautician %}
+                                                        <div class="price-on-sale">{{product.price_level_1|intcomma:False|default:"قیمت ناموجود"}}<toman> ریال </toman></div>
+                                                    {% else %}
+                                                        <div class="price-on-sale">{{product.price_level_2|intcomma:False|default:"قیمت ناموجود"}}<toman> ریال </toman></div>
+                                                    {% endif %}
+                                                </div>
+
+                                                <div class="cart-section mb-3">
+                                                    {% if product.stock > 0 %}
+                                                        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="d-inline">
+                                                            {% csrf_token %}
+                                                            <div class="quantity-input mb-3">
+                                                                <label for="id_quantity" class="form-label d-block mb-2">تعداد:</label>
+                                                                <div class="input-stock-wrapper">
+                                                                    <div class="d-flex align-items-center justify-content-center quantity-control">
+                                                                        <button type="button" class="btn quantity-btn" onclick="decreaseQuantity()">
+                                                                            <i class="fas fa-minus"></i>
+                                                                        </button>
+                                                                        {{ cart_add_form.quantity }}
+                                                                        <button type="button" class="btn quantity-btn" onclick="increaseQuantity()">
+                                                                            <i class="fas fa-plus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="stock-display">
+                                                                        <span class="text-muted">موجودی: {{ product.stock }} عدد</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {{ cart_add_form.update }}
+                                                            <button type="submit" class="btn-add-to-cart">
+                                                                <span class="icon">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                        <circle cx="9" cy="21" r="1"></circle>
+                                                                        <circle cx="20" cy="21" r="1"></circle>
+                                                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                                                    </svg>
+                                                                </span>
+                                                                <span class="text">افزودن به سبد خرید</span>
+                                                            </button>
+                                                        </form>
+                                                    {% else %}
+                                                        <button class="btn-add-to-cart disabled" disabled>
+                                                            <span class="icon">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                    <circle cx="9" cy="21" r="1"></circle>
+                                                                    <circle cx="20" cy="21" r="1"></circle>
+                                                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="text">ناموجود</span>
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
+
+                                                <div class="stock-section text-center">
+                                                    {% if product.stock > 0 %}
+                                                        <div class="stock-info available">
+                                                            <span class="icon">✓</span>
+                                                            <span class="text">موجود در انبار</span>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="stock-info unavailable">
+                                                            <span class="icon">×</span>
+                                                            <span class="text">ناموجود</span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if product.short_description %}
+                                    <div class="tf-product-info-description">
+                                        <p>{{product.short_description}}</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /default -->
+        <!-- tabs -->
+        <section class="flat-spacing-17 pt_0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="widget-tabs style-has-border">
+                            <ul class="widget-menu-tab">
+                                <li class="item-title active">
+                                    <span class="inner">توضیحات</span>
+                                </li>
+                                {% if product.skin_types.all or product.skin_conditions.all %}
+                                <li class="item-title">
+                                    <span class="inner">ویژگی های محصول</span>
+                                </li>
+                                {% endif %}
+                                <li class="item-title">
+                                    <span class="inner">نظرات کاربران ({{product.comments.count}})</span>
+                                </li>
+                            </ul>
+                            <div class="widget-content-tab">
+                                <div class="widget-content-inner active">
+                                    {% if product.long_description %}
+                                    <div class="product-description">
+                                        {{product.long_description|safe}}
+                                    </div>
+                                    {% else %}
+                                    <p class="text-center">توضیحات محصول موجود نیست</p>
+                                    {% endif %}
+                                </div>
+                                {% if product.skin_types.all or product.skin_conditions.all %}
+                                <div class="widget-content-inner">
+                                    <table class="tf-pr-attrs">
+                                        <tbody>
+                                            {% if product.skin_types.all %}
+                                            <tr class="tf-attr-pa-color">
+                                                <th class="tf-attr-label">ویژگی محصول</th>
+                                                <td class="tf-attr-value">
+                                                    <p>{{ product.skin_types.all|join:", " }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if product.skin_conditions.all %}
+                                            <tr class="tf-attr-pa-size">
+                                                <th class="tf-attr-label">ویژگی درمانی محصول</th>
+                                                <td class="tf-attr-value">
+                                                    <p>{{ product.skin_conditions.all|join:", " }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if product.model %}
+                                            <tr class="tf-attr-pa-size">
+                                                <th class="tf-attr-label">مدل محصول</th>
+                                                <td class="tf-attr-value">
+                                                    <p>{{ product.model.name }}</p>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endif %}
+                                <div class="widget-content-inner">
+                                    <div class="comments-section">
+                                        <div class="comments-header mb-4">
+                                            <h4 class="mb-3">نظرات کاربران</h4>
+                                            <div class="rating-summary d-flex align-items-center mb-3">
+                                                <div class="average-rating me-3">
+                                                    <span class="rating-value">{{ avg_rating|floatformat:1 }}</span>
+                                                    <div class="stars">
+                                                        {% for i in "12345"|make_list %}
+                                                            {% if forloop.counter <= avg_rating %}
+                                                                <i class="fas fa-star text-warning"></i>
+                                                            {% elif forloop.counter|add:"-0.5" <= avg_rating %}
+                                                                <i class="fas fa-star-half-alt text-warning"></i>
+                                                            {% else %}
+                                                                <i class="far fa-star text-warning"></i>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                <span class="total-comments">({{ product.comments.count }} نظر)</span>
+                                            </div>
+                                        </div>
+
+                                        {% if request.user.is_authenticated %}
+                                            <div class="add-comment-section mb-4">
+                                                <h5 class="mb-3">ثبت نظر</h5>
+                                                <form method="post" action="{% url 'products:submit_comment' product.slug %}" class="comment-form">
+                                                    {% csrf_token %}
+                                                    <div class="rating-input mb-3">
+                                                        <label class="form-label">امتیاز شما</label>
+                                                        <div class="star-rating">
+                                                            {% for i in "54321"|make_list %}
+                                                                <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}" required>
+                                                                <label for="star{{ i }}" class="star-label">
+                                                                    <i class="fas fa-star"></i>
+                                                                </label>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        {{ comment_form.text }}
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">ثبت نظر</button>
+                                                </form>
+                                            </div>
+                                        {% else %}
+                                            <div class="alert alert-info">
+                                                برای ثبت نظر باید <a href="{% url 'accounts:login' %}">وارد شوید</a> 
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="comments-list">
+                                            {% for comment in product.comments.all %}
+                                                <div class="comment-item card mb-3">
+                                                    <div class="card-body">
+                                                        <div class="comment-header d-flex justify-content-between align-items-center mb-2">
+                                                            <div class="user-info">
+                                                                <span class="username fw-bold">{{ comment.user.username }}</span>
+                                                                <div class="rating">
+                                                                    {% for i in "12345"|make_list %}
+                                                                        {% if forloop.counter <= comment.rating %}
+                                                                            <i class="fas fa-star text-warning"></i>
+                                                                        {% else %}
+                                                                            <i class="far fa-star text-warning"></i>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                            <span class="date text-muted">{{ comment.created_at|naturaltime }}</span>
+                                                        </div>
+                                                        <p class="comment-text mb-0">{{ comment.text }}</p>
+                                                    </div>
+                                                </div>
+                                            {% empty %}
+                                                <div class="alert alert-info">
+                                                    هنوز نظری برای این محصول ثبت نشده است.
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /tabs -->
+        <!-- product related-->
+        <section class="flat-spacing-1 pt_0">
+            <div class="container">
+                <div class="flat-title">
+                    <span class="title">محصولات مرتبط</span>
+                </div>
+                <div class="hover-sw-nav hover-sw-2">
+                    <div class="swiper tf-sw-product-sell wrap-sw-over" data-preview="4" data-tablet="3" data-mobile="2" data-space-lg="30" data-space-md="15" data-pagination="2" data-pagination-md="3" data-pagination-lg="3">
+                        <div class="swiper-wrapper">
+                            {% for related_product in related_products %}
+                            <div class="swiper-slide" lazy="true">
+                                <div class="product-card">
+                                    <a href="{% url 'products:product_detail' related_product.slug %}" class="product-image">
+                                        {% if related_product.images.all %}
+                                            <img src="{{ related_product.images.first.image.url }}" alt="{{ related_product.name }}">
+                                        {% else %}
+                                            <img src="{% static 'img/no-image.png' %}" alt="بدون تصویر">
+                                        {% endif %}
+                                    </a>
+                                    <div class="product-title">
+                                        <a href="{% url 'products:product_detail' related_product.slug %}" class="text-decoration-none text-dark">
+                                            {{ related_product.name }}
+                                        </a>
+                                    </div>
+                                    <div class="product-brand-line">
+                                        {{ related_product.brand.name }}{% if related_product.line.name %} - {{ related_product.line.name }}{% endif %}
+                                    </div>
+                                    {% if related_product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                        {% if request.user.is_authenticated and request.user.profile.is_beautician %}
+                                            <div class="product-price">
+                                                {{ related_product.price_level_1|intcomma:False|default:"قیمت ناموجود" }} ریال
+                                </div>
+                                        {% else %}
+                                            <div class="beautician-badge">
+                                                <i class="fas fa-spa"></i>
+                                                <span>بیوتیشن</span>
+                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="product-price">
+                                            {% if request.user.is_authenticated and request.user.profile.is_beautician %}
+                                                {{ related_product.price_level_1|intcomma:False|default:"قیمت ناموجود" }} ریال
+                                            {% else %}
+                                                {{ related_product.price_level_2|intcomma:False|default:"قیمت ناموجود" }} ریال
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="nav-sw nav-next-slider nav-next-product box-icon w_46 round"><span class="icon icon-arrow-left"></span></div>
+                    <div class="nav-sw nav-prev-slider nav-prev-product box-icon w_46 round"><span class="icon icon-arrow-right"></span></div>
+                    <div class="sw-dots style-2 sw-pagination-product justify-content-center"></div>
+                </div>
+            </div>
+        </section>
+        <!-- /product related-->
+
+{%endblock%}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<style>
+    .quantity-input {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .input-stock-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quantity-control {
+        width: 180px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .quantity-btn {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 1px solid #dee2e6;
+        color: #495057;
+        border-radius: 6px;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+
+    .quantity-btn:hover {
+        background: #e9ecef;
+    }
+
+    #id_quantity {
+        width: 60px !important;
+        text-align: center;
+        border: none;
+        background: transparent;
+        margin: 0 8px;
+        padding: 0;
+        font-size: 16px;
+        font-weight: 500;
+        -moz-appearance: textfield;
+    }
+
+    #id_quantity::-webkit-inner-spin-button,
+    #id_quantity::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .stock-display {
+        font-size: 14px;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .btn-add-to-cart {
+        margin-top: 1rem;
+        padding: 12px 24px;
+        border-radius: 8px;
+        width: 100%;
+        max-width: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-add-to-cart:hover {
+        background-color: #218838;
+    }
+
+    @media (max-width: 576px) {
+        .quantity-control {
+            width: 160px;
+            padding: 4px;
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+        }
+
+        #id_quantity {
+            width: 50px !important;
+            font-size: 14px;
+            margin: 0 4px;
+        }
+
+        .stock-display {
+            font-size: 13px;
+        }
+
+        .btn-add-to-cart {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function decreaseQuantity() {
+        var input = document.getElementById('id_quantity');
+        var value = parseInt(input.value);
+        if (value > 1) {
+            input.value = value - 1;
+        }
+    }
+
+    function increaseQuantity() {
+        var input = document.getElementById('id_quantity');
+        var value = parseInt(input.value);
+        var max = {{ product.stock }};
+        if (value < max) {
+            input.value = value + 1;
+        }
+    }
+</script>
+{% endblock %}

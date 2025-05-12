@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="wallet-icon me-3">
+                            <i class="fas fa-wallet fa-2x text-success"></i>
+                        </div>
+                        <h4 class="card-title mb-0" style="font-size: 1.5rem; font-weight: 600;">شارژ کیف پول</h4>
+                    </div>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.name == 'amount' %}
+                            <div class="wallet-guide-box mt-2 mb-1 p-2 px-3 text-center">
+                                <i class="fas fa-info-circle text-info mb-2" style="font-size: 1.3rem;"></i>
+                                <div class="fw-semibold" style="font-size: 1.08rem;">
+                                    <div>حداقل مبلغ شارژ: <span class="text-success">۱,۰۰۰,۰۰۰</span> ریال</div>
+                                    <div class="mt-1">حداکثر مبلغ شارژ: <span class="text-danger">۱۵۰,۰۰۰,۰۰۰</span> ریال</div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if field.errors %}
+                            <div class="alert alert-danger mt-2 mb-0 py-1 px-2" style="font-size: 0.95rem;">
+                                {{ field.errors|striptags }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg flex-grow-1">
+                                <i class="fas fa-plus-circle me-2"></i> شارژ کیف پول
+                            </button>
+                            <a href="{% url 'wallet:detail' %}" class="btn btn-outline-secondary btn-lg">بازگشت</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.wallet-icon i {
+    vertical-align: middle;
+}
+
+.wallet-guide-box {
+    background: #f0f6fa;
+    border-radius: 12px;
+    border: 1px solid #d1e7f5;
+    color: #256080;
+    text-align: center;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var amountInput = document.querySelector('input[name="amount"]');
+    if (amountInput) {
+        amountInput.addEventListener('input', function(e) {
+            // Remove all non-digit chars (including Persian/Arabic digits)
+            var val = amountInput.value;
+            // Convert Persian/Arabic digits to English
+            var persianDigits = '۰۱۲۳۴۵۶۷۸۹';
+            var englishDigits = '0123456789';
+            for (var i = 0; i < 10; i++) {
+                val = val.replace(new RegExp(persianDigits[i], 'g'), englishDigits[i]);
+            }
+            // Remove commas
+            val = val.replace(/,/g, '');
+            // Format with commas
+            if (val.length > 0 && !isNaN(val)) {
+                amountInput.value = Number(val).toLocaleString('en-US');
+            } else {
+                amountInput.value = '';
+            }
+        });
+        // On form submit, remove commas so only plain number is sent
+        var form = amountInput.closest('form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                var val = amountInput.value.replace(/,/g, '');
+                // Convert Persian/Arabic digits to English
+                var persianDigits = '۰۱۲۳۴۵۶۷۸۹';
+                var englishDigits = '0123456789';
+                for (var i = 0; i < 10; i++) {
+                    val = val.replace(new RegExp(persianDigits[i], 'g'), englishDigits[i]);
+                }
+                amountInput.value = val;
+            });
+        }
+    }
+});
+</script>
+{% endblock %} 

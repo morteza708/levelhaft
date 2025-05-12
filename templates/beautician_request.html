@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    درخواست بیوتیشن
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .beautician-page {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        padding: 2rem 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .beautician-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        padding: 2.5rem;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .beautician-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .logo-container {
+        margin-bottom: 1.5rem;
+    }
+
+    .beautician-logo {
+        max-width: 110px;
+        height: auto;
+    }
+
+    .beautician-title {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .beautician-subtitle {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .info-section {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-top: 2rem;
+    }
+
+    .info-title {
+        color: #28a745;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .info-title i {
+        margin-left: 0.5rem;
+    }
+
+    .benefits-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .benefits-list li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        color: #555;
+    }
+
+    .benefits-list li i {
+        color: #28a745;
+        margin-left: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        font-size: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+        text-align: right;
+        direction: rtl;
+    }
+
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+        outline: none;
+    }
+
+    .btn-beautician {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        color: #fff;
+        background-color: #28a745;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-beautician:hover {
+        background-color: #218838;
+        transform: translateY(-1px);
+    }
+
+    .btn-beautician i {
+        margin-left: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .beautician-card {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- page-title -->
+<div class="tf-page-title style-2 justify-content-center">
+    <div class="container-full">
+        <div class="heading text-center">درخواست بیوتیشن</div>
+    </div>
+</div>
+<!-- /page-title -->
+
+<div class="beautician-page">
+    <div class="container">
+        <div class="beautician-card">
+            <div class="beautician-header">
+                <div class="logo-container">
+                    <img src="{% static 'images/logo/levelhaft_logo.svg' %}" alt="لوگو" class="beautician-logo">
+                </div>
+                <h4 class="beautician-title">فرم درخواست بیوتیشن</h4>
+                <p class="beautician-subtitle">لطفاً اطلاعات زیر را با دقت تکمیل نمایید</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="form-section">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="btn-beautician">
+                                <i class="fas fa-paper-plane"></i>
+                                ارسال درخواست
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="info-section">
+                        <div class="info-title">
+                            <i class="fas fa-info-circle"></i>
+                            مزایای همکاری
+                        </div>
+                        <ul class="benefits-list">
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                امکان دسترسی و خرید محصولات کابین
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                امکان دسترسی و خرید محصولات خانگی با قیمت های پایین تر
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                استفاده از تخفیف های دوره ای
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                پشتیبانی حرفه‌ای
+                            </li>
+                        </ul>
+                        <div class="info-title mt-4">
+                            <i class="fas fa-exclamation-circle"></i>
+                            توجه
+                        </div>
+                        <p class="mb-0">با تکمیل این فرم، درخواست شما برای همکاری به عنوان بیوتیشن ثبت خواهد شد. پس از بررسی اطلاعات، به شما پیام ارسال خواهد شد.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

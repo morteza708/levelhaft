@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jalali_tags %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    ویرایش اطلاعات کاربری
+{% endblock %}
+
+{% block extra_css %}
+    {{ form.media }}
+<style>
+    .profile-edit-page {
+        min-height: 60vh;
+        padding: 2rem 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .profile-edit-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .profile-edit-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .profile-edit-title {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-edit-title i {
+        margin-left: 0.8rem;
+        color: #28a745;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: #555;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        font-size: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+        text-align: right;
+        direction: rtl;
+    }
+
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+        outline: none;
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-group i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 1.1rem;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23343a40' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: left 1rem center;
+        background-size: 16px 12px;
+        padding-left: 2.5rem;
+    }
+
+    .btn-save {
+        padding: 1rem 2rem;
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+        min-width: 200px;
+    }
+
+    .btn-save:hover {
+        background: linear-gradient(45deg, #218838, #1aa179);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-save i {
+        margin-left: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    /* Custom styling for crispy forms */
+    .asteriskField {
+        color: #dc3545;
+        margin-right: 4px;
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .profile-edit-card {
+            padding: 1.5rem;
+        }
+    }
+
+    .date-input {
+        position: relative;
+    }
+
+    .date-input .input-icon {
+        left: 12px;
+        right: auto;
+    }
+
+    /* Add specific styling for Jalali date input */
+    input[type="text"].jalali-datepicker {
+        background-color: #fff;
+        cursor: pointer;
+    }
+
+    input[type="text"].jalali-datepicker:focus {
+        background-color: #fff;
+        border-color: #28a745;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-edit-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="profile-edit-card">
+                    <div class="profile-edit-header">
+                        <h4 class="profile-edit-title">
+                            <i class="fas fa-user-edit"></i>
+                            ویرایش اطلاعات کاربری
+                        </h4>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <!-- اطلاعات هویتی -->
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    {{ form.first_name|as_crispy_field }}
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    {{ form.last_name|as_crispy_field }}
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group date-input">
+                                    {{ form.birth_date|as_crispy_field }}
+                                    <i class="fas fa-calendar input-icon"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    {{ form.age|as_crispy_field }}
+                                    <i class="fas fa-birthday-cake"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    {{ form.gender|as_crispy_field }}
+                                    <i class="fas fa-venus-mars"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    {{ form.email|as_crispy_field }}
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn-save">
+                                <i class="fas fa-save"></i>
+                                ذخیره تغییرات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ form.media.js }}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'admin/js/django_jalali.min.js' %}"></script>
+{% endblock %} 

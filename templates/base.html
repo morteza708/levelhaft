@@ -1,0 +1,734 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Bootstrap RTL CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'fonts/font-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/font-icons-flip.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.rtl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.rtl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/image-compare-viewer.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link href="https://sibforms.com/forms/end-form/build/sib-styles.rtl.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.rtl.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.rtl.new.css' %}" />
+
+    <!-- Favicon and Touch Icons  -->
+    <link rel="shortcut icon" href="{% static 'images/logo/levelhaft_logo.svg' %}">
+    <link rel="apple-touch-icon-precomposed" href="{% static 'images/logo/levelhaft_logo.svg' %}">
+    {%block extra_css%}
+    {%endblock%}
+
+    <style>
+    .cart-count-badge {
+        padding: 0.13em 0.45em;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border: 2px solid #fff;
+        background: #dc3545;
+        color: #fff;
+        box-shadow: 0 2px 8px #dc354522;
+        top: -3px !important;
+        right: -6px !important;
+        left: auto !important;
+        min-width: 18px;
+        min-height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .toolbar-cart-badge {
+        padding: 0.13em 0.45em;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border: 2px solid #fff;
+        background: #dc3545;
+        color: #fff;
+        box-shadow: 0 2px 8px #dc354522;
+        top: -3px !important;
+        right: -6px !important;
+        left: auto !important;
+        min-width: 18px;
+        min-height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        position: absolute;
+        z-index: 2;
+    }
+    .wallet-btn {
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 15px;
+        transition: all 0.2s;
+    }
+    .wallet-btn:hover, .wallet-btn:focus {
+        background: #218838 !important;
+        color: #fff !important;
+        text-decoration: none;
+        box-shadow: 0 2px 8px #28a74533;
+    }
+    .wallet-balance {
+        margin-left: 0 !important;
+        margin-right: 6px !important;
+    }
+    .wallet-btn .fa-wallet {
+        margin-left: 0 !important;
+        margin-right: 8px !important;
+    }
+    @media (max-width: 576px) {
+        .wallet-btn {
+            background: none !important;
+            color: inherit !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            min-width: 0;
+            box-shadow: none !important;
+            border: none !important;
+            justify-content: center;
+        }
+        .wallet-balance,
+        .wallet-currency {
+            display: none !important;
+        }
+        .wallet-btn .fa-wallet,
+        .wallet-icon {
+            font-size: 22px !important;
+            margin-right: 0 !important;
+            color: #222 !important;
+        }
+    }
+    </style>
+
+</head>
+
+<body class="preload-wrapper">
+     <!-- RTL -->
+     <a class="tf-btn animate-hover-btn btn-fill" href="javascript:void(0);" id="toggle-rtl">RTL</a>
+     <!-- /RTL  -->
+     <!-- preload -->
+     <div class="preload preload-container">
+         <div class="preload-logo">
+             <div class="spinner"></div>
+         </div>
+     </div>
+     <!-- /preload -->
+     <div id="wrapper">
+         <!-- Header -->
+         <header class="header-default" id="header">
+             <div class="px_15 lg-px_40">
+                 <div class="row wrapper-header align-items-center">
+                     <div class="col-md-4 col-3 tf-lg-hidden">
+                         <a aria-controls="offcanvasLeft" data-bs-toggle="offcanvas" href="#mobileMenu">
+                             <svg fill="none" height="16" viewbox="0 0 24 16" width="24"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                 <path
+                                     d="M2.00056 2.28571H16.8577C17.1608 2.28571 17.4515 2.16531 17.6658 1.95098C17.8802 1.73665 18.0006 1.44596 18.0006 1.14286C18.0006 0.839753 17.8802 0.549063 17.6658 0.334735C17.4515 0.120408 17.1608 0 16.8577 0H2.00056C1.69745 0 1.40676 0.120408 1.19244 0.334735C0.978109 0.549063 0.857702 0.839753 0.857702 1.14286C0.857702 1.44596 0.978109 1.73665 1.19244 1.95098C1.40676 2.16531 1.69745 2.28571 2.00056 2.28571ZM0.857702 8C0.857702 7.6969 0.978109 7.40621 1.19244 7.19188C1.40676 6.97755 1.69745 6.85714 2.00056 6.85714H22.572C22.8751 6.85714 23.1658 6.97755 23.3801 7.19188C23.5944 7.40621 23.7148 7.6969 23.7148 8C23.7148 8.30311 23.5944 8.59379 23.3801 8.80812C23.1658 9.02245 22.8751 9.14286 22.572 9.14286H2.00056C1.69745 9.14286 1.40676 9.02245 1.19244 8.80812C0.978109 8.59379 0.857702 8.30311 0.857702 8ZM0.857702 14.8571C0.857702 14.554 0.978109 14.2633 1.19244 14.049C1.40676 13.8347 1.69745 13.7143 2.00056 13.7143H12.2863C12.5894 13.7143 12.8801 13.8347 13.0944 14.049C13.3087 14.2633 13.4291 14.554 13.4291 14.8571C13.4291 15.1602 13.3087 15.4509 13.0944 15.6653C12.8801 15.8796 12.5894 16 12.2863 16H2.00056C1.69745 16 1.40676 15.8796 1.19244 15.6653C0.978109 15.4509 0.857702 15.1602 0.857702 14.8571Z"
+                                     fill="currentColor"></path>
+                             </svg>
+                         </a>
+                     </div>
+                     <div class="col-xl-3 col-md-4 col-6">
+                         <a class="logo-header" href="{% url 'pages:home' %}">
+                             <img alt="logo" class="logo" src="{% static 'images/logo/levelhaft_logo.svg' %}" />
+                         </a>
+                     </div>
+                     <div class="col-xl-6 tf-md-hidden">
+                         <nav class="box-navigation text-center">
+                             <ul class="box-nav-ul d-flex align-items-center justify-content-center gap-30">
+                                 <li class="menu-item">
+                                     <a href="{% url 'pages:home' %}" class="text-dark">خانه<i class="icon"></i></a>
+                                 </li>
+                                 <li class="menu-item">
+                                    <a class="item-link" href="#">محصولات<i class="icon icon-arrow-down"></i></a>
+                                    <div class="sub-menu mega-menu">
+                                        <div class="container">
+                                            <div class="row">
+                                                {% for brand in brands_menu %}
+                                                <div class="col-lg-2">
+                                                    <div class="mega-menu-item">
+                                                        <div class="menu-heading d-flex align-items-center">
+                                                            {% if brand.image %}
+                                                                <img src="{{ brand.image.url }}" alt="{{ brand.name }}" class="brand-logo me-2" style="width: 20px; height: auto;">
+                                                            {% endif %}
+                                                            <span>{{ brand.name }}</span>
+                                                        </div>
+                                                        <ul class="menu-list">
+                                                            {% for line in brand.lines.all %}
+                                                            <li>
+                                                                <a class="menu-link-text link" 
+                                                                   href="{% url 'products:line_products' line.slug %}">
+                                                                    {{ line.name }}
+                                                                </a>
+                                                            </li>
+                                                            {% empty %}
+                                                            <li>
+                                                                <span class="menu-link-text">هیچ لاینی موجود نیست</span>
+                                                            </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                {% empty %}
+                                                <div class="col-12">
+                                                    <div class="mega-menu-item">
+                                                        <span class="menu-link-text">هیچ برندی موجود نیست</span>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                 <li class="menu-item position-relative">
+                                     <a class="item-link" href="{% url 'workshop:workshop_list' %}">ورکشاپ<i class="icon icon-arrow-down"></i></a>
+                                     <div class="sub-menu submenu-default">
+                                         <ul class="menu-list">
+                                             {% for brand in workshop_brands %}
+                                             <li>
+                                                 <a class="menu-link-text link text_black-2" href="{% url 'workshop:workshop_brand' brand.id %}">
+                                                     ورکشاپ {{ brand.name }}
+                                                 </a>
+                                             </li>
+                                             {% endfor %}
+                                         </ul>
+                                     </div>
+                                 </li>
+                                 <li class="menu-item position-relative">
+                                     <a class="item-link" href="{% url 'blogs:post_list' %}">وبلاگ<i class="icon"></i></a>
+                                 </li>
+                                 <li class="menu-item position-relative">
+                                    <a class="item-link" href="#">درباره ما<i class="icon"></i></a>
+                                </li>
+                                <li class="menu-item position-relative">
+                                    <a class="item-link" href="#">تماس باما<i class="icon"></i></a>
+                                </li>
+                             </ul>
+                         </nav>
+                     </div>
+                     <div class="col-xl-3 col-md-4 col-3">
+                         <ul class="nav-icon d-flex justify-content-end align-items-center gap-20">
+                             {% if user.is_authenticated %}
+                             <li class="nav-wallet">
+                                 <a href="{% url 'wallet:detail' %}" class="btn btn-success d-flex align-items-center wallet-btn px-3 py-1">
+                                     <i class="fas fa-wallet ms-3 wallet-icon" style="font-size: 18px;"></i>
+                                     <span class="wallet-balance" style="font-family: inherit; margin-right: 6px;">{{ user.wallet.balance|intcomma:False }}</span>
+                                     <span class="wallet-currency" style="font-size: 12px; margin-right: 4px;">ریال</span>
+                                 </a>
+                             </li>
+                             <style>
+                                 .wallet-btn {
+                                     border-radius: 20px;
+                                     font-weight: bold;
+                                     font-size: 15px;
+                                     transition: all 0.2s;
+                                 }
+                                 .wallet-btn:hover, .wallet-btn:focus {
+                                     background: #218838 !important;
+                                     color: #fff !important;
+                                     text-decoration: none;
+                                     box-shadow: 0 2px 8px #28a74533;
+                                 }
+                                 .wallet-balance {
+                                     margin-left: 0 !important;
+                                     margin-right: 6px !important;
+                                 }
+                                 .wallet-btn .fa-wallet {
+                                     margin-left: 0 !important;
+                                     margin-right: 8px !important;
+                                 }
+                                 /* فقط آیکون ساده و بدون پس‌زمینه در موبایل */
+                                 @media (max-width: 576px) {
+                                     .wallet-btn {
+                                         background: none !important;
+                                         color: inherit !important;
+                                         border-radius: 0 !important;
+                                         padding: 0 !important;
+                                         min-width: 0;
+                                         box-shadow: none !important;
+                                         border: none !important;
+                                         justify-content: center;
+                                     }
+                                     .wallet-balance,
+                                     .wallet-currency {
+                                         display: none !important;
+                                     }
+                                     .wallet-btn .fa-wallet,
+                                     .wallet-icon {
+                                         font-size: 22px !important;
+                                         margin-right: 0 !important;
+                                         color: #222 !important;
+                                     }
+                                 }
+                             </style>
+                             {% endif %}
+                             <li class="nav-search"><a aria-controls="#" class="nav-icon-item"
+                                     data-bs-toggle="#" href="{% url 'products:search_page' %}"><i class="icon icon-search"></i></a>
+                             </li>
+                             <li class="nav-account">
+                                {% if user.is_authenticated %}
+                                    <a class="nav-icon-item position-relative" href="{% url 'accounts:my_account' %}">
+                                        <i class="icon icon-account"></i>
+                                        {% if user.profile.is_beautician %}
+                                            <span style="position: absolute; top: -4px; right: 9px; width: 8px; height: 8px; background-color: #28a745; border-radius: 50%; display: block;"></span>
+                                        {% endif %}
+                                    </a>
+                                {% else %}
+                                    <a class="nav-icon-item" href="{% url 'accounts:login' %}">
+                                        <i class="icon icon-account"></i>
+                                    </a>
+                                {% endif %}
+                            </li>
+                             
+                             <li class="nav-cart position-relative">
+                                <a class="nav-icon-item" href="{% url 'cart:cart_detail' %}">
+                                    <i class="icon icon-bag"></i>
+                                    {% if cart and cart|length > 0 %}
+                                        <span class="cart-count-badge position-absolute translate-middle badge rounded-pill" style="z-index:2;">
+                                            {{ cart|length }}
+                                        </span>
+                                    {% endif %}
+                                </a>
+                            </li>
+                         </ul>
+                     </div>
+                 </div>
+             </div>
+         </header>
+         {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+         <!-- /Header -->
+         {%block content%}
+         {%endblock%}
+         <!-- Icon box -->
+         <section class="flat-spacing-3 bg_grey-7 flat-iconbox">
+             <div class="container">
+                 <div class="wrap-carousel wrap-mobile wow fadeInUp" data-wow-delay="0s">
+                     <div class="swiper tf-sw-mobile" data-preview="4" data-space="15" dir="rtl">
+                         <div class="swiper-wrapper wrap-iconbox">
+                             <div class="swiper-slide">
+                                 <div class="tf-icon-box style-row">
+                                     <div class="icon bg_white">
+                                         <i class="icon-shipping"></i>
+                                     </div>
+                                     <div class="content">
+                                         <div class="title fw-6 fs-14">ارسال سریع</div>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="swiper-slide">
+                                 <div class="tf-icon-box style-row">
+                                     <div class="icon bg_white">
+                                         <i class="icon-payment-1 fw-6"></i>
+                                     </div>
+                                     <div class="content">
+                                         <div class="title fw-6 fs-14">پرداخت مطمئن </div>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="swiper-slide">
+                                 <div class="tf-icon-box style-row">
+                                     <div class="icon bg_white">
+                                         <i class="icon-safe fw-6"></i>
+                                     </div>
+                                     <div class="content">
+                                         <div class="title fw-6 fs-12">ضمانت اصالت کالا</div>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="swiper-slide">
+                                 <div class="tf-icon-box style-row">
+                                     <div class="icon bg_white">
+                                         <i class="icon-suport"></i>
+                                     </div>
+                                     <div class="content">
+                                         <div class="title fw-6 fs-14">پشتیبانی آنلاین </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="sw-dots style-2 sw-pagination-mb justify-content-center"></div>
+                 </div>
+             </div>
+         </section>
+         <!-- /Icon box -->
+         <!-- Footer -->
+         <footer class="footer background-black" id="footer">
+             <div class="footer-wrap wow fadeIn" data-wow-delay="0s">
+                 <div class="footer-body">
+                     <div class="container">
+                         <div class="row">
+                             <div class="col-xl-3 col-md-6 col-12">
+                                 <div class="footer-infor">
+                                    <div class="logo-container d-flex justify-content-center gap-3">
+                                        <div class="header-logo footer-logo">
+                                            <a href="index.html">
+                                                <img alt="" src="{% static 'images/logo/levelhaft_logo.svg' %}" />
+                                            </a>
+                                        </div>
+                                        <div class="header-logo footer-logo">
+                                            <a href="index.html">
+                                                <img alt="" src="{% static 'images/logo/levelhaft_logo.svg' %}" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <ul class="tf-social-icon d-flex gap-10 style-white">
+                                        <li>
+                                            <a class="box-icon w_34 round social-line" href="#">
+                                                <i class="fab fa-instagram fs-14"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="box-icon w_34 round social-line" href="#">
+                                                <i class="fab fa-whatsapp fs-14"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="box-icon w_34 round social-line" href="#">
+                                                <i class="fab fa-telegram fs-14"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="box-icon w_34 round social-line" href="#">
+                                                <i class="fab fa-youtube fs-14"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    
+                                 </div>
+                             </div>
+                             <div class="col-xl-3 col-md-6 col-12 footer-col-block">
+                                 <div class="footer-heading footer-heading-desktop">
+                                     <h6>راهنمای خرید</h6>
+                                 </div>
+                                 <div class="footer-heading footer-heading-moblie">
+                                     <h6>راهنمای خرید</h6>
+                                 </div>
+                                 <ul class="footer-menu-list tf-collapse-content">
+                                     <li>
+                                         <a class="footer-menu_item" href="privacy-policy.html">فروشگاه</a>
+                                     </li>
+                                     <li>
+                                         <a class="footer-menu_item" href="delivery-return.html">وبلاگ</a>
+                                     </li>
+                                     <li>
+                                         <a class="footer-menu_item" href="shipping-delivery.html">ورکشاپ</a>
+                                     </li>
+                                     <li>
+                                         <a class="footer-menu_item" href="terms-conditions.html">نحوه ارسال</a>
+                                     </li>
+                                 </ul>
+                             </div>
+                             <div class="col-xl-3 col-md-6 col-12 footer-col-block">
+                                 <div class="footer-heading footer-heading-desktop">
+                                     <h6>شرکت لول هفت</h6>
+                                 </div>
+                                 <div class="footer-heading footer-heading-moblie">
+                                     <h6>شرکت لول هفت</h6>
+                                 </div>
+                                 <ul class="footer-menu-list tf-collapse-content">
+                                     <li>
+                                         <a class="footer-menu_item" href="about-us.html">درباره ما</a>
+                                     </li>
+                                     <li>
+                                         <a class="footer-menu_item" href="our-store.html">تماس باما</a>
+                                     </li>
+                                 </ul>
+                             </div>
+                             <div class="col-xl-3 col-md-6 col-12" style="margin-bottom: 60px;">
+                                 <div class="footer-newsletter footer-col-block">
+                                     <div class="footer-heading footer-heading-desktop">
+                                         <h6>برای ایمیل ثبت نام کنید</h6>
+                                     </div>
+                                     <div class="footer-heading footer-heading-moblie">
+                                         <h6>برای ایمیل ثبت نام کنید</h6>
+                                     </div>
+                                     <div>
+                                        <p class="footer-menu_item">برای اطلاع از جدیدترین اخبار و آخرین اطلاعات از طریق ایمیل خود را ثبت کنید</p>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </footer>
+         <!-- /Footer -->
+     </div>
+     <!-- gotop -->
+     <div class="progress-wrap">
+         <svg class="progress-circle svg-content" height="100%" viewbox="-1 -1 102 102" width="100%">
+             <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"
+                 style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 286.138;">
+             </path>
+         </svg>
+     </div>
+     <!-- /gotop -->
+     <!-- toolbar-bottom -->
+     <div class="tf-toolbar-bottom type-1150">
+         <div class="toolbar-item">
+             <a aria-controls="#" data-bs-toggle="#" href="{% url 'pages:home' %}">
+                 <div class="toolbar-icon">
+                     <i class="icon-home"></i>
+                 </div>
+                 <div class="toolbar-label">خانه</div>
+             </a>
+         </div>
+         <div class="toolbar-item">
+             <a aria-controls="#" data-bs-toggle="#" href="{% url 'products:search_page' %}">
+                 <div class="toolbar-icon">
+                     <i class="icon-search"></i>
+                 </div>
+                 <div class="toolbar-label">جستجو</div>
+             </a>
+         </div>
+         <div class="toolbar-item">
+             <a aria-controls="offcanvasLeft" data-bs-toggle="offcanvas" href="#toolbarShopmb">
+                 <div class="toolbar-icon">
+                     <i class="icon-shop"></i>
+                 </div>
+                 <div class="toolbar-label">دسته بندی</div>
+             </a>
+         </div>
+         <div class="toolbar-item position-relative">
+             <a href="{% url 'cart:cart_detail' %}">
+                 <div class="toolbar-icon position-relative">
+                     <i class="icon-bag"></i>
+                     {% if cart and cart|length > 0 %}
+                         <span class="cart-count-badge position-absolute translate-middle badge rounded-pill" style="z-index:2;">{{ cart|length }}</span>
+                     {% endif %}
+                 </div>
+                 <div class="toolbar-label">سبد خرید</div>
+             </a>
+         </div>
+         <div class="toolbar-item">
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:my_account' %}">
+                    <div class="toolbar-icon">
+                        <i class="icon-account"></i>
+                        {% if user.profile.is_beautician %}
+                            <span style="position: absolute; top: -5px; right: 9px; width: 8px; height: 8px; background-color: #28a745; border-radius: 50%; display: block;"></span>
+                        {% endif %}
+                    </div>
+                    <div class="toolbar-label">حساب کاربری</div>
+                </a>
+            {% else %}
+            <a href="{% url 'accounts:login' %}">
+                <div class="toolbar-icon">
+                    <i class="icon-account"></i>
+                </div>
+                <div class="toolbar-label">حساب کاربری</div>
+            </a>
+            {% endif %}
+        </div>
+     </div>
+     <!-- /toolbar-bottom -->
+     <!-- mobile menu -->
+     <div class="offcanvas offcanvas-start canvas-mb" id="mobileMenu">
+        <div class="canvas-header d-flex align-items-center justify-content-between">
+            <div class="canvas-header-logo text-center flex-grow-1">
+                <a href="#">
+                    <img src="{% static 'images/logo/levelhaft_logo.svg' %}" alt="Logo" style="height: 50px; margin-top: 10px;">
+                </a>
+            </div>
+        </div>
+         <span aria-label="Close" class="icon-close icon-close-popup" data-bs-dismiss="offcanvas"></span>
+         <div class="mb-canvas-content">
+             <div class="mb-body">
+                 <ul class="nav-ul-mb" id="wrapper-menu-navigation">
+                     <li class="nav-mb-item">
+                         <a aria-controls="#" aria-expanded="false" class=" mb-menu-link current"
+                             data-bs-toggle="#" href="{% url 'pages:home' %}">
+                             <span>خانه</span>
+                             
+                         </a>
+                     </li>
+                     <li class="nav-mb-item">
+                         <a aria-controls="dropdown-menu-products" aria-expanded="false"
+                             class="mb-menu-link collapsed" data-bs-toggle="collapse"
+                             href="#dropdown-menu-products">
+                             <span>محصولات</span>
+                             <span class="btn-open-sub"></span>
+                         </a>
+                         <div class="collapse" id="dropdown-menu-products">
+                             <ul class="sub-nav-menu" id="sub-menu-navigation">
+                                 {% for brand in brands_menu %}
+                                     <li>
+                                         <a aria-controls="sub-brand-{{ brand.id }}" aria-expanded="false"
+                                             class="sub-nav-link collapsed" data-bs-toggle="collapse"
+                                             href="#sub-brand-{{ brand.id }}">
+                                             <div class="d-flex align-items-center">
+                                                 {% if brand.image %}
+                                                     <img src="{{ brand.image.url }}" alt="{{ brand.name }}" class="brand-logo me-2" style="width: 25px; height: auto;">
+                                                 {% endif %}
+                                                 <span>{{ brand.name }}</span>
+                                             </div>
+                                             <span class="btn-open-sub"></span>
+                                         </a>
+                                         <div class="collapse" id="sub-brand-{{ brand.id }}">
+                                             <ul class="sub-nav-menu sub-menu-level-2">
+                                                 {% for line in brand.lines.all %}
+                                                     <li>
+                                                         <a href="{% url 'products:line_products' line.slug %}" class="sub-nav-link">
+                                                             <span>{{ line.name }}</span>
+                                                         </a>
+                                                     </li>
+                                                 {% empty %}
+                                                     <li>
+                                                         <span class="sub-nav-link">هیچ لاینی موجود نیست</span>
+                                                     </li>
+                                                 {% endfor %}
+                                             </ul>
+                                         </div>
+                                     </li>
+                                 {% empty %}
+                                     <li class="dropdown-item">
+                                         <span class="dropdown-link">هیچ برندی موجود نیست</span>
+                                     </li>
+                                 {% endfor %}
+                             </ul>
+                         </div>
+                     </li>
+                     <li class="nav-mb-item">
+                         <a aria-controls="dropdown-menu-four" aria-expanded="true"
+                             class="collapsed mb-menu-link current" data-bs-toggle="collapse" href="#dropdown-menu-four">
+                             <span>ورکشاپ</span>
+                             <span class="btn-open-sub"></span>
+                         </a>
+                         <div class="collapse" id="dropdown-menu-four">
+                             <ul class="sub-nav-menu" id="sub-menu-navigation">
+                                 <li><a class="sub-nav-link" href="{% url 'workshop:workshop_list' %}">لیست ورکشاپ‌ها</a></li>
+                                 {% for brand in workshop_brands %}
+                                 <li><a class="sub-nav-link" href="{% url 'workshop:workshop_brand' brand.id %}">ورکشاپ {{ brand.name }}</a></li>
+                                 {% endfor %}
+                             </ul>
+                         </div>
+                     </li>
+                     <li class="nav-mb-item">
+                         <a aria-controls="#" aria-expanded="false"
+                             class="collapsed mb-menu-link current" data-bs-toggle="#" href="{% url 'blogs:post_list' %}">
+                             <span>وبلاگ</span>
+                         </a>
+                     </li>
+                     <li class="nav-mb-item">
+                        <a aria-controls="dropdown-menu-five" aria-expanded="false"
+                            class="collapsed mb-menu-link current" data-bs-toggle="collapse" href="#dropdown-menu-five">
+                            <span>درباره ما</span>
+                        </a>
+                    </li>
+                    <li class="nav-mb-item">
+                        <a aria-controls="dropdown-menu-five" aria-expanded="false"
+                            class="collapsed mb-menu-link current" data-bs-toggle="collapse" href="#dropdown-menu-five">
+                            <span>تماس با ما</span>
+                        </a>
+                    </li>
+                 </ul>
+             </div>
+         </div>
+     </div>
+     <!-- /mobile menu -->
+     <!-- toolbarShopmb -->
+     <div class="offcanvas offcanvas-start canvas-mb toolbar-shop-mobile" id="toolbarShopmb">
+         <span aria-label="Close" class="icon-close icon-close-popup" data-bs-dismiss="offcanvas"></span>
+         <div class="mb-canvas-content">
+             <div class="mb-body">
+                 <ul class="nav-ul-mb" id="wrapper-menu-navigation">
+                    <div class="accordion" id="accordion-main">
+                        {% for brand in brands_menu %}
+                            <li class="nav-mb-item">
+                                <a aria-controls="sub-brand-{{ brand.id }}" aria-expanded="false"
+                                   class="mb-menu-link collapsed" data-bs-toggle="collapse"
+                                   href="#sub-brand-{{ brand.id }}">
+                                    <div class="d-flex align-items-center">
+                                        {% if brand.image %}
+                                            <img src="{{ brand.image.url }}" alt="{{ brand.name }}" class="brand-logo me-2" style="width: 25px; height: auto;">
+                                        {% endif %}
+                                        <span>{{ brand.name }}</span>
+                                    </div>
+                                    <span class="btn-open-sub"></span>
+                                </a>
+                                <div class="collapse" id="sub-brand-{{ brand.id }}">
+                                    <ul class="sub-nav-menu" id="sub-menu-navigation">
+                                        {% for line in brand.lines.all %}
+                                            <li>
+                                                <a href="{% url 'products:line_products' line.slug %}" class="sub-nav-link">
+                                                    <span>{{ line.name }}</span>
+                                                </a>
+                                            </li>
+                                        {% empty %}
+                                            <li>
+                                                <span class="sub-nav-link">هیچ لاینی موجود نیست</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li class="nav-mb-item">
+                                <span class="mb-menu-link">هیچ برندی موجود نیست</span>
+                            </li>
+                        {% endfor %}
+                    </div>                         
+                 </ul>
+             </div>
+         </div>
+     </div>
+     <!-- /toolbarShopmb -->
+
+    <!-- Javascript -->
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/swiper-bundle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/carousel.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap-select.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lazysize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/count-down.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/wow.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/multiple-modal.js' %}"></script>
+    <script src="{% static 'js/image-compare-viewer.js' %}" type="module"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+    <script>
+        window.REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';
+        window.LOCALE = 'en';
+        window.EMAIL_INVALID_MESSAGE = window.SMS_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+
+        window.REQUIRED_ERROR_MESSAGE = "This field cannot be left blank. ";
+
+        window.GENERIC_INVALID_MESSAGE = "The information provided is invalid. Please review the field format and try again.";
+
+        window.translation = {
+            common: {
+                selectedList: '{quantity} list selected',
+                selectedLists: '{quantity} lists selected'
+            }
+        };
+
+        var AUTOHIDE = Boolean(0);
+    </script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+
+</html>

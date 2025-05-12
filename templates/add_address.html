@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    افزودن آدرس جدید
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .address-page {
+        min-height: 60vh;
+        padding: 2rem 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .address-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        padding: 2.5rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .address-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .address-title {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .address-title i {
+        margin-left: 0.8rem;
+        color: #28a745;
+        font-size: 1.5rem;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: #555;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        font-size: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+        text-align: right;
+        direction: rtl;
+    }
+
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+        outline: none;
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .input-group i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 1.1rem;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .default-address-toggle {
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .default-address-toggle input[type="checkbox"] {
+        margin-left: 0.8rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-save {
+        flex: 1;
+        padding: 1rem;
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+        text-decoration: none;
+    }
+
+    .btn-save:hover {
+        background: linear-gradient(45deg, #218838, #1aa179);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        color: #fff;
+    }
+
+    .btn-cancel {
+        flex: 1;
+        padding: 1rem;
+        background: #f8f9fa;
+        color: #666;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .btn-cancel:hover {
+        background: #e9ecef;
+        color: #333;
+    }
+
+    .btn-save i, .btn-cancel i {
+        margin-left: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+        .address-card {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+
+        .btn-group {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="address-page">
+    <div class="container">
+        <div class="address-card">
+            <div class="address-header">
+                <h4 class="address-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    افزودن آدرس جدید
+                </h4>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            {{ form.province }}
+                            <i class="fas fa-map-pin"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            {{ form.city }}
+                            <i class="fas fa-city"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    {{ form.address }}
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+
+                <div class="input-group">
+                    {{ form.postal_code }}
+                    <i class="fas fa-envelope"></i>
+                </div>
+
+                <div class="default-address-toggle">
+                    {{ form.is_default }}
+                    <label for="{{ form.is_default.id_for_label }}">این آدرس به عنوان آدرس پیش‌فرض تنظیم شود</label>
+                </div>
+
+                <div class="btn-group">
+                    <a href="{% url 'accounts:my_account' %}" class="btn-cancel">
+                        <i class="fas fa-times"></i>
+                        انصراف
+                    </a>
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-check"></i>
+                        ثبت آدرس
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

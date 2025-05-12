@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}جزئیات سفارش {{ order.order_number }}{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .order-detail-container {
+        max-width: 900px;
+        margin: 2rem auto;
+    }
+    .order-detail-card {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+        padding: 2.5rem 2.2rem 2rem 2.2rem;
+        margin-bottom: 2rem;
+    }
+    .order-detail-card .card-header {
+        background: none;
+        border: none;
+        padding: 0 0 1.2rem 0;
+        text-align: center;
+    }
+    .order-detail-card .card-header h4 {
+        font-weight: 700;
+        color: #28a745;
+        font-size: 1.3rem;
+    }
+    .order-detail-card .badge {
+        font-size: 1rem;
+        padding: 0.5em 1.1em;
+        border-radius: 8px;
+    }
+    .order-section-title {
+        color: #28a745;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        margin-top: 1.5rem;
+    }
+    .order-info-table, .order-summary-table {
+        width: 100%;
+        font-size: 1rem;
+    }
+    .order-info-table td, .order-summary-table td {
+        padding: 0.5rem 0.2rem;
+        border: none;
+    }
+    .order-summary-table tr.border-top td {
+        border-top: 1px solid #e0e0e0;
+    }
+    .order-summary-table .fw-bold {
+        font-weight: 700;
+        color: #222;
+    }
+    .order-summary-table .text-end {
+        text-align: left;
+    }
+    .order-summary-table .text-right {
+        text-align: right;
+    }
+    .order-detail-card .btn-cancel {
+        background: #dc3545;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 0.7rem 2.2rem;
+        margin-top: 1.5rem;
+        transition: background 0.2s;
+    }
+    .order-detail-card .btn-cancel:hover {
+        background: #b52a37;
+        color: #fff;
+    }
+    .order-notes-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        padding: 1rem 1.2rem;
+    }
+    @media (max-width: 768px) {
+        .order-detail-container {
+            max-width: 100%;
+            padding: 0 0.5rem;
+        }
+        .order-detail-card {
+            padding: 1.2rem 0.7rem 1rem 0.7rem;
+        }
+        .order-info-table td, .order-summary-table td {
+            font-size: 0.98rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="order-detail-container">
+    <div class="order-detail-card">
+        <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+            <h4 class="mb-2 mb-md-0">جزئیات سفارش {{ order.order_number }}</h4>
+            <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'processing' %}bg-info{% elif order.status == 'shipped' %}bg-primary{% elif order.status == 'delivered' %}bg-success{% else %}bg-danger{% endif %}">
+                {{ order.get_status_display }}
+            </span>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <div class="order-section-title">اطلاعات سفارش</div>
+                <table class="order-info-table">
+                    <tr>
+                        <td class="text-muted">شماره سفارش:</td>
+                        <td>{{ order.order_number }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">تاریخ ثبت:</td>
+                        <td>{{ order.created_at|date:"Y/m/d H:i" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">وضعیت پرداخت:</td>
+                        <td>
+                            <span class="badge {% if order.payment_status == 'paid' %}bg-success{% elif order.payment_status == 'pending' %}bg-warning{% elif order.payment_status == 'failed' %}bg-danger{% else %}bg-info{% endif %}">
+                                {{ order.get_payment_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <div class="order-section-title">اطلاعات گیرنده</div>
+                <table class="order-info-table">
+                    <tr>
+                        <td class="text-muted">نام گیرنده:</td>
+                        <td>{{ order.receiver_name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">شماره تماس:</td>
+                        <td>{{ order.receiver_phone }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">آدرس:</td>
+                        <td>{{ order.receiver_address }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">شهر:</td>
+                        <td>{{ order.receiver_city }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">کد پستی:</td>
+                        <td>{{ order.receiver_postal_code }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="order-section-title">محصولات سفارش</div>
+        <div class="table-responsive mb-4">
+            <table class="order-summary-table">
+                <thead>
+                    <tr>
+                        <th>محصول</th>
+                        <th class="text-end">قیمت واحد</th>
+                        <th class="text-end">تعداد</th>
+                        <th class="text-end">قیمت کل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td class="text-end">{{ item.unit_price|intcomma:False }} ریال</td>
+                        <td class="text-end">{{ item.quantity }} عدد</td>
+                        <td class="text-end">{{ item.total_price|intcomma:False }} ریال</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="fw-bold">
+                        <td colspan="3" class="text-end">مبلغ کل:</td>
+                        <td class="text-end">{{ order.final_amount|intcomma:False }} ریال</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        {% if order.notes %}
+        <div class="order-notes-card mb-4">
+            <h6 class="card-title mb-2">توضیحات سفارش</h6>
+            <p class="card-text mb-0">{{ order.notes }}</p>
+        </div>
+        {% endif %}
+        {% if order.can_be_cancelled %}
+        <div class="d-flex justify-content-end">
+            <button id="cancelOrderBtn" onclick="cancelOrder({{ order.id }})" class="btn btn-cancel">
+                لغو سفارش
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal برای نمایش پیام‌ها -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">پیام سیستم</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// تابع کمکی برای دریافت CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// تابع نمایش مودال
+function showModal(message) {
+    const modal = new bootstrap.Modal(document.getElementById('messageModal'));
+    document.getElementById('modalMessage').textContent = message;
+    modal.show();
+}
+
+// تابع لغو سفارش
+function cancelOrder(orderId) {
+    if (confirm('آیا از لغو این سفارش اطمینان دارید؟')) {
+        // غیرفعال کردن دکمه
+        const cancelBtn = document.getElementById('cancelOrderBtn');
+        cancelBtn.disabled = true;
+        cancelBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال لغو...';
+
+        fetch(`/orders/${orderId}/cancel/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showModal('سفارش با موفقیت لغو شد. مبلغ به کیف پول شما بازگردانده شد.');
+                // رفرش صفحه بعد از 2 ثانیه
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            } else {
+                showModal(data.message);
+                // فعال کردن مجدد دکمه در صورت خطا
+                cancelBtn.disabled = false;
+                cancelBtn.innerHTML = 'لغو سفارش';
+            }
+        })
+        .catch(error => {
+            showModal('خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.');
+            // فعال کردن مجدد دکمه در صورت خطا
+            cancelBtn.disabled = false;
+            cancelBtn.innerHTML = 'لغو سفارش';
+        });
+    }
+}
+</script>
+{% endblock %} 

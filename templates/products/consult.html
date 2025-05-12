@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}مشاوره هوشمند خرید{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<style>
+.consult-container {
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+    display: flex;
+    justify-content: center;
+}
+.consult-card {
+    max-width: 500px;
+    width: 100%;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    padding: 2rem 1.5rem;
+    background: #fff;
+}
+@media (max-width: 576px) {
+    .consult-card { padding: 1.25rem 0.5rem; }
+}
+.consult-title {
+    font-size: 1.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 576px) {
+    .consult-title {
+        font-size: 1.6rem;
+        white-space: normal;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container consult-container">
+    <div class="card consult-card">
+        <div class="card-body">
+            <h2 class="mb-4 text-center consult-title">مشاوره هوشمند خرید</h2>
+            <form method="get" action="{% url 'products:consult_search' %}">
+                <div class="mb-3">
+                    <label for="skin_type" class="form-label">نوع پوست شما چیست؟</label>
+                    <select name="skin_type" id="skin_type" class="form-select">
+                        <option value="">انتخاب کنید...</option>
+                        {% for st in skin_types %}
+                            <option value="{{ st.id }}">{{ st.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="skin_condition" class="form-label">عارضه پوستی خاصی دارید؟</label>
+                    <select name="skin_condition" id="skin_condition" class="form-select">
+                        <option value="">انتخاب کنید...</option>
+                        {% for sc in skin_conditions %}
+                            <option value="{{ sc.id }}">{{ sc.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="model" class="form-label">هدف استفاده شما چیست؟</label>
+                    <select name="model" id="model" class="form-select">
+                        <option value="">انتخاب کنید...</option>
+                        {% for m in models %}
+                            <option value="{{ m.id }}">{{ m.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">جستجوی محصولات مناسب من</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

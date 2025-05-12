@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load jalali_tags %}
+
+{% block title %}
+    تکمیل پروفایل
+{% endblock %}
+
+{% block extra_css %}
+    {{ form.media.css }}
+<style>
+    .profile-page {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        padding: 1rem 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .profile-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        padding: 2.5rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .logo-container {
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-logo {
+        max-width: 110px;
+        height: auto;
+    }
+
+    .profile-title {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        color: #666;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+        font-size: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+        text-align: right;
+        direction: rtl;
+    }
+
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+        outline: none;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 1.1rem;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .form-select {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+        font-size: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #fff;
+        appearance: none;
+        text-align: right;
+        direction: rtl;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23343a40' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: left 1rem center;
+        background-size: 16px 12px;
+        cursor: pointer;
+    }
+
+    .form-select:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
+        outline: none;
+    }
+
+    /* Specific styling for gender select */
+    #id_gender {
+        padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        cursor: pointer;
+        text-align: right;
+        direction: rtl;
+    }
+
+    #id_gender:hover {
+        background-color: #f1f3f5;
+    }
+
+    #id_gender:focus {
+        background-color: #fff;
+    }
+
+    .date-input .input-icon {
+        left: 12px;
+        right: auto;
+    }
+
+    /* RTL specific adjustments */
+    input[type="text"], 
+    input[type="email"], 
+    select {
+        text-align: right;
+        direction: rtl;
+    }
+
+    .btn-profile {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        color: #fff;
+        background-color: #28a745;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-profile:hover {
+        background-color: #218838;
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+        .profile-card {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- page-title -->
+<div class="tf-page-title style-2 justify-content-center">
+    <div class="container-full">
+        <div class="heading text-center">تکمیل پروفایل</div>
+    </div>
+</div>
+<!-- /page-title -->
+
+<div class="profile-page">
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="logo-container">
+                    <img src="{% static 'images/logo/levelhaft_logo.svg' %}" alt="لوگو" class="profile-logo">
+                </div>
+                <h4 class="profile-title">لطفاً اطلاعات پروفایل خود را تکمیل کنید</h4>
+            </div>
+            
+            <form method="post" class="profile-form">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">نام</label>
+                            <div class="input-group">
+                                <i class="fas fa-user input-icon"></i>
+                                {{ form.first_name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">نام خانوادگی</label>
+                            <div class="input-group">
+                                <i class="fas fa-user input-icon"></i>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">تاریخ تولد</label>
+                            <div class="input-group date-input">
+                                {{ form.birth_date }}
+                                <i class="fas fa-calendar input-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">جنسیت</label>
+                            <div class="input-group">
+                                {{ form.gender }}
+                                <i class="fas fa-venus-mars input-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ایمیل</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope input-icon"></i>
+                        {{ form.email }}
+                    </div>
+                </div>
+
+                <div class="form-group mb-0">
+                    <button type="submit" class="btn-profile">
+                        <i class="fas fa-save me-2"></i>
+                        ذخیره اطلاعات
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ form.media.js }}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'admin/js/django_jalali.min.js' %}"></script>
+{% endblock %}
+    

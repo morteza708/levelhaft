@@ -1,0 +1,359 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<!-- Start Workshop List -->
+<div class="workshop-list-page">
+    <div class="container">
+        <div class="section-header">
+            <h1 class="page-title">{{ page_title }}</h1>
+            <p class="page-subtitle">جدیدترین ورکشاپ‌های آموزشی</p>
+        </div>
+
+        {% if workshops %}
+        <div class="workshop-grid">
+            {% for workshop in workshops %}
+            <div class="workshop-card">
+                <div class="card-image">
+                    <img src="{{ workshop.image.url }}" alt="{{ workshop.title }}" class="workshop-img">
+                    <div class="brand-badge">
+                        <img src="{{ workshop.brand.image.url }}" alt="{{ workshop.brand.name }}" class="brand-logo">
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="workshop-title">{{ workshop.title }}</h3>
+                    <div class="workshop-info">
+                        <div class="info-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>{{ workshop.date|date:"Y/m/d" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ workshop.city }}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>{{ workshop.price|intcomma:False }} ریال</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'workshop:workshop_detail' workshop.id %}" class="btn-details">
+                        <i class="fas fa-arrow-left"></i>
+                        مشاهده جزئیات
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="pagination-wrapper">
+            <nav class="pagination-nav">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-calendar-times"></i>
+            <h3>در حال حاضر ورکشاپی موجود نیست</h3>
+            <p>لطفاً بعداً مراجعه کنید</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .workshop-list-page {
+        min-height: calc(100vh - 200px);
+        padding: 3rem 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .page-subtitle {
+        color: #6c757d;
+        font-size: 1.1rem;
+    }
+
+    .workshop-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .workshop-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .workshop-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-image {
+        position: relative;
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .workshop-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .workshop-card:hover .workshop-img {
+        transform: scale(1.05);
+    }
+
+    .brand-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        padding: 0.5rem;
+        border-radius: 50%;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .workshop-card:hover .brand-badge {
+        transform: translateY(-2px);
+    }
+
+    .brand-logo {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    .card-content {
+        padding: 1.5rem;
+    }
+
+    .workshop-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .workshop-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.8rem;
+        background: rgba(248, 249, 250, 0.8);
+        backdrop-filter: blur(5px);
+        border-radius: 12px;
+    }
+
+    .info-item i {
+        width: 20px;
+        text-align: center;
+    }
+
+    .info-item i.fa-calendar-alt { color: #28a745; }
+    .info-item i.fa-map-marker-alt { color: #dc3545; }
+    .info-item i.fa-money-bill-wave { color: #198754; }
+
+    .btn-details {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-details:hover {
+        background: linear-gradient(45deg, #218838, #1aa179);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 3rem;
+    }
+
+    .pagination-nav {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination {
+        display: flex;
+        gap: 0.5rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-item .page-link {
+        background: transparent;
+        border: none;
+        color: #2c3e50;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .page-item.active .page-link {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+    }
+
+    .page-item:not(.active) .page-link:hover {
+        background: rgba(40, 167, 69, 0.1);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state h3 {
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        color: #6c757d;
+    }
+
+    @media (max-width: 768px) {
+        .workshop-list-page {
+            padding: 2rem 0;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+        }
+
+        .workshop-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .card-image {
+            height: 200px;
+        }
+
+        .workshop-title {
+            font-size: 1.2rem;
+        }
+
+        .info-item {
+            padding: 0.6rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .page-title {
+            font-size: 1.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+        }
+
+        .brand-badge {
+            top: 10px;
+            left: 10px;
+        }
+
+        .brand-logo {
+            width: 30px;
+            height: 30px;
+        }
+
+        .card-content {
+            padding: 1.2rem;
+        }
+
+        .workshop-info {
+            gap: 0.8rem;
+        }
+
+        .btn-details {
+            padding: 0.7rem 1.2rem;
+            font-size: 0.95rem;
+        }
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,5 @@
+{{ object.name }}
+{{ object.barcode }}
+{{ object.brand.name }}
+{{ object.line.name }}
+{{ object.usage_type.name }} 

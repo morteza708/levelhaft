@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}لیست محصولات {{line.name}} - {{line.brand.name}} {% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- page-title -->
+<div class="tf-page-title">
+    <div class="container-full">
+        <div class="row">
+            <div class="col-12">
+                <div class="heading text-center d-flex align-items-center justify-content-center">
+                    {% if line.brand.image %}
+                        <img src="{{ line.brand.image.url }}" alt="{{ line.brand.name }}" class="brand-logo me-3" style="width: 50px; height: auto;">
+                    {% endif %}
+                    <span>{{line.name}} - {{line.brand.name}}</span>
+                </div>
+                <p class="text-center text-2 text_black-2 mt_5">محصولات {{line.brand.name}} در لاین {{line.name}}</p> 
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /page-title -->
+<section class="flat-spacing-1">
+    <div class="container">
+        <!-- فیلتر نوع مصرف -->
+        <div class="filter-bar mb-4">
+            <a href="?usage_type=مصرف خانگی(Home care)" class="btn btn-outline-primary {% if current_usage_type == 'مصرف خانگی(Home care)' %}active{% endif %}">
+                مصرف خانگی
+            </a>
+            <a href="?usage_type=مصرف سالن (Cabin)" class="btn btn-outline-primary {% if current_usage_type == 'مصرف سالن (Cabin)' %}active{% endif %}">
+                مصرف سالن
+            </a>
+        </div>
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-col">
+                <div class="product-card">
+                    <a href="{% url 'products:product_detail' product.slug %}" class="product-image">
+                        {% if product.images.all %}
+                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'img/no-image.png' %}" alt="بدون تصویر">
+                        {% endif %}
+                    </a>
+                    <div class="product-title">
+                        <a href="{% url 'products:product_detail' product.slug %}" class="text-decoration-none text-dark">
+                            {{ product.name }}
+                        </a>
+                    </div>
+                    <div class="product-brand-line">
+                        {{ product.brand.name }}{% if product.line.name %} - {{ product.line.name }}{% endif %}
+                    </div>
+                    {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                        {% if request.user.is_authenticated and request.user.profile.is_beautician %}
+                            <div class="product-price">
+                                {{ product.price_level_1|intcomma:False|default:"قیمت ناموجود" }} ریال
+                            </div>
+                        {% else %}
+                            <div class="beautician-badge">
+                                <i class="fas fa-spa"></i>
+                                <span>بیوتیشن</span>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="product-price">
+                            {% if request.user.is_authenticated and request.user.profile.is_beautician %}
+                                {{ product.price_level_1|intcomma:False|default:"قیمت ناموجود" }} ریال
+                            {% else %}
+                                {{ product.price_level_2|intcomma:False|default:"قیمت ناموجود" }} ریال
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>هیچ محصولی در این لاین موجود نیست</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if products.paginator.num_pages > 1 %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <nav aria-label="صفحه‌بندی محصولات">
+                    <ul class="pagination justify-content-center">
+                        {% if products.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ products.previous_page_number }}{% if current_usage_type %}&usage_type={{ current_usage_type }}{% endif %}" aria-label="قبلی">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span>قبلی</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span>قبلی</span>
+                                </span>
+                            </li>
+                        {% endif %}
+
+                        {% for num in products.paginator.page_range %}
+                            {% if products.number == num %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                            {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if current_usage_type %}&usage_type={{ current_usage_type }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if products.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ products.next_page_number }}{% if current_usage_type %}&usage_type={{ current_usage_type }}{% endif %}" aria-label="بعدی">
+                                    <span>بعدی</span>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <span>بعدی</span>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock content %}
+
+
+

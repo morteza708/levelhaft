@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="workshop-registrations-page">
+    <div class="container">
+        <!-- Search Section -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-8">
+                <div class="search-card">
+                    <form method="get" class="search-form">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" 
+                                   placeholder="جستجو در نام، نام خانوادگی، عنوان ورکشاپ یا بارکد..." 
+                                   value="{{ search_query }}">
+                            <button class="btn btn-search" type="submit">
+                                <i class="fas fa-search"></i>
+                                جستجو
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registrations List -->
+        <div class="registrations-card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="name-col">
+                                <i class="fas fa-user"></i>
+                                نام و نام خانوادگی
+                            </th>
+                            <th class="workshop-col">
+                                <i class="fas fa-graduation-cap"></i>
+                                عنوان ورکشاپ
+                            </th>
+                            <th class="date-col">
+                                <i class="fas fa-calendar-alt"></i>
+                                تاریخ برگزاری
+                            </th>
+                            <th class="barcode-col">
+                                <i class="fas fa-barcode"></i>
+                                بارکد شرکت کننده
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registration in registrations %}
+                        <tr>
+                            <td class="name-col">{{ registration.user.get_full_name }}</td>
+                            <td class="workshop-col">{{ registration.workshop.title }}</td>
+                            <td class="date-col">{{ registration.workshop.date|date:"Y/m/d" }}</td>
+                            <td class="barcode-col">
+                                <span class="badge">{{ registration.barcode }}</span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="empty-state">
+                                    <i class="fas fa-users"></i>
+                                    <p>هیچ ثبت‌نام تایید شده‌ای یافت نشد.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <div class="pagination-wrapper">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="Previous">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="Next">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .workshop-registrations-page {
+        min-height: calc(100vh - 200px);
+        padding: 3rem 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .search-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .search-form .input-group {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .search-form .input-group:focus-within {
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.15);
+    }
+
+    .search-form .form-control {
+        border: 2px solid #e9ecef;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-form .form-control:focus {
+        border-color: #28a745;
+        box-shadow: none;
+    }
+
+    .btn-search {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        padding: 1rem 2rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-search:hover {
+        background: linear-gradient(45deg, #218838, #1aa179);
+        transform: translateY(-2px);
+    }
+
+    .btn-search i {
+        margin-left: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    .registrations-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .table {
+        margin-bottom: 0;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .table th {
+        font-weight: 600;
+        color: #2c3e50;
+        border-top: none;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1.2rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .table th i {
+        margin-left: 0.5rem;
+        color: #28a745;
+    }
+
+    .table td {
+        vertical-align: middle;
+        padding: 1rem 1.2rem;
+        border-bottom: 1px solid #e9ecef;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover td {
+        background-color: rgba(40, 167, 69, 0.05);
+    }
+
+    .name-col { width: 25%; }
+    .workshop-col { width: 35%; }
+    .date-col { width: 20%; }
+    .barcode-col { width: 20%; }
+
+    .badge {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .empty-state {
+        padding: 3rem 0;
+        text-align: center;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #28a745;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state p {
+        color: #6c757d;
+        font-size: 1.1rem;
+    }
+
+    .pagination-wrapper {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .pagination {
+        margin-bottom: 0;
+    }
+
+    .page-link {
+        padding: 0.8rem 1.2rem;
+        border: none;
+        margin: 0 0.2rem;
+        border-radius: 8px;
+        color: #2c3e50;
+        transition: all 0.3s ease;
+    }
+
+    .page-item.active .page-link {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+    }
+
+    .page-link:hover {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .workshop-registrations-page {
+            padding: 2rem 0;
+        }
+
+        .search-card, .registrations-card {
+            padding: 1.5rem;
+        }
+
+        .search-form .input-group {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .search-form .form-control {
+            padding: 0.8rem;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .btn-search {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .btn-search i {
+            margin-left: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .table-responsive {
+            margin: 0 -1.5rem;
+            padding: 0 1.5rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table {
+            min-width: 800px;
+        }
+
+        .table th, .table td {
+            padding: 0.8rem;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .name-col { min-width: 180px; }
+        .workshop-col { min-width: 250px; }
+        .date-col { min-width: 120px; }
+        .barcode-col { min-width: 150px; }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .search-form .form-control {
+            padding: 0.7rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-search {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-search i {
+            margin-left: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .table th, .table td {
+            padding: 0.7rem;
+            font-size: 0.9rem;
+        }
+
+        .name-col { min-width: 160px; }
+        .workshop-col { min-width: 220px; }
+        .date-col { min-width: 110px; }
+        .barcode-col { min-width: 140px; }
+
+        .page-link {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %} 
