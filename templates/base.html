@@ -6,8 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    <!-- Bootstrap RTL CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'fonts/font-icons.css' %}">
     <link rel="stylesheet" href="{% static 'fonts/font-icons-flip.css' %}">
@@ -18,106 +17,19 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.rtl.css' %}">
     <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.rtl.css' %}">
-    <link rel="stylesheet" href="{% static 'css/image-compare-viewer.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/animate.css' %}">
     <link href="https://sibforms.com/forms/end-form/build/sib-styles.rtl.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.rtl.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.rtl.new.css' %}" />
-
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.rtl.min.css' %}" /> 
+    
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="{% static 'images/logo/levelhaft_logo.svg' %}">
     <link rel="apple-touch-icon-precomposed" href="{% static 'images/logo/levelhaft_logo.svg' %}">
     {%block extra_css%}
     {%endblock%}
 
-    <style>
-    .cart-count-badge {
-        padding: 0.13em 0.45em;
-        font-size: 0.75rem;
-        font-weight: 700;
-        border: 2px solid #fff;
-        background: #dc3545;
-        color: #fff;
-        box-shadow: 0 2px 8px #dc354522;
-        top: -3px !important;
-        right: -6px !important;
-        left: auto !important;
-        min-width: 18px;
-        min-height: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .toolbar-cart-badge {
-        padding: 0.13em 0.45em;
-        font-size: 0.75rem;
-        font-weight: 700;
-        border: 2px solid #fff;
-        background: #dc3545;
-        color: #fff;
-        box-shadow: 0 2px 8px #dc354522;
-        top: -3px !important;
-        right: -6px !important;
-        left: auto !important;
-        min-width: 18px;
-        min-height: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        position: absolute;
-        z-index: 2;
-    }
-    .wallet-btn {
-        border-radius: 20px;
-        font-weight: bold;
-        font-size: 15px;
-        transition: all 0.2s;
-    }
-    .wallet-btn:hover, .wallet-btn:focus {
-        background: #218838 !important;
-        color: #fff !important;
-        text-decoration: none;
-        box-shadow: 0 2px 8px #28a74533;
-    }
-    .wallet-balance {
-        margin-left: 0 !important;
-        margin-right: 6px !important;
-    }
-    .wallet-btn .fa-wallet {
-        margin-left: 0 !important;
-        margin-right: 8px !important;
-    }
-    @media (max-width: 576px) {
-        .wallet-btn {
-            background: none !important;
-            color: inherit !important;
-            border-radius: 0 !important;
-            padding: 0 !important;
-            min-width: 0;
-            box-shadow: none !important;
-            border: none !important;
-            justify-content: center;
-        }
-        .wallet-balance,
-        .wallet-currency {
-            display: none !important;
-        }
-        .wallet-btn .fa-wallet,
-        .wallet-icon {
-            font-size: 22px !important;
-            margin-right: 0 !important;
-            color: #222 !important;
-        }
-    }
-    </style>
-
 </head>
 
 <body class="preload-wrapper">
-     <!-- RTL -->
-     <a class="tf-btn animate-hover-btn btn-fill" href="javascript:void(0);" id="toggle-rtl">RTL</a>
-     <!-- /RTL  -->
      <!-- preload -->
      <div class="preload preload-container">
          <div class="preload-logo">
@@ -145,7 +57,7 @@
                              <img alt="logo" class="logo" src="{% static 'images/logo/levelhaft_logo.svg' %}" />
                          </a>
                      </div>
-                     <div class="col-xl-6 tf-md-hidden">
+                     <div class="col-xl-6 d-none d-xl-block">
                          <nav class="box-navigation text-center">
                              <ul class="box-nav-ul d-flex align-items-center justify-content-center gap-30">
                                  <li class="menu-item">
@@ -707,7 +619,7 @@
     <script type="text/javascript" src="{% static 'js/count-down.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/wow.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/multiple-modal.js' %}"></script>
-    <script src="{% static 'js/image-compare-viewer.js' %}" type="module"></script>
+    {% comment %} <script src="{% static 'js/image-compare-viewer.js' %}" type="module"></script> {% endcomment %}
     <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
     <script>
         window.REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';

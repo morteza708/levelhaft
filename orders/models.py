@@ -119,7 +119,7 @@ class OrderStatusHistory(models.Model):
 
     def get_jalali_changed_at(self):
         return jdatetime.datetime.fromgregorian(datetime=self.changed_at).strftime('%Y/%m/%d %H:%M:%S')
-    get_jalali_changed_at.short_description = 'تاریخ تغییر'
+    get_jalali_changed_at.short_description = 'تاریخ تغییر' 
 
 @receiver(post_save, sender=Order)
 def handle_order_status_change(sender, instance, created, **kwargs):

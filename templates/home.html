@@ -2,7 +2,40 @@
 {% load static %}
 {% load humanize %}
 {% block title %}فروشگاه اینترنتی لول هفت{% endblock %}
-
+{% block extra_css %}
+<style>
+    .tf-slideshow {
+        position: relative;
+    }
+    .navigation-next-slider {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        left: auto;
+        transform: translateY(-50%);
+        z-index: 10;
+    }
+    .navigation-prev-slider {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        right: auto;
+        transform: translateY(-50%);
+        z-index: 10;
+    }
+    @media (max-width: 991px) {
+        .navigation-next-slider,
+        .navigation-prev-slider {
+            top: auto;
+            bottom: 10px;
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%);
+            display: none; /* در موبایل فلش‌ها مخفی می‌شوند */
+        }
+    }
+</style>
+{% endblock %}
 {% block content %}
          <!-- Slider -->
          <section class="tf-slideshow slider-collection hover-sw-nav slider-cosmetic">
@@ -91,7 +124,7 @@
                             </a>
                             <div class="collection-content text-center">
                                 <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;">
+                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
                                 </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">دکتر بلتر</a>
                             </div>
@@ -104,7 +137,7 @@
                             </a>
                             <div class="collection-content text-center">
                                 <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;">
+                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
                                 </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">دکتر ریمپلر</a>
                             </div>
@@ -117,7 +150,7 @@
                             </a>
                             <div class="collection-content text-center">
                                 <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;">
+                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
                                 </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">ایزابل لنکری</a>
                             </div>
@@ -130,7 +163,7 @@
                             </a>
                             <div class="collection-content text-center">
                                 <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;">
+                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
                                 </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">راکوتن</a>
                             </div>
@@ -143,7 +176,7 @@
                             </a>
                             <div class="collection-content text-center">
                                 <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;">
+                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
                                 </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">DSV-LINE</a>
                             </div>
@@ -156,7 +189,7 @@
                             </a>
                             <div class="collection-content text-center">
                                 <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;">
+                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
                                 </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">کیسی</a>
                             </div>
@@ -670,4 +703,5 @@
     });
 
 </script>
+
 {% endblock %}

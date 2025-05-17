@@ -1,43 +1,4 @@
 @import url(font-ir.css);
-/* ---------------------------------------------------------
-    * Name: Ecomus Multipurpose eCommerce HTML Template
-    * Version: 1.0.9
-    * Author: Themesflat
-    * Author URI: http://themesflat.com 
-
-	* Abstracts variable
-
-    * Reset css styles
-
-    * Components
-        * header
-        * footer
-        * tabs
-        * slider banner
-        * button
-        * range slider
-        * form
-        * nice select
-        * carousel
-        * avatar
-        * pop up
-        * box icon
-        * hover
-        * collection
-        * product
-        * blog
-        * testimonial
-        * lookbook
-        * featured
-        * accordion
-        * zoom
-
-    * section
-
-    * Responsive
- ------------------------------------------------------------------------------ */
-
-/*--------- Abstracts variable ---------- */
 
 @import url(./bootstrap-select.min.css);
 :root {
@@ -70,68 +31,6 @@
     --bg-scrollbar-track: #f1f1f1;
     --bg-scrollbar-thumb: #c1c1c1;
 }
-
-.color-primary-2 {
-    --primary: #814037;
-}
-
-.color-primary-3 {
-    --primary: #93f859;
-}
-
-.color-primary-4 {
-    --primary: #000;
-}
-
-.color-primary-5 {
-    --primary: #67c08f;
-}
-
-.color-primary-6 {
-    --primary: #a45f3b;
-}
-
-.color-primary-7 {
-    --primary: #a6e57c;
-}
-
-.color-primary-8 {
-    --primary: #61b482;
-}
-
-.color-primary-9 {
-    --primary: #ff0b0b;
-}
-
-.color-primary-10 {
-    --primary: #fd8484;
-}
-
-.color-primary-11 {
-    --primary: #214332;
-}
-
-.color-primary-12 {
-    --primary: #f67d0d;
-}
-
-.color-primary-13 {
-    --primary: #3c71d7;
-}
-
-.color-primary-14 {
-    --primary: #9914f2;
-}
-
-.color-primary-main {
-    --primary: #000000;
-}
-
-.color-main-text-2 {
-    --main: #253d4e;
-}
-
-/*---------- Reset css styles ----------- */
 
 html,
 body,
@@ -241,9 +140,6 @@ section {
     display: block;
 }
 
-/* Elements
--------------------------------------------------------------- */
-
 html {
     margin-left: 0 !important;
     scroll-behavior: smooth;
@@ -302,155 +198,6 @@ li {
 .container {
     padding-right: 15px;
     padding-left: 15px;
-}
-
-.container-full {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0px 15px;
-}
-
-.slider-layout-right {
-    width: calc(100vw - (100vw - 1440px) / 2 + 30px);
-    margin-left: unset;
-    max-width: 100%;
-    margin-right: auto;
-}
-
-.mw-1100 {
-    max-width: 1100px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-textarea,
-input[type=text],
-input[type=password],
-input[type=datetime],
-input[type=datetime-local],
-input[type=date],
-input[type=month],
-input[type=time],
-input[type=week],
-input[type=number],
-input[type=email],
-input[type=url],
-input[type=search],
-input[type=tel],
-input[type=color] {
-    font-family: "Albert Sans", sans-serif;
-    border: 1px solid var(--line);
-    outline: 0;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    font-size: 14px;
-    line-height: 24px;
-    border-radius: 3px;
-    padding: 12px 18px;
-    width: 100%;
-    background: var(--white);
-    color: var(--text-2);
-    font-weight: 400;
-}
-
-textarea:focus,
-input[type=text]:focus,
-input[type=password]:focus,
-input[type=datetime]:focus,
-input[type=datetime-local]:focus,
-input[type=date]:focus,
-input[type=month]:focus,
-input[type=time]:focus,
-input[type=week]:focus,
-input[type=number]:focus,
-input[type=email]:focus,
-input[type=url]:focus,
-input[type=search]:focus,
-input[type=tel]:focus,
-input[type=color]:focus {
-    border-color: var(--line);
-}
-
-textarea::placeholder,
-input[type=text]::placeholder,
-input[type=password]::placeholder,
-input[type=datetime]::placeholder,
-input[type=datetime-local]::placeholder,
-input[type=date]::placeholder,
-input[type=month]::placeholder,
-input[type=time]::placeholder,
-input[type=week]::placeholder,
-input[type=number]::placeholder,
-input[type=email]::placeholder,
-input[type=url]::placeholder,
-input[type=search]::placeholder,
-input[type=tel]::placeholder,
-input[type=color]::placeholder {
-    color: var(--text-2);
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    -ms-transition: all 0.3s ease;
-    -o-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-}
-
-textarea {
-    height: 112px;
-    resize: none;
-}
-
-/* Placeholder color */
-
-::-webkit-input-placeholder {
-    color: var(--text-2);
-}
-
-:-moz-placeholder {
-    color: var(--text-2);
-}
-
-::-moz-placeholder {
-    color: var(--text-2);
-    opacity: 1;
-}
-
-/* Since FF19 lowers the opacity of the placeholder by default */
-
-:-ms-input-placeholder {
-    color: var(--text-2);
-}
-
-/* Typography
--------------------------------------------------------------- */
-
-.font-young-serif {
-    font-family: "Young Serif", serif;
-}
-
-.font-gloock {
-    font-family: "Gloock", serif;
-}
-
-.font-caprasimo {
-    font-family: "Caprasimo", serif;
-}
-
-.font-poppins {
-    font-family: "Poppins", serif;
-}
-
-.font-libre-baskerville {
-    font-family: "Libre Baskerville", serif;
-}
-
-.font-sora {
-    font-family: "Sora", serif;
-}
-
-.font-readex-pro {
-    font-family: "Readex Pro", serif;
 }
 
 h1,
@@ -1607,11 +1354,6 @@ label {
     padding-bottom: 90px;
 }
 
-.flat-spacing-29 {
-    padding-top: 26px;
-    padding-bottom: 90px;
-}
-
 .flat-spacing-30 {
     padding-top: 65px;
     padding-bottom: 42px;
@@ -2181,7 +1923,8 @@ label {
 }
 
 .logo-header img {
-    width: 90px;
+    width: 75px;
+    padding: 3px;
 }
 
 .box-nav-ul .menu-item {
@@ -4008,10 +3751,6 @@ header.header-bg {
     border-radius: 60px;
 }
 
-.slider-radius .tf-sw-slideshow .heading {
-    margin-bottom: 38px;
-}
-
 .slider-radius .tf-sw-slideshow .subheading {
     font-size: 14px;
     line-height: 22.4px;
@@ -5596,18 +5335,10 @@ header.header-bg {
     display: block;
 }
 
-.reply-comment .reply-comment-heading {
-    margin-bottom: 24px;
-}
-
 .reply-comment .reply-comment-item {
     display: flex;
     flex-direction: column;
     gap: 12px;
-}
-
-.reply-comment .reply-comment-item:not(:last-child) {
-    margin-bottom: 20px;
 }
 
 .reply-comment .reply-comment-item:not(:last-child) .content {
@@ -6405,9 +6136,8 @@ header.header-bg {
     border-color: transparent;
 }
 
-.nav-sw.style-not-line.swiper-button-disabled {
-    background-color: rgba(255, 255, 255, 0.4);
-    color: rgb(0, 0, 0);
+.nav-sw.style-not-line {
+    border-color: transparent;
 }
 
 .nav-sw.line-white {
@@ -7203,11 +6933,6 @@ header.header-bg {
     cursor: pointer;
 }
 
-.tf-compare-color-item .tf-compare-color-top img {
-    border-radius: 10px;
-    margin-top: 14px;
-}
-
 .tf-compare-color-item .tf-compare-color-bottom {
     margin-top: 1.5px;
 }
@@ -8001,11 +7726,6 @@ header.header-bg {
 .tf-cart-checkbox label {
     font-weight: 400;
     cursor: pointer;
-}
-
-.tf-cart-checkbox label a {
-    text-decoration: underline;
-    text-underline-offset: 2px;
 }
 
 .tf-cart-checkbox .wrap-content {
@@ -10401,11 +10121,6 @@ header.header-bg {
     gap: 5px;
 }
 
-.tf-product-bundle-infos .tf-product-bundle-price .compare-at-price {
-    color: var(--main);
-    text-decoration: line-through;
-}
-
 .tf-product-bundle-infos .tf-product-bundle-price .price-on-sale {
     font-weight: 600;
     color: var(--primary);
@@ -12799,14 +12514,6 @@ header.header-bg {
     height: 88px;
 }
 
-.blog-article-item.style-sidebar .article-content {
-    padding-top: 0;
-}
-
-.blog-article-item.style-sidebar .article-content .article-label {
-    position: unset;
-}
-
 .blog-article-item.style-sidebar .article-content .article-label a {
     background-color: rgb(242, 242, 242);
 }
@@ -13601,11 +13308,6 @@ blockquote .text {
 
 .tf-lookbook {
     display: flex;
-}
-
-.wrap-lookbook {
-    width: 100%;
-    position: relative;
 }
 
 .wrap-lookbook .image img {
@@ -15943,11 +15645,6 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
 .tf-img-with-text-2 .item-list-box {
     display: flex;
     gap: 12px;
-}
-
-.tf-img-with-text-2 .item-list-box .content {
-    display: grid;
-    gap: 16px;
 }
 
 .tf-img-with-text-2 .item-list-box .img-box {
@@ -18824,7 +18521,8 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
         line-height: 24px;
     }
     .logo-header img {
-        width: 136px;
+        width: 75px;
+        padding: 3px;
     }
     .canvas-mb {
         width: 100% !important;
@@ -20531,6 +20229,15 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     .flat-iconbox-v2 .wrap-iconbox {
         grid-template-columns: repeat(3, 1fr);
         gap: 0;
+    }
+    .flat-iconbox-v2 .wrap-iconbox .swiper-slide:last-child {
+        grid-column: unset;
+    }
+    .flat-iconbox-v2 .wrap-iconbox .swiper-slide:not(:last-child) .tf-icon-box {
+        border-left: 1px solid var(--line);
+    }
+    .flat-iconbox-v2.style-2 .wrap-iconbox {
+        gap: 30px;
     }
     .flat-iconbox-v2 .wrap-iconbox .swiper-slide:last-child {
         grid-column: unset;
@@ -23478,11 +23185,6 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     right: 20px;
 }
 
-.rtl .flat-accordion1.has-btns .flat-toggle.style-2 .toggle-title::after,
-.rtl .flat-accordion.has-btns .flat-toggle.style-2 .toggle-title::after {
-    right: 15px;
-}
-
 .rtl .flat-accordion1.style-default .toggle-title,
 .rtl .flat-accordion.style-default .toggle-title {
     padding-left: 0;
@@ -23580,5 +23282,142 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     .rtl .tf-cart-item .img-box {
         right: auto;
         left: 0;
+    }
+}
+.logo-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* فاصله بین لوگوها */
+    margin-bottom: 40px;
+}
+.footer-logo img {
+    width: 100px;  /* یا هر سایزی که مناسب طراحی شماست */
+    height: auto;  /* ارتفاع خودکار برای حفظ تناسب تصویر */
+}
+.brand-logo {
+    object-fit: contain;
+    max-height: 50%;
+    border-radius: 4px;
+} 
+.cart-count-badge {
+    padding: 0.13em 0.45em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 2px solid #fff;
+    background: #dc3545;
+    color: #fff;
+    box-shadow: 0 2px 8px #dc354522;
+    top: -3px !important;
+    right: -6px !important;
+    left: auto !important;
+    min-width: 18px;
+    min-height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.toolbar-cart-badge {
+    padding: 0.13em 0.45em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 2px solid #fff;
+    background: #dc3545;
+    color: #fff;
+    box-shadow: 0 2px 8px #dc354522;
+    top: -3px !important;
+    right: -6px !important;
+    left: auto !important;
+    min-width: 18px;
+    min-height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 2;
+}
+.wallet-btn {
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+.wallet-btn:hover, .wallet-btn:focus {
+    background: #218838 !important;
+    color: #fff !important;
+    text-decoration: none;
+    box-shadow: 0 2px 8px #28a74533;
+}
+.wallet-balance {
+    margin-left: 0 !important;
+    margin-right: 6px !important;
+}
+.wallet-btn .fa-wallet {
+    margin-left: 0 !important;
+    margin-right: 8px !important;
+}
+@media (max-width: 576px) {
+    .wallet-btn {
+        background: none !important;
+        color: inherit !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        min-width: 0;
+        box-shadow: none !important;
+        border: none !important;
+        justify-content: center;
+    }
+    .wallet-balance,
+    .wallet-currency {
+        display: none !important;
+    }
+    .wallet-btn .fa-wallet,
+    .wallet-icon {
+        font-size: 22px !important;
+        margin-right: 0 !important;
+        color: #222 !important;
+    }
+}
+.wallet-btn {
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+.wallet-btn:hover, .wallet-btn:focus {
+    background: #218838 !important;
+    color: #fff !important;
+    text-decoration: none;
+    box-shadow: 0 2px 8px #28a74533;
+}
+.wallet-balance {
+    margin-left: 0 !important;
+    margin-right: 6px !important;
+}
+.wallet-btn .fa-wallet {
+    margin-left: 0 !important;
+    margin-right: 8px !important;
+}
+/* فقط آیکون ساده و بدون پس‌زمینه در موبایل */
+@media (max-width: 576px) {
+    .wallet-btn {
+        background: none !important;
+        color: inherit !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        min-width: 0;
+        box-shadow: none !important;
+        border: none !important;
+        justify-content: center;
+    }
+    .wallet-balance,
+    .wallet-currency {
+        display: none !important;
+    }
+    .wallet-btn .fa-wallet,
+    .wallet-icon {
+        font-size: 22px !important;
+        margin-right: 0 !important;
+        color: #222 !important;
     }
 }
