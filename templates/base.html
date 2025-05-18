@@ -122,10 +122,10 @@
                                      <a class="item-link" href="{% url 'blogs:post_list' %}">وبلاگ<i class="icon"></i></a>
                                  </li>
                                  <li class="menu-item position-relative">
-                                    <a class="item-link" href="#">درباره ما<i class="icon"></i></a>
+                                    <a class="item-link" href="{% url 'pages:about_us' %}">درباره ما<i class="icon"></i></a>
                                 </li>
                                 <li class="menu-item position-relative">
-                                    <a class="item-link" href="#">تماس باما<i class="icon"></i></a>
+                                    <a class="item-link" href="{% url 'pages:contact_us' %}">تماس باما<i class="icon"></i></a>
                                 </li>
                              </ul>
                          </nav>
@@ -545,14 +545,14 @@
                          </a>
                      </li>
                      <li class="nav-mb-item">
-                        <a aria-controls="dropdown-menu-five" aria-expanded="false"
-                            class="collapsed mb-menu-link current" data-bs-toggle="collapse" href="#dropdown-menu-five">
+                        <a aria-controls="#" aria-expanded="false"
+                            class="collapsed mb-menu-link current" data-bs-toggle="#" href="{% url 'pages:about_us' %}">
                             <span>درباره ما</span>
                         </a>
                     </li>
                     <li class="nav-mb-item">
-                        <a aria-controls="dropdown-menu-five" aria-expanded="false"
-                            class="collapsed mb-menu-link current" data-bs-toggle="collapse" href="#dropdown-menu-five">
+                        <a aria-controls="#" aria-expanded="false"
+                            class="collapsed mb-menu-link current" data-bs-toggle="#" href="{% url 'pages:contact_us' %}">
                             <span>تماس با ما</span>
                         </a>
                     </li>

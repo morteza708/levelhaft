@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from products.models import Product, ProductImage
 from django.db.models import Prefetch
+from .forms import ContactMessageForm
+from django.contrib import messages
 
 
 
@@ -140,3 +142,15 @@ class HomeView(TemplateView):
         context['accessories_products'] = home_products.filter(line__name='اکسسوری')
         
         return context
+
+def about_us_view(request):
+    return render(request, 'about_us.html')
+
+def contact_us_view(request):
+    form = ContactMessageForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'پیام شما با موفقیت ارسال شد. کارشناسان ما در اسرع وقت پاسخ خواهند داد.')
+            form = ContactMessageForm()  # فرم خالی شود
+    return render(request, 'contact_us.html', {'form': form})

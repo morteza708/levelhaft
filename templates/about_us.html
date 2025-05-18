@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}درباره ما - فروشگاه لول هفت{% endblock %}
+{% block content %}
+<section class="container py-5">
+  <div class="row align-items-center mb-5">
+    <div class="col-md-6 mb-4 mb-md-0">
+      <img src="{% static 'images/about/about_us_sample.jpg' %}" class="img-fluid rounded shadow" alt="درباره ما">
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-lg border-0 p-4 h-100" style="background:rgba(255,255,255,0.97);">
+        <h1 class="fw-bold mb-4 text-center text-md-start display-5 fs-2 fs-md-1" style="font-size:2.2rem;">
+          درباره فروشگاه لول هفت
+        </h1>
+        <p class="lead text-muted mb-4" style="line-height:2;">
+          فروشگاه لول هفت با هدف ارائه بهترین محصولات مراقبت از پوست و زیبایی، فعالیت خود را آغاز کرده است. ما با تکیه بر تیمی متخصص و محصولات اورجینال، تجربه‌ای متفاوت و مطمئن را برای مشتریان خود فراهم می‌کنیم.
+        </p>
+        <ul class="list-unstyled mt-3 mb-0">
+          <li class="mb-3 fs-6"><i class="fa fa-check-circle text-success me-2"></i> ارسال سریع و مطمئن به سراسر کشور</li>
+          <li class="mb-3 fs-6"><i class="fa fa-check-circle text-success me-2"></i> تضمین اصالت کالا و مشاوره تخصصی</li>
+          <li class="mb-3 fs-6"><i class="fa fa-check-circle text-success me-2"></i> پشتیبانی آنلاین و پاسخگویی سریع</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row text-center">
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow h-100">
+        <div class="card-body">
+          <i class="fa fa-truck fa-2x text-primary mb-3"></i>
+          <h5 class="card-title fw-bold">ارسال سریع</h5>
+          <p class="card-text text-muted">تحویل سریع و مطمئن محصولات به سراسر ایران</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow h-100">
+        <div class="card-body">
+          <i class="fa fa-shield-alt fa-2x text-primary mb-3"></i>
+          <h5 class="card-title fw-bold">تضمین اصالت</h5>
+          <p class="card-text text-muted">تمامی محصولات با ضمانت اصالت و سلامت فیزیکی</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow h-100">
+        <div class="card-body">
+          <i class="fa fa-headset fa-2x text-primary mb-3"></i>
+          <h5 class="card-title fw-bold">پشتیبانی تخصصی</h5>
+          <p class="card-text text-muted">مشاوره رایگان و پشتیبانی آنلاین توسط کارشناسان</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-5">
+    <a href="#" class="btn btn-lg btn-primary px-5">تماس با ما</a>
+  </div>
+</section>
+{% endblock %}

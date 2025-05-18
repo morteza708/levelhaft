@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}تماس با ما - فروشگاه لول هفت{% endblock %}
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center mb-5">
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 p-4">
+        <h2 class="fw-bold mb-4 text-center fs-2">
+          <span class="align-middle">
+            <i class="fa fa-envelope-open-text text-primary" style="font-size:1.5em;"></i>
+          </span>
+          <span class="align-middle">تماس با ما</span>
+        </h2>
+        <p class="text-center text-muted mb-4">
+          برای ارتباط با تیم پشتیبانی لول هفت، فرم زیر را پر کنید یا از اطلاعات تماس استفاده نمایید.
+        </p>
+        <div class="row mb-4">
+          <div class="col-md-4 text-center mb-3 mb-md-0">
+            <i class="fa fa-phone fa-2x text-primary mb-2"></i>
+            <div class="fw-bold">تلفن:</div>
+            <div class="text-muted">021-12345678</div>
+          </div>
+          <div class="col-md-4 text-center mb-3 mb-md-0">
+            <i class="fa fa-envelope fa-2x text-primary mb-2"></i>
+            <div class="fw-bold">ایمیل:</div>
+            <div class="text-muted">info@levelhaft.com</div>
+          </div>
+          <div class="col-md-4 text-center">
+            <i class="fa fa-map-marker-alt fa-2x text-primary mb-2"></i>
+            <div class="fw-bold">آدرس:</div>
+            <div class="text-muted">تهران، خیابان مثال، پلاک ۷</div>
+          </div>
+        </div>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{ form.name }}
+              {% if form.name.errors %}
+                <div class="text-danger small">{{ form.name.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              {{ form.email }}
+              {% if form.email.errors %}
+                <div class="text-danger small">{{ form.email.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="mb-3">
+            {{ form.subject }}
+            {% if form.subject.errors %}
+              <div class="text-danger small">{{ form.subject.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ form.message }}
+            {% if form.message.errors %}
+              <div class="text-danger small">{{ form.message.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">ارسال پیام</button>
+          </div>
+        </form>
+        <div class="text-center mt-4">
+          <a href="#" class="mx-2 text-primary"><i class="fab fa-instagram fa-lg"></i></a>
+          <a href="#" class="mx-2 text-primary"><i class="fab fa-telegram fa-lg"></i></a>
+          <a href="#" class="mx-2 text-primary"><i class="fab fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
