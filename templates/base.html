@@ -222,7 +222,7 @@
          {% if messages %}
         <div class="container mt-3">
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <div class="alert alert-{% if 'error' in message.tags %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -504,7 +504,7 @@
                                                  {% for line in brand.lines.all %}
                                                      <li>
                                                          <a href="{% url 'products:line_products' line.slug %}" class="sub-nav-link">
-                                                             <span>{{ line.name }}</span>
+                                                             <span>.{{ line.name }}</span>
                                                          </a>
                                                      </li>
                                                  {% empty %}

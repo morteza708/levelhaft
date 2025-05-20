@@ -292,16 +292,17 @@
                                         </div>
 
                                         {% if request.user.is_authenticated %}
-                                            <div class="add-comment-section mb-4">
+                                            <div class="add-comment-section lh-add-comment-section mb-4">
                                                 <h5 class="mb-3">ثبت نظر</h5>
                                                 <form method="post" action="{% url 'products:submit_comment' product.slug %}" class="comment-form">
                                                     {% csrf_token %}
+                                                    <input type="hidden" name="rating" id="ratingInput">
                                                     <div class="rating-input mb-3">
-                                                        <label class="form-label">امتیاز شما</label>
-                                                        <div class="star-rating">
+                                                        <label class="form-label">امتیاز شما:</label>
+                                                        <div class="star-rating lh-star-rating">
                                                             {% for i in "54321"|make_list %}
-                                                                <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}" required>
-                                                                <label for="star{{ i }}" class="star-label">
+                                                                <input type="radio" name="star_rating" value="{{ i }}" id="star{{ i }}" onchange="updateRating(this.value)">
+                                                                <label for="star{{ i }}" class="star-label lh-star-label">
                                                                     <i class="fas fa-star"></i>
                                                                 </label>
                                                             {% endfor %}
@@ -313,6 +314,12 @@
                                                     <button type="submit" class="btn btn-primary">ثبت نظر</button>
                                                 </form>
                                             </div>
+
+                                            <script>
+                                                function updateRating(value) {
+                                                    document.getElementById('ratingInput').value = value;
+                                                }
+                                            </script>
                                         {% else %}
                                             <div class="alert alert-info">
                                                 برای ثبت نظر باید <a href="{% url 'accounts:login' %}">وارد شوید</a> 
@@ -325,7 +332,7 @@
                                                     <div class="card-body">
                                                         <div class="comment-header d-flex justify-content-between align-items-center mb-2">
                                                             <div class="user-info">
-                                                                <span class="username fw-bold">{{ comment.user.username }}</span>
+                                                                <span class="username fw-bold">{{ comment.user.first_name }} {{ comment.user.last_name }}</span>
                                                                 <div class="rating">
                                                                     {% for i in "12345"|make_list %}
                                                                         {% if forloop.counter <= comment.rating %}
@@ -420,142 +427,28 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
-<style>
-    .quantity-input {
-        max-width: 300px;
-        margin: 0 auto;
-    }
-
-    .input-stock-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .quantity-control {
-        width: 180px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .quantity-btn {
-        width: 36px;
-        height: 36px;
-        padding: 0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: white;
-        border: 1px solid #dee2e6;
-        color: #495057;
-        border-radius: 6px;
-        transition: all 0.2s;
-        flex-shrink: 0;
-    }
-
-    .quantity-btn:hover {
-        background: #e9ecef;
-    }
-
-    #id_quantity {
-        width: 60px !important;
-        text-align: center;
-        border: none;
-        background: transparent;
-        margin: 0 8px;
-        padding: 0;
-        font-size: 16px;
-        font-weight: 500;
-        -moz-appearance: textfield;
-    }
-
-    #id_quantity::-webkit-inner-spin-button,
-    #id_quantity::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    .stock-display {
-        font-size: 14px;
-        color: #6c757d;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        white-space: nowrap;
-    }
-
-    .btn-add-to-cart {
-        margin-top: 1rem;
-        padding: 12px 24px;
-        border-radius: 8px;
-        width: 100%;
-        max-width: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        font-weight: 500;
-        transition: all 0.2s;
-    }
-
-    .btn-add-to-cart:hover {
-        background-color: #218838;
-    }
-
-    @media (max-width: 576px) {
-        .quantity-control {
-            width: 160px;
-            padding: 4px;
-        }
-
-        .quantity-btn {
-            width: 32px;
-            height: 32px;
-        }
-
-        #id_quantity {
-            width: 50px !important;
-            font-size: 14px;
-            margin: 0 4px;
-        }
-
-        .stock-display {
-            font-size: 13px;
-        }
-
-        .btn-add-to-cart {
-            padding: 10px 20px;
-            font-size: 14px;
-        }
-    }
-</style>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    function decreaseQuantity() {
-        var input = document.getElementById('id_quantity');
-        var value = parseInt(input.value);
-        if (value > 1) {
-            input.value = value - 1;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Quantity functions
+        window.decreaseQuantity = function() {
+            var input = document.getElementById('id_quantity');
+            var value = parseInt(input.value);
+            if (value > 1) {
+                input.value = value - 1;
+            }
         }
-    }
 
-    function increaseQuantity() {
-        var input = document.getElementById('id_quantity');
-        var value = parseInt(input.value);
-        var max = {{ product.stock }};
-        if (value < max) {
-            input.value = value + 1;
+        window.increaseQuantity = function() {
+            var input = document.getElementById('id_quantity');
+            var value = parseInt(input.value);
+            var max = {{ product.stock }};
+            if (value < max) {
+                input.value = value + 1;
+            }
         }
-    }
+    });
 </script>
 {% endblock %}

@@ -206,15 +206,42 @@ def product_detail(request, slug):
 def submit_comment(request, slug):
     if request.method == 'POST':
         product = get_object_or_404(Product, slug=slug)
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.product = product
-            comment.user = request.user
+        rating = request.POST.get('rating')
+        text = request.POST.get('text', '').strip()
+        
+        # بررسی امتیاز
+        if not rating:
+            messages.error(request, 'لطفاً امتیاز خود را برای محصول ثبت نمایید.')
+            return redirect('products:product_detail', slug=slug)
+            
+        # بررسی متن نظر
+        if not text:
+            messages.error(request, 'لطفاً متن نظر خود را وارد کنید.')
+            return redirect('products:product_detail', slug=slug)
+            
+        # بررسی معتبر بودن امتیاز
+        try:
+            rating = int(rating)
+            if rating < 1 or rating > 5:
+                messages.error(request, 'امتیاز باید بین 1 تا 5 باشد.')
+                return redirect('products:product_detail', slug=slug)
+        except ValueError:
+            messages.error(request, 'امتیاز نامعتبر است.')
+            return redirect('products:product_detail', slug=slug)
+            
+        # ایجاد و ذخیره نظر
+        try:
+            comment = Comment(
+                product=product,
+                user=request.user,
+                text=text,
+                rating=rating
+            )
             comment.save()
             messages.success(request, 'نظر شما با موفقیت ثبت شد و پس از تایید نمایش داده خواهد شد.')
-        else:
+        except Exception as e:
             messages.error(request, 'خطا در ثبت نظر. لطفاً دوباره تلاش کنید.')
+            
     return redirect('products:product_detail', slug=slug)
 
 @staff_member_required

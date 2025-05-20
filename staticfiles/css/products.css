@@ -608,3 +608,209 @@
 .beautician-badge i {
     margin-left: 0.5rem;
 } 
+@media (max-width: 576px) {
+    .star-rating {
+      min-height: 48px;
+    }
+    .star-rating label {
+      font-size: 1.5rem;
+      padding: 0 4px;
+      cursor: pointer;
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+    }
+    .star-rating input[type="radio"] {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      opacity: 0;
+      margin: 0;
+      z-index: 2;
+    }
+  }
+  .quantity-input {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.input-stock-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-control {
+    width: 180px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.quantity-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    border-radius: 6px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.quantity-btn:hover {
+    background: #e9ecef;
+}
+
+#id_quantity {
+    width: 60px !important;
+    text-align: center;
+    border: none;
+    background: transparent;
+    margin: 0 8px;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 500;
+    -moz-appearance: textfield;
+}
+
+#id_quantity::-webkit-inner-spin-button,
+#id_quantity::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.stock-display {
+    font-size: 14px;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.btn-add-to-cart {
+    margin-top: 1rem;
+    padding: 12px 24px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-add-to-cart:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 576px) {
+    .quantity-control {
+        width: 160px;
+        padding: 4px;
+    }
+
+    .quantity-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    #id_quantity {
+        width: 50px !important;
+        font-size: 14px;
+        margin: 0 4px;
+    }
+
+    .stock-display {
+        font-size: 13px;
+    }
+
+    .btn-add-to-cart {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+/* فرم ثبت نظر زیباتر با کلاس اختصاصی */
+.lh-add-comment-section {
+    background: #f8fafd;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    padding: 24px 16px;
+    margin-bottom: 32px;
+    border: 1px solid #e3e6ea;
+}
+
+/* ستاره‌ها با کلاس اختصاصی */
+.lh-star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 8px;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+.lh-star-rating input[type="radio"] {
+    display: none;
+}
+.lh-star-label {
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.15s;
+    font-size: 2.2rem;
+    padding: 0 2px;
+}
+.lh-star-label:hover,
+.lh-star-label:hover ~ .lh-star-label,
+.lh-star-rating input[type="radio"]:checked ~ .lh-star-label {
+    color: #ffc107;
+    transform: scale(1.15);
+}
+.lh-star-rating input[type="radio"]:checked + .lh-star-label,
+.lh-star-rating input[type="radio"]:checked + .lh-star-label ~ .lh-star-label {
+    color: #ffc107;
+}
+@media (max-width: 576px) {
+    .lh-add-comment-section {
+        padding: 16px 6px;
+        border-radius: 10px;
+    }
+    .lh-star-rating {
+        font-size: 1.7rem;
+        gap: 4px;
+    }
+    .lh-star-label {
+        font-size: 2rem;
+        padding: 0 1px;
+    }
+}
+@media (max-width: 576px) {
+    .lh-add-comment-section {
+        padding: 16px 6px;
+        border-radius: 10px;
+    }
+    .lh-star-rating {
+        font-size: 1rem;   /* سایز ستاره‌ها کوچکتر */
+        gap: 8px;            /* فاصله بین ستاره‌ها بیشتر */
+    }
+    .lh-star-label {
+        font-size: 1rem;   /* سایز هر ستاره کوچکتر */
+        padding: 0 2px;      /* فاصله افقی هر ستاره */
+    }
+}
