@@ -26,7 +26,82 @@
     <link rel="apple-touch-icon-precomposed" href="{% static 'images/logo/levelhaft_logo.svg' %}">
     {%block extra_css%}
     {%endblock%}
-
+    <style>
+        /* فقط بولت و خط برای زیرمجموعه برندها (خطوط هر برند) با specificity و !important */
+        ul.lh-mobile-brand-lines > li {
+            position: relative !important;
+            padding-right: 18px !important;
+            margin-bottom: 2px !important;
+            background: none !important;
+            direction: rtl !important;
+        }
+        ul.lh-mobile-brand-lines > li::before {
+            content: '' !important;
+            position: absolute !important;
+            right: 0 !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            width: 7px !important;
+            height: 7px !important;
+            background: #28a745 !important;
+            border-radius: 50% !important;
+            z-index: 2 !important;
+        }
+        ul.lh-mobile-brand-lines > li:not(:last-child) {
+            border-bottom: 1px solid #f0f0f0 !important;
+        }
+        ul.lh-mobile-brand-lines > li > .sub-nav-link {
+            display: block !important;
+            padding: 8px 0 !important;
+            color: #222 !important;
+            transition: color 0.2s !important;
+        }
+        ul.lh-mobile-brand-lines > li > .sub-nav-link:hover {
+            color: #28a745 !important;
+        }
+        /* دکمه باز/بستن کنار نام برند */
+        .sub-nav-link, .mb-menu-link {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .btn-open-sub {
+            font-size: 1.5rem;
+            margin-right: 8px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+        }
+        @media (max-width: 991px) {
+            .menu-toggle svg {
+                transform: scaleX(-1);
+            }
+        }
+        /* استایل دکمه استعلام شرکت‌کنندگان ورکشاپ */
+        .lh-mb-approved-btn {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%) !important;
+            color: #fff !important;
+            font-weight: 600;
+            box-shadow: 0 4px 16px #28a74522;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            border: none !important;
+        }
+        .lh-mb-approved-btn:hover, .lh-mb-approved-btn:focus {
+            background: linear-gradient(90deg, #218838 0%, #1aa179 100%) !important;
+            color: #fff !important;
+            box-shadow: 0 6px 24px #28a74533;
+            transform: translateY(-2px) scale(1.03);
+            text-decoration: none;
+        }
+        @media (max-width: 576px) {
+            .lh-mb-approved-btn {
+                font-size: 1rem !important;
+                padding: 0.9rem 0.5rem !important;
+                border-radius: 12px !important;
+            }
+        }
+    </style>
 </head>
 
 <body class="preload-wrapper">
@@ -43,7 +118,7 @@
              <div class="px_15 lg-px_40">
                  <div class="row wrapper-header align-items-center">
                      <div class="col-md-4 col-3 tf-lg-hidden">
-                         <a aria-controls="offcanvasLeft" data-bs-toggle="offcanvas" href="#mobileMenu">
+                         <a aria-controls="offcanvasLeft" data-bs-toggle="offcanvas" href="#mobileMenu" class="menu-toggle">
                              <svg fill="none" height="16" viewbox="0 0 24 16" width="24"
                                  xmlns="http://www.w3.org/2000/svg">
                                  <path
@@ -489,7 +564,8 @@
                                  {% for brand in brands_menu %}
                                      <li>
                                          <a aria-controls="sub-brand-{{ brand.id }}" aria-expanded="false"
-                                             class="sub-nav-link collapsed" data-bs-toggle="collapse"
+                                             class="sub-nav-link collapsed d-flex align-items-center justify-content-between"
+                                             data-bs-toggle="collapse"
                                              href="#sub-brand-{{ brand.id }}">
                                              <div class="d-flex align-items-center">
                                                  {% if brand.image %}
@@ -500,11 +576,11 @@
                                              <span class="btn-open-sub"></span>
                                          </a>
                                          <div class="collapse" id="sub-brand-{{ brand.id }}">
-                                             <ul class="sub-nav-menu sub-menu-level-2">
+                                             <ul class="sub-nav-menu sub-menu-level-2 lh-mobile-brand-lines">
                                                  {% for line in brand.lines.all %}
                                                      <li>
                                                          <a href="{% url 'products:line_products' line.slug %}" class="sub-nav-link">
-                                                             <span>.{{ line.name }}</span>
+                                                             <span>{{ line.name }}</span>
                                                          </a>
                                                      </li>
                                                  {% empty %}
@@ -554,6 +630,13 @@
                         <a aria-controls="#" aria-expanded="false"
                             class="collapsed mb-menu-link current" data-bs-toggle="#" href="{% url 'pages:contact_us' %}">
                             <span>تماس با ما</span>
+                        </a>
+                    </li>
+                    <!-- دکمه استعلام شرکت‌کنندگان ورکشاپ -->
+                    <li class="nav-mb-item mt-3">
+                        <a href="{% url 'workshop:approved_registrations' %}" class="btn btn-success w-100 lh-mb-approved-btn d-flex align-items-center justify-content-center gap-2 py-3" style="font-size: 1.1rem; border-radius: 16px;">
+                            <i class="fas fa-list-alt" style="font-size: 1.3rem;"></i>
+                            <span>استعلام شرکت‌کنندگان ورکشاپ</span>
                         </a>
                     </li>
                  </ul>
