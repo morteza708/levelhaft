@@ -101,6 +101,98 @@
                 border-radius: 12px !important;
             }
         }
+        /* استایل آیکون‌های شبکه‌های اجتماعی */
+        .lh-social-icon {
+            width: 40px !important;
+            height: 40px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(5px) !important;
+            transition: all 0.3s ease !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+
+        .lh-social-icon i {
+            font-size: 1.2rem !important;
+            color: #fff !important;
+            transition: all 0.3s ease !important;
+            z-index: 2 !important;
+        }
+
+        .lh-social-icon::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: linear-gradient(45deg, #28a745, #20c997) !important;
+            opacity: 0 !important;
+            transition: all 0.3s ease !important;
+            z-index: 1 !important;
+        }
+
+        .lh-social-icon:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3) !important;
+        }
+
+        .lh-social-icon:hover::before {
+            opacity: 1 !important;
+        }
+
+        .lh-social-icon:hover i {
+            transform: scale(1.1) !important;
+        }
+
+        /* استایل‌های اختصاصی برای هر شبکه اجتماعی */
+        .lh-social-icon[href*="instagram"]:hover {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) !important;
+        }
+
+        .lh-social-icon[href*="whatsapp"]:hover {
+            background: #25D366 !important;
+        }
+
+        .lh-social-icon[href*="telegram"]:hover {
+            background: #0088cc !important;
+        }
+
+        .lh-social-icon[href*="youtube"]:hover {
+            background: #FF0000 !important;
+        }
+
+        /* استایل‌های واکنش‌گرا */
+        @media (max-width: 768px) {
+            .tf-social-icon {
+                justify-content: center !important;
+                margin-top: 1.5rem !important;
+            }
+
+            .lh-social-icon {
+                width: 36px !important;
+                height: 36px !important;
+            }
+
+            .lh-social-icon i {
+                font-size: 1.1rem !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .lh-social-icon {
+                width: 32px !important;
+                height: 32px !important;
+            }
+
+            .lh-social-icon i {
+                font-size: 1rem !important;
+            }
+        }
     </style>
 </head>
 
@@ -383,23 +475,23 @@
                                     
                                     <ul class="tf-social-icon d-flex gap-10 style-white">
                                         <li>
-                                            <a class="box-icon w_34 round social-line" href="#">
-                                                <i class="fab fa-instagram fs-14"></i>
+                                            <a class="box-icon w_34 round social-line lh-social-icon" href="#" target="_blank">
+                                                <i class="fab fa-instagram"></i>
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="box-icon w_34 round social-line" href="#">
-                                                <i class="fab fa-whatsapp fs-14"></i>
+                                            <a class="box-icon w_34 round social-line lh-social-icon" href="#" target="_blank">
+                                                <i class="fab fa-whatsapp"></i>
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="box-icon w_34 round social-line" href="#">
-                                                <i class="fab fa-telegram fs-14"></i>
+                                            <a class="box-icon w_34 round social-line lh-social-icon" href="#" target="_blank">
+                                                <i class="fab fa-telegram"></i>
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="box-icon w_34 round social-line" href="#">
-                                                <i class="fab fa-youtube fs-14"></i>
+                                            <a class="box-icon w_34 round social-line lh-social-icon" href="#" target="_blank">
+                                                <i class="fab fa-youtube"></i>
                                             </a>
                                         </li>
                                     </ul>
@@ -702,7 +794,6 @@
     <script type="text/javascript" src="{% static 'js/count-down.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/wow.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/multiple-modal.js' %}"></script>
-    {% comment %} <script src="{% static 'js/image-compare-viewer.js' %}" type="module"></script> {% endcomment %}
     <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
     <script>
         window.REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';
