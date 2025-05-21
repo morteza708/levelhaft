@@ -62,14 +62,14 @@ class ProductModel(models.Model):
         verbose_name_plural = "مدل‌های محصول"
 
 class SkinType(models.Model):
-    name = models.CharField(max_length=50, verbose_name="ویژگی محصول")
+    name = models.CharField(max_length=50, verbose_name="نوع پوست")
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = "ویژگی محصول"
-        verbose_name_plural = "ویژگی‌های محصول"
+        verbose_name = "نوع پوست"
+        verbose_name_plural = "نوع پوست‌ها"
 
 class SkinCondition(models.Model):
     name = models.CharField(max_length=50, verbose_name="ویژگی درمانی محصول")
