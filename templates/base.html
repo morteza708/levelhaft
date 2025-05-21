@@ -46,6 +46,7 @@
             background: #28a745 !important;
             border-radius: 50% !important;
             z-index: 2 !important;
+            margin-right: 8px !important;
         }
         ul.lh-mobile-brand-lines > li:not(:last-child) {
             border-bottom: 1px solid #f0f0f0 !important;
@@ -668,7 +669,7 @@
                                              <span class="btn-open-sub"></span>
                                          </a>
                                          <div class="collapse" id="sub-brand-{{ brand.id }}">
-                                             <ul class="sub-nav-menu sub-menu-level-2 lh-mobile-brand-lines">
+                                             <ul class="sub-nav-menu lh-mobile-brand-lines" id="sub-menu-navigation">
                                                  {% for line in brand.lines.all %}
                                                      <li>
                                                          <a href="{% url 'products:line_products' line.slug %}" class="sub-nav-link">
@@ -757,7 +758,7 @@
                                     <span class="btn-open-sub"></span>
                                 </a>
                                 <div class="collapse" id="sub-brand-{{ brand.id }}">
-                                    <ul class="sub-nav-menu" id="sub-menu-navigation">
+                                    <ul class="sub-nav-menu lh-mobile-brand-lines" id="sub-menu-navigation">
                                         {% for line in brand.lines.all %}
                                             <li>
                                                 <a href="{% url 'products:line_products' line.slug %}" class="sub-nav-link">
