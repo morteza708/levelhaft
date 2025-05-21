@@ -7,175 +7,77 @@
 {% endblock %}
 
 {% block content %}
-
-
 <div class="container py-4">
-    <div class="row">
-        <div class="col-12">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-12">
             <div class="tf-main-cart">
                 <h2 class="tf-title mb-4 text-center">سبد خرید</h2>
-                
                 {% if cart_items %}
-                    <!-- Mobile Card View -->
-                    <div class="d-block d-md-none">
+                    <div class="row g-3">
                         {% for item in cart_items %}
-                        <div class="cart-item-card card mb-3 px-2 py-3">
-                          <div class="d-flex flex-row align-items-center">
-                            <!-- عکس محصول سمت چپ -->
-                            <div class="cart-item-img me-3 flex-shrink-0">
-                              <img src="{% if item.product.image %}{{ item.product.image }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
-                                   alt="{{ item.product.name }}" class="img-fluid rounded" style="width: 90px; height: 90px; object-fit: cover;">
+                        <div class="col-12">
+                            <div class="card shadow-sm border-0 cart-item-card flex-row flex-wrap align-items-center p-3">
+                                <div class="cart-item-img me-3 mb-2 mb-md-0 flex-shrink-0">
+                                    <img src="{% if item.product.image %}{{ item.product.image }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
+                                         alt="{{ item.product.name }}" class="img-fluid rounded" style="width: 90px; height: 90px; object-fit: cover;">
+                                </div>
+                                <div class="flex-grow-1 d-flex flex-column justify-content-between">
+                                    <div class="fw-bold text-dark mb-2" style="font-size: 1.1rem;">{{ item.product.name }}</div>
+                                    <div class="d-flex align-items-center gap-2 mb-3">
+                                        <form action="{% url 'cart:cart_add' item.product.product_id %}" method="post" class="d-flex align-items-center">
+                                            {% csrf_token %}
+                                            <button type="button" class="btn btn-light border quantity-btn px-2 py-1" onclick="decreaseQuantity('{{ item.product.product_id }}')">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input type="number" name="quantity" value="{{ item.quantity|default:1 }}" min="1" max="{{ item.product.stock }}" class="form-control text-center mx-1" style="width: 50px;" id="quantity_{{ item.product.product_id }}">
+                                            <button type="button" class="btn btn-light border quantity-btn px-2 py-1" onclick="increaseQuantity('{{ item.product.product_id }}', {{ item.product.stock }})">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                            <input type="hidden" name="update" value="True">
+                                            <button class="btn btn-outline-secondary ms-2 px-2 py-1" type="submit" title="بروزرسانی">
+                                                <i class="fas fa-sync-alt"></i>
+                                            </button>
+                                        </form>
+                                        <span class="text-muted small">موجودی: {{ item.product.stock }} عدد</span>
+                                    </div>
+                                    <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
+                                        <div class="fw-bold text-primary" style="font-size: 1.1rem;">
+                                            قیمت واحد: {{ item.product.price|intcomma:False }} <span class="text-secondary" style="font-size:0.95rem;">ریال</span>
+                                        </div>
+                                        <div class="fw-bold text-success" style="font-size: 1.1rem;">
+                                            قیمت کل: {{ item.product.total_price|intcomma:False }} <span class="text-secondary" style="font-size:0.95rem;">ریال</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <form action="{% url 'cart:cart_remove' item.product.product_id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle ms-2" title="حذف">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex-grow-1 d-flex flex-column align-items-center">
-                              <div class="fw-bold text-dark mb-2 text-center" style="font-size: 1.15rem;">{{ item.product.name }}</div>
-                              <div class="d-flex align-items-center justify-content-center mb-2">
-                                {% if item.product.product_id %}
-                                <form action="{% url 'cart:cart_add' item.product.product_id %}" method="post" class="d-flex align-items-center justify-content-center">
-                                  {% csrf_token %}
-                                  <div class="quantity-control">
-                                    <button type="button" class="btn quantity-btn" onclick="decreaseQuantity('{{ item.product.product_id }}')">
-                                      <i class="fas fa-minus"></i>
-                                    </button>
-                                    <input type="number" 
-                                           name="quantity" 
-                                           value="{{ item.quantity|default:1 }}" 
-                                           min="1" 
-                                           max="{{ item.product.stock }}"
-                                           class="quantity-input-field"
-                                           id="quantity_{{ item.product.product_id }}">
-                                    <button type="button" class="btn quantity-btn" onclick="increaseQuantity('{{ item.product.product_id }}', {{ item.product.stock }})">
-                                      <i class="fas fa-plus"></i>
-                                    </button>
-                                  </div>
-                                  <input type="hidden" name="update" value="True">
-                                  <button class="btn btn-update ms-2" type="submit">
-                                    <i class="fas fa-sync-alt"></i>
-                                  </button>
-                                </form>
-                                {% else %}
-                                <span class="text-danger">محصول نامعتبر یا حذف شده از فروشگاه</span>
-                                {% endif %}
-                                <form action="{% url 'cart:cart_remove' item.product.product_id %}" method="post" class="ms-2">
-                                  {% csrf_token %}
-                                  <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-                                </form>
-                              </div>
-                              <div class="text-muted mb-2" style="font-size: 0.98rem;">موجودی: {{ item.product.stock }} عدد</div>
-                              <div class="fw-bold text-primary text-center" style="font-size: 1.25rem;">{{ item.product.total_price|intcomma:False }} <span style="font-size:0.98rem;">ریال</span></div>
-                            </div>
-                          </div>
                         </div>
                         {% endfor %}
                     </div>
-                    <!-- /Mobile Card View -->
-                    <div class="tf-cart-table d-none d-md-block">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">تصویر</th>
-                                        <th>نام محصول</th>
-                                        <th class="text-center">تعداد</th>
-                                        <th class="text-center">قیمت واحد</th>
-                                        <th class="text-center">قیمت کل</th>
-                                        <th class="text-center">حذف</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in cart_items %}
-                                        <tr>
-                                            <td class="text-center">
-                                                <div class="product-image">
-                                                    <img src="{% if item.product.image %}{{ item.product.image }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
-                                                         alt="{{ item.product.name }}"
-                                                         class="img-fluid">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="product-info">
-                                                    <h6 class="product-name">{{ item.product.name }}</h6>
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                {% if item.product.product_id %}
-                                                <form action="{% url 'cart:cart_add' item.product.product_id %}" method="post" class="d-flex align-items-center justify-content-center">
-                                                    {% csrf_token %}
-                                                    <div class="quantity-control">
-                                                        <button type="button" class="btn quantity-btn" onclick="decreaseQuantity('{{ item.product.product_id }}')">
-                                                            <i class="fas fa-minus"></i>
-                                                        </button>
-                                                        <input type="number" 
-                                                               name="quantity" 
-                                                               value="{{ item.quantity|default:1 }}" 
-                                                               min="1" 
-                                                               max="{{ item.product.stock }}"
-                                                               class="quantity-input-field"
-                                                               id="quantity_{{ item.product.product_id }}">
-                                                        <button type="button" class="btn quantity-btn" onclick="increaseQuantity('{{ item.product.product_id }}', {{ item.product.stock }})">
-                                                            <i class="fas fa-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                    <input type="hidden" name="update" value="True">
-                                                    <button class="btn btn-update ms-2" type="submit">
-                                                        <i class="fas fa-sync-alt"></i>
-                                                    </button>
-                                                </form>
-                                                {% else %}
-                                                <span class="text-danger">محصول نامعتبر یا حذف شده از فروشگاه</span>
-                                                {% endif %}
-                                                <small class="text-muted d-block mt-1">موجودی: {{ item.product.stock }} عدد</small>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="product-price">
-                                                    <span class="price">{{ item.product.price|intcomma:False }}</span>
-                                                    <small class="currency">ریال</small>
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="product-total-price">
-                                                    <span class="price">{{ item.product.total_price|intcomma:False }}</span>
-                                                    <small class="currency">ریال</small>
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <form action="{% url 'cart:cart_remove' item.product.product_id %}" method="post">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-remove">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="tf-cart-total mt-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-md-6">
-                                        <div class="total-info">
-                                            <h5 class="mb-0">جمع کل سبد خرید:</h5>
-                                            <div class="total-price">
-                                                <span class="price fw-bold">{{ cart.get_total_price|intcomma:False }}</span>
-                                                <small class="currency">ریال</small>
-                                            </div>
+                    <div class="row justify-content-center mt-4">
+                        <div class="col-md-8 col-12">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body">
+                                    <div class="d-flex flex-column align-items-center align-items-md-start mb-3">
+                                        <h5 class="mb-2">جمع کل سبد خرید:</h5>
+                                        <div class="total-price fw-bold text-primary" style="font-size: 1.5rem;">
+                                            {{ cart.get_total_price|intcomma:False }} <span class="text-secondary" style="font-size:1rem;">ریال</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                                        <div class="cart-actions">
-                                            <a href="{% url 'pages:home' %}" class="btn btn-continue">
-                                                <i class="fas fa-arrow-right ms-2"></i>
-                                                ادامه خرید
-                                            </a>
-                                            <a href="{% url 'orders:order_create' %}" class="btn btn-checkout">
-                                                نهایی کردن خرید
-                                                <i class="fas fa-arrow-left me-2"></i>
-                                            </a>
-                                        </div>
+                                    <div class="d-flex flex-row justify-content-center gap-3 mt-3">
+                                        <a href="{% url 'pages:home' %}" class="btn btn-outline-secondary btn-md rounded-pill px-4">
+                                            <i class="fas fa-arrow-right ms-2"></i> ادامه خرید
+                                        </a>
+                                        <a href="{% url 'orders:order_create' %}" class="btn btn-success btn-md rounded-pill px-4">
+                                            نهایی کردن خرید <i class="fas fa-arrow-left me-2"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -188,7 +90,7 @@
                         </div>
                         <h5 class="fw-bold mb-3">سبد خرید شما خالی است</h5>
                         <p class="text-muted mb-4">برای مشاهده محصولات و افزودن به سبد خرید، به فروشگاه مراجعه کنید.</p>
-                        <a href="{% url 'pages:home' %}" class="btn btn-primary">
+                        <a href="{% url 'pages:home' %}" class="btn btn-primary btn-lg">
                             <i class="fas fa-store me-2"></i>
                             مشاهده محصولات
                         </a>
@@ -202,377 +104,102 @@
 
 {% block extra_css %}
 <style>
-    .tf-breadcrumb {
-        background-color: #f8f9fa;
-        padding: 15px 0;
-        margin-bottom: 30px;
-    }
-
-    .tf-breadcrumb-list {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .tf-breadcrumb-list .text {
-        color: #6c757d;
-        text-decoration: none;
-    }
-
-    .tf-breadcrumb-list .icon {
-        color: #adb5bd;
-    }
-
     .tf-main-cart {
-        background: white;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px 18px;
+        box-shadow: 0 2px 16px #0000000a;
     }
-
     .tf-title {
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 1.6rem;
+        font-weight: 700;
         color: #212529;
         margin-bottom: 20px;
     }
-
-    .tf-cart-table {
-        margin-bottom: 30px;
+    .cart-item-card {
+        border-radius: 16px;
+        background: #f9f9fb;
+        box-shadow: 0 1px 8px #0000000a;
+        transition: box-shadow 0.2s;
     }
-
-    .tf-cart-table .table {
-        margin-bottom: 0;
+    .cart-item-card:hover {
+        box-shadow: 0 4px 24px #28a74522;
     }
-
-    .tf-cart-table th {
-        background-color: #f8f9fa;
-        border-bottom: 2px solid #dee2e6;
-        font-weight: 600;
-        color: #495057;
-    }
-
-    .product-image {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto;
-        overflow: hidden;
-        border-radius: 8px;
-    }
-
-    .product-image img {
-        width: 100%;
-        height: 100%;
+    .cart-item-img img {
+        border-radius: 12px;
+        border: 1px solid #eee;
+        background: #fafafa;
+        width: 90px;
+        height: 90px;
         object-fit: cover;
     }
-
-    .product-name {
-        font-size: 16px;
-        font-weight: 500;
-        color: #212529;
-        margin-bottom: 0;
-    }
-
-    .quantity-control {
-        max-width: 180px;
-        margin: 0 auto;
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-    }
-
     .quantity-btn {
+        border-radius: 8px !important;
+        font-size: 1.1rem;
         width: 36px;
         height: 36px;
-        padding: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: white;
-        border: 1px solid #dee2e6;
-        color: #495057;
-        border-radius: 6px;
-        transition: all 0.2s;
-        min-width: 36px;
     }
-
-    .quantity-btn:hover {
-        background: #e9ecef;
-    }
-
-    .quantity-input-field {
-        width: 50px !important;
-        min-width: 50px !important;
+    .form-control[type=number] {
+        border-radius: 8px;
+        font-size: 1.1rem;
+        padding: 4px 8px;
+        width: 50px;
         text-align: center;
-        border: 1px solid #dee2e6 !important;
-        background: white !important;
-        margin: 0 5px;
-        padding: 5px !important;
-        font-size: 16px;
-        font-weight: 500;
-        color: #212529 !important;
-        border-radius: 6px;
-        -webkit-appearance: none;
-        -moz-appearance: textfield;
     }
-
-    .quantity-input-field::-webkit-inner-spin-button,
-    .quantity-input-field::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    .btn-update {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        color: #495057;
-        padding: 8px 12px;
-        border-radius: 6px;
-        transition: all 0.2s;
-    }
-
-    .btn-update:hover {
-        background: #e9ecef;
-    }
-
-    .btn-remove {
-        color: #dc3545;
-        padding: 8px;
-        border-radius: 6px;
-        transition: all 0.2s;
-    }
-
-    .btn-remove:hover {
-        background: #f8d7da;
-    }
-
-    .product-price, .product-total-price {
+    .btn-outline-danger.rounded-circle {
+        width: 36px;
+        height: 36px;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px;
+        padding: 0;
+        font-size: 1.1rem;
     }
-
-    .price {
-        font-weight: 600;
-        color: #212529;
-    }
-
-    .currency {
-        color: #6c757d;
-        font-size: 14px;
-    }
-
-    .tf-cart-total {
-        background: white;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-
-    .total-info {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
     .total-price {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .total-price .price {
-        font-size: 24px;
+        font-size: 1.5rem;
         color: #0d6efd;
     }
-
-    .cart-actions {
-        display: flex;
-        gap: 10px;
-        justify-content: flex-end;
-    }
-
-    .btn-continue {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        color: #495057;
-        padding: 10px 20px;
-        border-radius: 8px;
-        transition: all 0.2s;
-    }
-
-    .btn-continue:hover {
-        background: #e9ecef;
-    }
-
-    .btn-checkout {
-        background: #0d6efd;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 8px;
-        transition: all 0.2s;
-    }
-
-    .btn-checkout:hover {
-        background: #0b5ed7;
-        color: white;
-    }
-
-    .tf-empty-cart {
-        text-align: center;
-        padding: 40px 20px;
-    }
-
-    .empty-icon {
-        font-size: 48px;
+    .tf-empty-cart .empty-icon {
+        font-size: 3.5rem;
         color: #adb5bd;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-
     @media (max-width: 768px) {
         .tf-main-cart {
-            padding: 15px;
+            padding: 10px 2px;
+            border-radius: 10px;
         }
-
-        .tf-cart-table .table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
+        .cart-item-card {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            padding: 1.2rem 0.7rem !important;
         }
-
-        .product-image {
-            width: 60px;
-            height: 60px;
-        }
-
-        .product-name {
-            font-size: 14px;
-        }
-
-        .quantity-control {
-            max-width: 120px;
-            background: white;
-            border: 1px solid #dee2e6;
-            padding: 5px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2px;
-        }
-
-        .quantity-btn {
-            width: 30px;
-            height: 30px;
-            min-width: 30px;
-            font-size: 12px;
-            background: #f8f9fa;
-        }
-
-        .quantity-input-field {
-            width: 40px !important;
-            min-width: 40px !important;
-            height: 30px !important;
-            line-height: 30px !important;
-            padding: 0 !important;
-            margin: 0 2px !important;
-            font-size: 14px;
-            font-weight: bold;
-            color: #212529 !important;
-            background: white !important;
-            border: 1px solid #dee2e6 !important;
-            border-radius: 4px;
+        .cart-item-img {
+            margin: 0 auto 1rem auto !important;
             text-align: center;
-        }
-
-        .total-info {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .total-price {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            margin-top: 5px;
-        }
-
-        .total-price .price {
-            font-size: 20px;
-            color: #0d6efd;
-        }
-
-        .tf-cart-total .card-body .row {
-            text-align: center;
-        }
-
-        .tf-cart-total .card-body .col-md-6 {
-            width: 100%;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .cart-actions {
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-            width: 100%;
-        }
-
-        .btn-continue, .btn-checkout {
-            width: 100%;
-            text-align: center;
-        }
-
-        .cart-item-card.card {
-            width: 99%;
-            margin: 0 auto 1.5rem auto;
-            border-radius: 20px;
-            box-shadow: 0 2px 18px #00000018;
-            border: 1px solid #f1f1f1;
-            background: #fff;
-            padding: 1.5rem 1.2rem 1.2rem 1.2rem;
         }
         .cart-item-img img {
-            border-radius: 14px;
-            border: 1px solid #eee;
-            background: #fafafa;
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
+            width: 80px;
+            height: 80px;
         }
-        .cart-item-card .btn-outline-danger,
-        .cart-item-card .btn-outline-secondary {
-            border-radius: 50%;
-            padding: 8px 10px;
-            font-size: 18px;
+        .card-body.d-flex.flex-md-row {
+            flex-direction: column !important;
+            align-items: stretch !important;
         }
-        .cart-item-card .btn-light {
-            border-radius: 50%;
-            padding: 6px 10px;
-            font-size: 18px;
+        .btn-lg {
+            font-size: 1.1rem;
+            padding: 0.8rem 1.2rem;
         }
-        .cart-item-card .form-control-sm {
-            border-radius: 10px;
-            font-size: 17px;
-            padding: 4px 8px;
-            width: 48px;
-            text-align: center;
-        }
-        .cart-item-card .fw-bold.text-dark {
-            font-size: 1.18rem !important;
-        }
-        .cart-item-card .fw-bold.text-primary {
-            font-size: 1.32rem !important;
-        }
+        .cart-item-card .fw-bold.text-dark { font-size: 1.15rem !important; margin-bottom: 1.1rem !important; }
+        .cart-item-card .d-flex.align-items-center.gap-2 { margin-bottom: 1.1rem !important; }
+        .cart-item-card .d-flex.flex-wrap.align-items-center.gap-3 { margin-bottom: 1.1rem !important; }
+        .tf-empty-cart .empty-icon { font-size: 3rem; margin-bottom: 1.2rem; }
     }
 </style>
 {% endblock %}
