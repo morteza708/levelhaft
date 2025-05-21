@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}لیست اکسسوری‌ها{% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<style>
+    body, html { overflow-x: hidden !important; }
+    .product-grid, .product-col, .product-card { max-width: 100vw !important; }
+    .product-image img { max-width: 100%; height: auto; display: block; }
+  </style>
+{% endblock %}
+
+{% block content %}
+<!-- page-title -->
+<div class="tf-page-title">
+    <div class="container-full">
+        <div class="row">
+            <div class="col-12">
+                <div class="heading text-center d-flex align-items-center justify-content-center">
+                    <span>لیست اکسسوری‌ها</span>
+                </div>
+                <p class="text-center text-2 text_black-2 mt_5">تمام اکسسوری‌های موجود از همه برندها</p> 
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /page-title -->
+<section class="flat-spacing-1">
+    <div class="container">
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-col">
+                <div class="product-card">
+                    <a href="{% url 'products:product_detail' product.slug %}" class="product-image">
+                        {% if product.images.all %}
+                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'img/no-image.png' %}" alt="بدون تصویر">
+                        {% endif %}
+                    </a>
+                    <div class="product-title">
+                        <a href="{% url 'products:product_detail' product.slug %}" class="text-decoration-none text-dark">
+                            {{ product.name }}
+                        </a>
+                    </div>
+                    <div class="product-brand-line">
+                        {{ product.brand.name }}{% if product.line.name %} - {{ product.line.name }}{% endif %}
+                    </div>
+                    <div class="product-price">
+                        {% if request.user.is_authenticated and request.user.profile.is_beautician %}
+                            {{ product.price_level_1|intcomma:False|default:"قیمت ناموجود" }} ریال
+                        {% else %}
+                            {{ product.price_level_2|intcomma:False|default:"قیمت ناموجود" }} ریال
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>هیچ اکسسوری‌ای موجود نیست</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if products.paginator.num_pages > 1 %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <nav aria-label="صفحه بندی محصولات">
+                    <ul class="pagination justify-content-center">
+                        {% if products.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ products.previous_page_number }}" aria-label="قبلی">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span>قبلی</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span>قبلی</span>
+                                </span>
+                            </li>
+                        {% endif %}
+
+                        {% for num in products.paginator.page_range %}
+                            {% if products.number == num %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                            {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if products.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ products.next_page_number }}" aria-label="بعدی">
+                                    <span>بعدی</span>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <span>بعدی</span>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock content %}

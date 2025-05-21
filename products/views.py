@@ -372,6 +372,14 @@ def consult_view(request):
         'models': models,
     })
 
+def accessories_list_view(request):
+    accessories = Product.objects.filter(line__name='اکسسوری').select_related('brand', 'line')
+    context = {
+        'products': accessories,
+        'page_title': 'لیست اکسسوری‌ها'
+    }
+    return render(request, 'accesories_list.html', context)
+
 
 
 

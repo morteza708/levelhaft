@@ -194,6 +194,17 @@
                 font-size: 1rem !important;
             }
         }
+        .mb-menu-link.accessory-link {
+            background: #f8fff8 !important;
+            border-radius: 8px !important;
+            padding: 12px 0 !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+            font-weight: 600 !important;
+            transition: background 0.2s;
+        }
+        .mb-menu-link.accessory-link:hover {
+            background: #e6ffe6 !important;
+        }
     </style>
 </head>
 
@@ -778,6 +789,15 @@
                                 <span class="mb-menu-link">هیچ برندی موجود نیست</span>
                             </li>
                         {% endfor %}
+                        <!-- Accessories menu item -->
+                        <li class="nav-mb-item">
+                            <a href="{% url 'products:accessories_list' %}" class="mb-menu-link accessory-link">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-toolbox" style="color:#28a745; font-size: 1.1rem;"></i>
+                                    <span style="font-weight: 600; margin-right: 6px;">اکسسوری</span>
+                                </div>
+                            </a>
+                        </li>
                     </div>                         
                  </ul>
              </div>
