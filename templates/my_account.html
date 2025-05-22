@@ -607,7 +607,7 @@
                                                 <tr>
                                                     <th>شماره سفارش</th>
                                                     <th>تاریخ ثبت</th>
-                                                    <th>وضعیت</th>
+                                                    <th>وضعیت سفارش</th>
                                                     <th>وضعیت پرداخت</th>
                                                     <th>مبلغ کل</th>
                                                     <th>عملیات</th>
@@ -620,7 +620,7 @@
                                                         <td data-label="تاریخ ثبت">{{ order.created_at|jformat:"%Y/%m/%d" }}</td>
                                                         <td data-label="وضعیت">
                                                             {% if order.status == 'pending' %}
-                                                                <span class="badge bg-warning">در انتظار پرداخت</span>
+                                                                <span class="badge bg-warning">در انتظار تایید</span>
                                                             {% elif order.status == 'processing' %}
                                                                 <span class="badge bg-info">در حال پردازش</span>
                                                             {% elif order.status == 'shipped' %}

@@ -183,18 +183,10 @@ def order_cancel(request, order_id):
         notes='لغو سفارش توسط کاربر'
     )
     
-    # بازگشت وجه به کیف پول
+    # فقط ارسال پیامک و اطلاع‌رسانی (واریز وجه در سیگنال انجام می‌شود)
     if order.payment_status == 'paid':
-        deposit_to_wallet(
-            request.user.wallet,
-            order.final_amount,
-            transaction_type='refund',
-            description=f"بازگشت وجه سفارش {order.order_number}"
-        )
-        # ارسال پیامک بازگشت وجه
         send_refund_sms(request.user, order.final_amount, order.order_number)
     
-    # اطلاع‌رسانی به مدیر
     send_cancel_notification_to_admin(order)
     
     return JsonResponse({

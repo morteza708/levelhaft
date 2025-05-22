@@ -77,23 +77,40 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
         if instance.payment_status == 'paid':
             wallet = instance.user.wallet
             refund_amount = instance.final_amount
-            wallet.balance += refund_amount
-            wallet.save()
 
-            WalletTransaction.objects.create(
+            # جلوگیری از واریز تکراری
+            already_refunded = WalletTransaction.objects.filter(
                 wallet=wallet,
                 amount=refund_amount,
                 type='deposit',
-                description=f'بازگشت مبلغ سفارش لغو شده {instance.order_number}'
-            )
-            logger.info(f"💰 مبلغ {refund_amount} ریال به کیف پول بازگردانده شد.")
+                description__icontains=f'بازگشت مبلغ سفارش لغو شده {instance.order_number}'
+            ).exists()
+
+            if not already_refunded:
+                wallet.balance += refund_amount
+                wallet.save()
+
+                WalletTransaction.objects.create(
+                    wallet=wallet,
+                    amount=refund_amount,
+                    type='deposit',
+                    description=f'بازگشت مبلغ سفارش لغو شده {instance.order_number}'
+                )
+                logger.info(f"💰 مبلغ {refund_amount} ریال به کیف پول بازگردانده شد.")
 
         # 3. حذف پاداش از کیف پول (در صورت وجود)
         if instance.reward_applied:
             wallet = instance.user.wallet
             reward = get_order_reward_amount(instance)
 
-            if reward > 0 and wallet.balance >= reward:
+            already_withdrawn = WalletTransaction.objects.filter(
+                wallet=wallet,
+                amount=reward,
+                type='withdraw',
+                description__icontains=f'حذف پاداش سفارش لغو شده {instance.order_number}'
+            ).exists()
+
+            if reward > 0 and wallet.balance >= reward and not already_withdrawn:
                 wallet.balance -= reward
                 wallet.save()
 
@@ -107,61 +124,3 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
 
             # برای اطمینان دوباره ست شود
             instance.reward_applied = False
-
-
-
-
-
-# @receiver(post_save, sender=Order)
-# def handle_order_cancellation(sender, instance, created, **kwargs):
-#     """
-#     سیگنال برای بازگشت موجودی محصولات و بازپرداخت مبلغ به کیف پول پس از لغو سفارش
-#     """
-#     print("سیگنال لغو سفارش فراخوانی شد", instance.status)
-#     if not created and instance.status == 'cancelled':
-#         try:
-#             old = sender.objects.get(pk=instance.pk)
-#             print("سفارش قبلی یافت شد:", old.status)
-#         except sender.DoesNotExist:
-#             old = None
-#             print("سفارش قبلی یافت نشد.")
-        
-#         # تغییر شرط: اگر وضعیت قبلی cancelled نبوده باشد
-#         if old and old.status != 'cancelled':
-#             print("سفارش لغو شده است و موجودی باید بازگردد")
-#             # بازگشت موجودی محصولات
-#             for item in instance.items.all():
-#                 product = item.product
-#                 product.stock += item.quantity
-#                 product.save()
-#                 print(f"[سیگنال لغو] موجودی محصول {product.name} به میزان {item.quantity} افزایش یافت.")
-#             # بازپرداخت مبلغ به کیف پول
-#             if instance.payment_status == 'paid':
-#                 wallet = instance.user.wallet
-#                 refund_amount = instance.final_amount
-#                 wallet.balance += refund_amount
-#                 wallet.save()
-#                 WalletTransaction.objects.create(
-#                     wallet=wallet,
-#                     amount=refund_amount,
-#                     type='deposit',
-#                     description=f'بازپرداخت مبلغ سفارش لغو شده {instance.order_number}'
-#                 )
-#                 print(f"[سیگنال لغو] مبلغ {refund_amount} به کیف پول کاربر بازپرداخت شد.")
-#             # اگر پاداش اعمال شده بود، آن را حذف کن
-#             if instance.reward_applied:
-#                 from wallet.services.wallet_services import get_order_reward_amount
-#                 reward_amount = get_order_reward_amount(instance)
-#                 if reward_amount > 0:
-#                     wallet = instance.user.wallet
-#                     wallet.balance -= reward_amount
-#                     wallet.save()
-#                     WalletTransaction.objects.create(
-#                         wallet=wallet,
-#                         amount=-reward_amount,
-#                         type='withdraw',
-#                         description=f'حذف پاداش سفارش لغو شده {instance.order_number}'
-#                     )
-#                     print(f"[سیگنال لغو] پاداش سفارش {instance.order_number} به مبلغ {reward_amount} از کیف پول کاربر کسر شد.")
-#                 instance.reward_applied = False
-#                 instance.save(update_fields=["reward_applied"]) 
