@@ -165,7 +165,7 @@ def order_list(request):
 def order_cancel(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     
-    if order.status not in ['pending', 'processing']:
+    if order.status not in ['pending']:
         return JsonResponse({
             'status': 'error',
             'message': 'این سفارش قابل لغو نیست'

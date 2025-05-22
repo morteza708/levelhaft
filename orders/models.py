@@ -80,7 +80,7 @@ class Order(models.Model):
 
     @property
     def can_be_cancelled(self):
-        return self.status in ['pending', 'processing']
+        return self.status == 'pending'
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name="سفارش")
