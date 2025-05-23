@@ -3,8 +3,19 @@ from django.utils.html import format_html
 from .models import Order, OrderItem, OrderStatusHistory
 from accounts.tasks import send_message_task
 import logging
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
 
 logger = logging.getLogger(__name__)
+
+class OrderResource(resources.ModelResource):
+    class Meta:
+        model = Order
+        fields = ('order_number', 'user__phone_number', 'user__email', 'status', 'payment_status', 
+                 'total_amount', 'discount_amount', 'final_amount', 'unpaid_amount',
+                 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_city', 
+                 'receiver_postal_code', 'notes', 'tracking_code', 'created_at')
+        export_order = fields
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -23,7 +34,8 @@ class OrderStatusHistoryInline(admin.TabularInline):
         return False
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(ImportExportModelAdmin):
+    resource_class = OrderResource
     list_display = [
         'order_number', 'user', 'status', 'payment_status', 'final_amount_display', 'created_at'
     ]

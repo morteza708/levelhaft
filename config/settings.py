@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_ckeditor_5',
     'crispy_forms',
     'crispy_bootstrap5',
+    'import_export',
 
     # local apps
     'accounts',
