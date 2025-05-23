@@ -50,21 +50,46 @@
                                 <i class="fas fa-money-bill-wave"></i>
                             </div>
                             <div class="info-content">
-                                <span class="info-label">هزینه ثبت‌نام</span>
+                                <span class="info-label">هزینه ثبت‌نام (شرط خرید محصولات)</span>
                                 <span class="info-value">{{ workshop.price|intcomma:False }} ریال</span>
                             </div>
                         </div>
-                        {% if approved_registrations_count %}
                         <div class="info-item">
                             <div class="info-icon">
                                 <i class="fas fa-users"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">ظرفیت کل ورکشاپ</span>
+                                <span class="info-value">{{ capacity }} نفر</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-user-check"></i>
                             </div>
                             <div class="info-content">
                                 <span class="info-label">تعداد ثبت‌نام‌های تایید شده</span>
                                 <span class="info-value">{{ approved_registrations_count }} نفر</span>
                             </div>
                         </div>
-                        {% endif %}
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">در انتظار تایید</span>
+                                <span class="info-value">{{ pending_registrations_count }} نفر</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">ظرفیت باقی‌مانده</span>
+                                <span class="info-value">{{ remaining_capacity }} نفر</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Registration Status -->
@@ -91,6 +116,10 @@
                                         {% endif %}
                                     </div>
                                 </div>
+                            </div>
+                        {% elif remaining_capacity == 0 %}
+                            <div class="register-action">
+                                <button class="btn-register" disabled style="background: #ccc; cursor: not-allowed;">ظرفیت تکمیل است</button>
                             </div>
                         {% else %}
                             <div class="register-action">

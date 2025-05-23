@@ -19,7 +19,7 @@ class WorkshopBrandAdmin(admin.ModelAdmin):
 
 @admin.register(Workshop)
 class WorkshopAdmin(admin.ModelAdmin):
-    list_display = ['title', 'brand', 'date', 'city', 'display_price', 'workshop_image']
+    list_display = ['title', 'brand', 'date', 'city', 'display_price', 'capacity', 'workshop_image']
     list_filter = ['brand', 'city', 'date']
     search_fields = ['title', 'brand__name', 'city']
     readonly_fields = ['workshop_image_preview']
@@ -42,7 +42,7 @@ class WorkshopAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('اطلاعات اصلی', {
-            'fields': ('title', 'brand', 'date', 'city')
+            'fields': ('title', 'brand', 'date', 'city', 'capacity')
         }),
         ('اطلاعات مالی', {
             'fields': ('price',)

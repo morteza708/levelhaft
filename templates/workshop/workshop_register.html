@@ -41,7 +41,47 @@
                                 <span class="info-value">{{ workshop.price|intcomma:False }} ریال</span>
                             </div>
                         </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">ظرفیت کل ورکشاپ</span>
+                                <span class="info-value">{{ capacity }} نفر</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">تعداد ثبت‌نام‌های تایید شده</span>
+                                <span class="info-value">{{ approved_registrations_count }} نفر</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">در انتظار تایید</span>
+                                <span class="info-value">{{ pending_registrations_count }} نفر</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">ظرفیت باقی‌مانده</span>
+                                <span class="info-value">{{ remaining_capacity }} نفر</span>
+                            </div>
+                        </div>
                     </div>
+
+                    {% if remaining_capacity == 0 %}
+                        <div class="alert alert-danger text-center my-4">ظرفیت این ورکشاپ تکمیل شده است و امکان ثبت‌نام جدید وجود ندارد.</div>
+                    {% endif %}
 
                     <form method="post" class="register-form needs-validation" novalidate>
                         {% csrf_token %}

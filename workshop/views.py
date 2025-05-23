@@ -69,20 +69,20 @@ class WorkshopDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = self.object.title
-        
+        workshop = self.object
+        # ظرفیت و تعداد ثبت‌نام‌ها
+        total_approved = workshop.registrations.filter(status='approved').count()
+        total_pending = workshop.registrations.filter(status='pending').count()
+        context['capacity'] = workshop.capacity
+        context['approved_registrations_count'] = total_approved
+        context['pending_registrations_count'] = total_pending
+        context['remaining_capacity'] = max(0, workshop.capacity - (total_approved + total_pending))
         if self.request.user.is_authenticated:
             # بررسی وضعیت ثبت‌نام کاربر در این ورکشاپ
             context['user_registration'] = WorkshopRegistration.objects.filter(
-                workshop=self.object,
+                workshop=workshop,
                 user=self.request.user
             ).select_related('user').first()
-            
-            # تعداد ثبت‌نام‌های تایید شده
-            context['approved_registrations_count'] = WorkshopRegistration.objects.filter(
-                workshop=self.object,
-                status='approved'
-            ).count()
-        
         return context
 
 class WorkshopRegistrationView(LoginRequiredMixin, CreateView):
@@ -96,34 +96,41 @@ class WorkshopRegistrationView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         workshop = self.get_workshop()
+        # ظرفیت و تعداد ثبت‌نام‌ها
+        total_approved = workshop.registrations.filter(status='approved').count()
+        total_pending = workshop.registrations.filter(status='pending').count()
         context['workshop'] = workshop
+        context['capacity'] = workshop.capacity
+        context['approved_registrations_count'] = total_approved
+        context['pending_registrations_count'] = total_pending
+        context['remaining_capacity'] = max(0, workshop.capacity - (total_approved + total_pending))
         context['page_title'] = f'ثبت‌نام در {workshop.title}'
         return context
     
     def form_valid(self, form):
         workshop = self.get_workshop()
+        # ظرفیت را چک کن
+        total_approved = workshop.registrations.filter(status='approved').count()
+        total_pending = workshop.registrations.filter(status='pending').count()
+        if (total_approved + total_pending) >= workshop.capacity:
+            form.add_error(None, 'ظرفیت این ورکشاپ تکمیل شده است و امکان ثبت‌نام جدید وجود ندارد.')
+            return self.form_invalid(form)
         form.instance.workshop = workshop
         form.instance.user = self.request.user
-        
-        # Save the registration
         response = super().form_valid(form)
-        
-        # Send SMS to user
+        # ارسال پیامک به کاربر و ادمین (همانند قبل)
         message = f"..."
         send_message_task.delay(
             self.request.user.phone_number,
             message,
             template='workshop-registration'
         )
-        
-        # Send SMS to admin
         message = f"{self.request.user.phone_number}"
         send_message_task.delay(
             settings.ADMIN_PHONE,
             message,
             template='manager-workshop-notification'
         )
-        
         return response
     
     def get_success_url(self):

@@ -25,6 +25,7 @@ class Workshop(models.Model):
     date = jmodels.jDateField(verbose_name="تاریخ برگزاری")
     city = models.CharField(max_length=100, verbose_name="شهر محل برگزاری")
     price = models.PositiveIntegerField(verbose_name="قیمت ورکشاپ (ریال)")
+    capacity = models.PositiveIntegerField(verbose_name="ظرفیت ورکشاپ", default=30)
     description = CKEditor5Field(verbose_name="توضیحات")
     image = models.ImageField(upload_to='workshops/', verbose_name="تصویر ورکشاپ")
 
