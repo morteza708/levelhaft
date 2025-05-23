@@ -6,10 +6,10 @@ from .models import (
 )
 from django.utils.html import format_html
 from .forms import ProductForm, ProductAdminForm
-import csv
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
 from .utils import convert_to_english_digits
 
 def format_price(value):
@@ -21,6 +21,15 @@ def format_price(value):
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
+
+class ProductResource(resources.ModelResource):
+    class Meta:
+        model = Product
+        fields = ('barcode', 'name', 'brand__name', 'line__name', 'usage_type__name', 
+                 'model__name', 'volume_value', 'volume_unit__name', 'short_description',
+                 'price_level_1', 'price_level_2', 'stock', 'is_featured', 'show_on_home',
+                 'created_at')
+        export_order = fields
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
@@ -61,7 +70,8 @@ class VolumeUnitAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(ImportExportModelAdmin):
+    resource_class = ProductResource
     form = ProductAdminForm
     prepopulated_fields = {'slug': ('name',)}
     list_display = ('name', 'brand', 'line', 'usage_type', 'formatted_price_1', 'formatted_price_2', 'stock', 'is_featured', 'show_on_home',)
@@ -71,7 +81,7 @@ class ProductAdmin(admin.ModelAdmin):
     autocomplete_fields = ['brand', 'line', 'usage_type', 'model', 'volume_unit', 'skin_types', 'skin_conditions']
     inlines = [ProductImageInline]
     filter_horizontal = ('skin_types', 'skin_conditions')
-    actions = ['export_as_csv', 'make_featured']
+    actions = ['make_featured']
 
     class Media:
         js = ('js/price-format.js',)
@@ -83,22 +93,6 @@ class ProductAdmin(admin.ModelAdmin):
     def formatted_price_2(self, obj):
         return format_price(obj.price_level_2)
     formatted_price_2.short_description = "قیمت عادی"
-
-    def export_as_csv(self, request, queryset):
-        response = HttpResponse(content_type='text/csv; charset=utf-8')
-        response['Content-Disposition'] = 'attachment; filename=products.csv'
-        writer = csv.writer(response)
-        writer.writerow(['نام', 'برند', 'قیمت بیوتیشن', 'قیمت عادی', 'موجودی'])
-        for obj in queryset:
-            writer.writerow([
-                obj.name,
-                obj.brand.name if obj.brand else '',
-                obj.price_level_1,
-                obj.price_level_2,
-                obj.stock
-            ])
-        return response
-    export_as_csv.short_description = "📤 خروجی اکسل از محصولات"
 
     def make_featured(self, request, queryset):
         queryset.update(is_featured=True)

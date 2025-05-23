@@ -5,6 +5,8 @@ from django.db import transaction
 from .models import CustomUser, CustomerProfile, Address
 from .helper import send_message
 from .tasks import send_message_task
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
 
 def convert_persian_to_english(text):
     persian_digits = '۰۱۲۳۴۵۶۷۸۹'
@@ -12,7 +14,23 @@ def convert_persian_to_english(text):
     translation_table = str.maketrans(persian_digits, english_digits)
     return text.translate(translation_table)
 
-class CustomUserAdmin(admin.ModelAdmin):
+class CustomUserResource(resources.ModelResource):
+    class Meta:
+        model = CustomUser
+        fields = ('phone_number', 'first_name', 'last_name', 'email', 'is_beautician', 
+                 'is_staff', 'is_superuser', 'is_active', 'date_joined')
+        export_order = fields
+
+class CustomerProfileResource(resources.ModelResource):
+    class Meta:
+        model = CustomerProfile
+        fields = ('user__phone_number', 'first_name', 'last_name', 'birth_date', 'age', 
+                 'gender', 'clinic_name', 'activity_city', 'activity_history', 
+                 'brand_used', 'instagram_url', 'is_beautician')
+        export_order = fields
+
+class CustomUserAdmin(ImportExportModelAdmin):
+    resource_class = CustomUserResource
     list_display = ('phone_number', 'first_name', 'last_name', 'email', 'is_beautician')
     actions = ['make_beautician']
     fields = ('phone_number', 'is_beautician', 'first_name', 'last_name', 'email', 'is_staff', 'is_superuser', 'is_active')
@@ -32,7 +50,6 @@ class CustomUserAdmin(admin.ModelAdmin):
                 send_message_task.delay(user.phone_number, message, template='beautician-congrats')
     make_beautician.short_description = "تبدیل به بیوتیشن"
 
-
     def get_search_results(self, request, queryset, search_term):
         # تبدیل شماره‌های فارسی به انگلیسی
         search_term_en = convert_persian_to_english(search_term)
@@ -43,7 +60,8 @@ class CustomUserAdmin(admin.ModelAdmin):
             queryset |= self.model.objects.filter(phone_number__icontains=search_term_en)
         return queryset, use_distinct
 
-class CustomerProfileAdmin(admin.ModelAdmin):
+class CustomerProfileAdmin(ImportExportModelAdmin):
+    resource_class = CustomerProfileResource
     list_display = ('user', 'first_name', 'last_name', 'clinic_name', 'is_beautician')
     fields = ('user', 'first_name', 'last_name', 'birth_date', 'age', 'gender','clinic_name', 'activity_city', 'activity_history', 'brand_used','instagram_url', 'is_beautician')
     search_fields = ['first_name', 'last_name', 'user__phone_number']
@@ -64,7 +82,6 @@ class CustomerProfileAdmin(admin.ModelAdmin):
         self.message_user(request, "پروفایل‌ها به بیوتیشن تبدیل شدند.")
     make_beautician.short_description = "تبدیل به بیوتیشن"
 
-
     def save_model(self, request, obj, form, change):
         with transaction.atomic():
             if change:
@@ -84,7 +101,6 @@ class CustomerProfileAdmin(admin.ModelAdmin):
                 super().save_model(request, obj, form, change)
                 obj.user.is_beautician = obj.is_beautician
                 obj.user.save()
-
 
     def get_search_results(self, request, queryset, search_term):
         # تبدیل شماره‌های فارسی به انگلیسی
