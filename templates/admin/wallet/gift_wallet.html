@@ -1,0 +1,82 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}گیفت/شارژ کیف پول{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+    <div class="card custom-card-light border-0 shadow-lg" style="width: 420px;">
+        <div class="card-body p-4" dir="rtl">
+            <div class="d-flex align-items-center mb-3">
+                <div class="me-3">
+                    <i class="fas fa-wallet fa-2x text-success"></i>
+                </div>
+                <div>
+                    <h3 class="mb-0" style="font-weight: 700;">گیفت/شارژ کیف پول</h3>
+                </div>
+            </div>
+            <div class="alert custom-alert-light border mb-4 py-2 px-3">
+                <div><strong>کاربر:</strong> <span class="fw-bold">{{ wallet.user.get_full_name|default:wallet.user.username }}</span></div>
+                <div><strong>موجودی فعلی:</strong> <span class="text-success fw-bold">{{ wallet.balance|intcomma:False }} ریال</span></div>
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="amount" class="form-label">مبلغ (ریال):</label>
+                    <input type="number" class="form-control form-control-lg" id="amount" name="amount" min="1" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">توضیحات (اختیاری):</label>
+                    <input type="text" class="form-control" id="description" name="description" placeholder="مثال: گیفت ادمین">
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-success btn-lg px-4">شارژ کیف پول</button>
+                    <a href="/admin/wallet/wallet/{{ wallet.id }}/change/" class="btn btn-outline-secondary btn-lg px-4">بازگشت</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .custom-card-light {
+        background: #f8f9fa !important;
+        color: #23272b !important;
+        border-radius: 1.2rem;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+    }
+    .custom-alert-light {
+        background: #e9ecef !important;
+        color: #23272b !important;
+        border-radius: 0.7rem;
+    }
+    .form-label, label, strong {
+        color: #23272b !important;
+        font-weight: 500;
+    }
+    .form-control, .form-control:focus {
+        background: #fff !important;
+        color: #23272b !important;
+        border: 1px solid #ced4da;
+        border-radius: 0.6rem;
+    }
+    .btn-success {
+        border: none;
+        font-weight: 600;
+    }
+    .btn-outline-secondary {
+        border: 2px solid #adb5bd;
+        color: #495057;
+        background: #fff;
+        font-weight: 600;
+    }
+    .btn-outline-secondary:hover {
+        background: #dee2e6;
+        color: #23272b;
+    }
+</style>
+{% endblock %} 

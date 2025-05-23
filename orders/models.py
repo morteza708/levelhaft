@@ -42,7 +42,7 @@ class Order(models.Model):
     
     # اطلاعات تکمیلی
     notes = models.TextField(blank=True, verbose_name="توضیحات سفارش")
-    tracking_code = models.CharField(max_length=50, blank=True, verbose_name="کد رهگیری پستی")
+    tracking_code = models.CharField(max_length=50, blank=True, verbose_name="کد رهگیری تیپاکس")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ثبت")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ بروزرسانی")
 

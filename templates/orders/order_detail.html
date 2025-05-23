@@ -126,6 +126,12 @@
                             </span>
                         </td>
                     </tr>
+                    <tr>
+                        {% if order.tracking_code %}
+                        <td class="text-muted">کد رهگیری تیپاکس:</td>
+                        <td>{{ order.tracking_code }}</td>
+                        {% endif %}
+                    </tr>
                 </table>
             </div>
             <div class="col-md-6">

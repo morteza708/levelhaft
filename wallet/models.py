@@ -6,8 +6,13 @@ class Wallet(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='wallet')
     balance = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        verbose_name = 'کیف پول'
+        verbose_name_plural = 'کیف پول ها'
+
     def __str__(self):
-        return f"کیف پول {self.user.username} - موجودی: {self.balance} ریال"
+        username = getattr(self.user, 'username', 'نامشخص')
+        return f"کیف پول {username} - موجودی: {self.balance} ریال"
 
 class WalletTransaction(models.Model):
     TRANSACTION_TYPES = [
@@ -22,6 +27,10 @@ class WalletTransaction(models.Model):
     type = models.CharField(max_length=10, choices=TRANSACTION_TYPES)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'تراکنش کیف پول'
+        verbose_name_plural = 'تراکنش های کیف پول'
 
     def __str__(self):
         return f"{self.wallet.user.username} - {self.get_type_display()} - {self.amount} ریال"
