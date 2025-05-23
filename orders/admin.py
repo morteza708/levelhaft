@@ -74,16 +74,35 @@ class OrderStatusHistoryInline(admin.TabularInline):
 class OrderAdmin(ImportExportModelAdmin):
     resource_class = OrderResource
     list_display = [
-        'order_number', 'user', 'status', 'payment_status', 'final_amount_display', 'created_at'
+        'order_number', 'user', 'status', 'payment_status', 'final_amount_display', 'get_jalali_created_at'
     ]
     list_filter = ['status', 'payment_status', 'created_at']
     search_fields = ['order_number', 'user__phone_number', 'user__email']
     inlines = [OrderItemInline, OrderStatusHistoryInline, PaymentMethodInline]
-    readonly_fields = ['order_number', 'created_at', 'updated_at']
+    readonly_fields = ['order_number', 'get_jalali_created_at', 'get_jalali_updated_at', 'created_at', 'updated_at']
+    fieldsets = (
+        (None, {
+            'fields': ('order_number', 'user', 'status', 'payment_status', 'total_amount', 'discount_amount', 'final_amount', 'unpaid_amount', 'reward_applied')
+        }),
+        ('اطلاعات گیرنده', {
+            'fields': ('receiver_name', 'receiver_phone', 'receiver_address', 'receiver_city', 'receiver_postal_code')
+        }),
+        ('اطلاعات تکمیلی', {
+            'fields': ('notes', 'tracking_code', 'get_jalali_created_at', 'get_jalali_updated_at')
+        }),
+    )
 
     def final_amount_display(self, obj):
         return format_html('<span style="direction:ltr">{}</span>', f"{obj.final_amount:,}")
     final_amount_display.short_description = "مبلغ نهایی (ریال)"
+
+    def get_jalali_created_at(self, obj):
+        return obj.get_jalali_created_at()
+    get_jalali_created_at.short_description = 'تاریخ ثبت'
+
+    def get_jalali_updated_at(self, obj):
+        return obj.get_jalali_updated_at()
+    get_jalali_updated_at.short_description = 'تاریخ بروزرسانی'
 
     def save_model(self, request, obj, form, change):
         if change:  # فقط برای به‌روزرسانی
@@ -113,10 +132,18 @@ class OrderAdmin(ImportExportModelAdmin):
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ['order', 'product', 'quantity', 'unit_price', 'total_price']
+    list_display = ['order', 'product', 'quantity', 'unit_price_display', 'total_price_display']
     list_filter = ['created_at']
     search_fields = ['order__order_number', 'product__name']
     readonly_fields = ['total_price']
+
+    def unit_price_display(self, obj):
+        return f"{obj.unit_price:,}"
+    unit_price_display.short_description = "قیمت واحد (ریال)"
+
+    def total_price_display(self, obj):
+        return f"{obj.total_price:,}"
+    total_price_display.short_description = "قیمت کل (ریال)"
 
 @admin.register(OrderStatusHistory)
 class OrderStatusHistoryAdmin(admin.ModelAdmin):

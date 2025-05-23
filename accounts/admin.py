@@ -62,10 +62,19 @@ class CustomUserAdmin(ImportExportModelAdmin):
 
 class CustomerProfileAdmin(ImportExportModelAdmin):
     resource_class = CustomerProfileResource
-    list_display = ('user', 'first_name', 'last_name', 'clinic_name', 'is_beautician')
+    list_display = ('user_fa', 'first_name', 'last_name', 'clinic_name', 'is_beautician_fa')
     fields = ('user', 'first_name', 'last_name', 'birth_date', 'age', 'gender','clinic_name', 'activity_city', 'activity_history', 'brand_used','instagram_url', 'is_beautician')
     search_fields = ['first_name', 'last_name', 'user__phone_number']
     actions = ['make_beautician']
+
+    def user_fa(self, obj):
+        return obj.user
+    user_fa.short_description = 'کاربر'
+
+    def is_beautician_fa(self, obj):
+        return obj.is_beautician
+    is_beautician_fa.boolean = True
+    is_beautician_fa.short_description = 'بیوتیشن'
 
     def make_beautician(self, request, queryset):
         with transaction.atomic():

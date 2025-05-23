@@ -34,6 +34,34 @@
             display: none; /* در موبایل فلش‌ها مخفی می‌شوند */
         }
     }
+    /* Beautician badge style (from product_list.html) */
+    .beautician-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0.5rem auto 0 auto;
+        background: #f3e6fa;
+        color: #8e44ad;
+        border-radius: 8px;
+        padding: 0.12rem 0.6rem 0.12rem 0.4rem;
+        font-size: 0.92em;
+        font-weight: 600;
+        width: fit-content;
+        min-width: 80px;
+        box-shadow: 0 2px 8px rgba(142,68,173,0.07);
+    }
+    .beautician-badge i {
+        color: #8e44ad;
+        font-size: 1em;
+        margin-left: 0.2rem;
+    }
+    .product-price-area {
+        min-height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
 </style>
 {% endblock %}
 {% block content %}
@@ -224,11 +252,24 @@
                                     <div class="card-product-info text-center">
                                         <a class="title link fw-4 fs-10" href="{% url 'products:product_detail' product.slug %}">{{ product.brand.name }}</a>
                                         <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
-                                        {% if user.is_authenticated and user.profile.is_beautician %}
-                                            <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                        {% else %}
-                                            <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
-                                        {% endif %}
+                                        <div class="product-price-area">
+                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <div class="beautician-badge">
+                                                        <i class="fas fa-spa"></i>
+                                                        <span>بیوتیشن</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -268,11 +309,24 @@
                                             {{ product.brand.name }}
                                         </a>
                                         <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
-                                        {% if user.is_authenticated and user.profile.is_beautician %}
-                                            <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                        {% else %}
-                                            <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
-                                        {% endif %}
+                                        <div class="product-price-area">
+                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <div class="beautician-badge">
+                                                        <i class="fas fa-spa"></i>
+                                                        <span>بیوتیشن</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -313,11 +367,24 @@
                                             {{ product.brand.name }}
                                         </a>
                                         <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
-                                        {% if user.is_authenticated and user.profile.is_beautician %}
-                                            <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                        {% else %}
-                                            <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
-                                        {% endif %}
+                                        <div class="product-price-area">
+                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <div class="beautician-badge">
+                                                        <i class="fas fa-spa"></i>
+                                                        <span>بیوتیشن</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -523,11 +590,24 @@
                                             {{ product.brand.name }}
                                         </a>
                                         <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
-                                        {% if user.is_authenticated and user.profile.is_beautician %}
-                                            <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                        {% else %}
-                                            <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
-                                        {% endif %}
+                                        <div class="product-price-area">
+                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <div class="beautician-badge">
+                                                        <i class="fas fa-spa"></i>
+                                                        <span>بیوتیشن</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -568,11 +648,24 @@
                                             {{ product.brand.name }}
                                         </a>
                                         <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
-                                        {% if user.is_authenticated and user.profile.is_beautician %}
-                                            <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                        {% else %}
-                                            <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
-                                        {% endif %}
+                                        <div class="product-price-area">
+                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <div class="beautician-badge">
+                                                        <i class="fas fa-spa"></i>
+                                                        <span>بیوتیشن</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -613,11 +706,24 @@
                                             {{ product.brand.name }}
                                         </a>
                                         <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
-                                        {% if user.is_authenticated and user.profile.is_beautician %}
-                                            <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                        {% else %}
-                                            <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
-                                        {% endif %}
+                                        <div class="product-price-area">
+                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <div class="beautician-badge">
+                                                        <i class="fas fa-spa"></i>
+                                                        <span>بیوتیشن</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -658,11 +764,24 @@
                                             {{ product.brand.name }}
                                         </a>
                                         <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
-                                        {% if user.is_authenticated and user.profile.is_beautician %}
-                                            <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                        {% else %}
-                                            <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
-                                        {% endif %}
+                                        <div class="product-price-area">
+                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <div class="beautician-badge">
+                                                        <i class="fas fa-spa"></i>
+                                                        <span>بیوتیشن</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

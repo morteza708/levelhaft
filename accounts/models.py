@@ -10,13 +10,13 @@ class CustomUser(AbstractUser):
     """
     DoesNotExist = None
     username = None
-    phone_number = models.CharField(max_length=11, unique=True, db_index=True)
-    otp_code = models.PositiveSmallIntegerField(blank=True, null=True)
-    otp_code_created = models.DateTimeField(auto_now=True)
-    is_beautician = models.BooleanField(default=False)  # Field to check if user is beautician
-    first_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True)
-    email = models.EmailField(max_length=50, blank=True, null=True)
+    phone_number = models.CharField(max_length=11, unique=True, db_index=True, verbose_name="شماره موبایل")
+    otp_code = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name="کد تایید")
+    otp_code_created = models.DateTimeField(auto_now=True, verbose_name="زمان ایجاد کد تایید")
+    is_beautician = models.BooleanField(default=False, verbose_name="بیوتیشن")  # Field to check if user is beautician
+    first_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="نام")
+    last_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="نام خانوادگی")
+    email = models.EmailField(max_length=50, blank=True, null=True, verbose_name="ایمیل")
 
     objects = CustomUserManager()
 
@@ -56,7 +56,7 @@ class CustomerProfile(models.Model):
     brand_used = models.CharField(max_length=255, blank=True, null=True,
                                   verbose_name="چه برند هایی تاکنون استفاده کرده اید؟")
     instagram_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="لینک پیج اینستاگرام")
-    is_beautician = models.BooleanField(default=False)
+    is_beautician = models.BooleanField(default=False, verbose_name="بیوتیشن")
 
     def __str__(self):
         return f"{self.first_name or ''} {self.last_name or ''} ({self.user.phone_number})"
