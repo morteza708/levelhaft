@@ -1,9 +1,9 @@
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from .models import Order
+from .models import Order, PaymentMethod
 from products.models import Product
 from wallet.models import Wallet, WalletTransaction
-from wallet.services.wallet_services import get_order_reward_amount
+from wallet.services.wallet_services import get_order_reward_amount, apply_order_reward
 import logging
 
 logger = logging.getLogger(__name__)
@@ -124,3 +124,51 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
 
             # برای اطمینان دوباره ست شود
             instance.reward_applied = False
+
+@receiver(post_save, sender=PaymentMethod)
+def handle_payment_method_save(sender, instance, created, **kwargs):
+    """
+    همگام‌سازی وضعیت پرداخت سفارش با روش‌های پرداخت
+    """
+    order = instance.order
+    payments = order.payments.all()
+    
+    # محاسبه مجموع مبالغ پرداخت شده
+    total_paid = sum(payment.amount for payment in payments if payment.status == 'completed')
+    
+    # به‌روزرسانی مبلغ پرداخت نشده
+    order.unpaid_amount = max(0, order.final_amount - total_paid)
+    
+    # به‌روزرسانی وضعیت پرداخت سفارش
+    if total_paid >= order.final_amount:
+        order.payment_status = 'paid'
+    elif total_paid > 0:
+        order.payment_status = 'partial'
+    else:
+        order.payment_status = 'pending'
+    
+    order.save(update_fields=['unpaid_amount', 'payment_status'])
+
+@receiver(post_save, sender=Order)
+def handle_order_status_change(sender, instance, created, **kwargs):
+    """
+    اعمال پاداش سفارش و همگام‌سازی با روش‌های پرداخت
+    """
+    if not created and instance.payment_status == 'paid' and not instance.reward_applied:
+        print(f"[سیگنال سفارش] پاداش برای سفارش {instance.order_number} در حال اعمال است...")
+        apply_order_reward(instance)
+        instance.reward_applied = True
+        instance.save(update_fields=["reward_applied"])
+
+@receiver(pre_save, sender=PaymentMethod)
+def validate_payment_method(sender, instance, **kwargs):
+    """
+    اعتبارسنجی روش پرداخت
+    """
+    if instance.status == 'completed':
+        # بررسی اینکه مجموع مبالغ پرداخت شده از مبلغ کل سفارش بیشتر نباشد
+        other_payments = instance.order.payments.exclude(id=instance.id).filter(status='completed')
+        total_paid = sum(payment.amount for payment in other_payments) + instance.amount
+        
+        if total_paid > instance.order.final_amount:
+            raise ValueError("مجموع مبالغ پرداخت شده نمی‌تواند از مبلغ کل سفارش بیشتر باشد.")

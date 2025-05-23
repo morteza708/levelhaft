@@ -128,3 +128,39 @@ def handle_order_status_change(sender, instance, created, **kwargs):
         apply_order_reward(instance)
         instance.reward_applied = True
         instance.save(update_fields=["reward_applied"]) 
+
+class PaymentMethod(models.Model):
+    PAYMENT_TYPES = (
+        ('wallet', 'کیف پول'),
+        ('gateway', 'درگاه پرداخت'),
+    )
+    
+    STATUS_CHOICES = (
+        ('pending', 'در انتظار پرداخت'),
+        ('completed', 'پرداخت شده'),
+        ('failed', 'ناموفق'),
+    )
+
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='payments')
+    payment_type = models.CharField(max_length=10, choices=PAYMENT_TYPES, verbose_name="نوع پرداخت")
+    amount = models.PositiveBigIntegerField(verbose_name="مبلغ پرداختی")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending', verbose_name="وضعیت پرداخت")
+    transaction_id = models.CharField(max_length=100, blank=True, null=True, verbose_name="شماره تراکنش")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ بروزرسانی")
+
+    class Meta:
+        verbose_name = "روش پرداخت"
+        verbose_name_plural = "روش‌های پرداخت"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.get_payment_type_display()} - {self.amount:,} ریال"
+
+    def get_jalali_created_at(self):
+        return jdatetime.datetime.fromgregorian(datetime=self.created_at).strftime('%Y/%m/%d %H:%M:%S')
+    get_jalali_created_at.short_description = 'تاریخ ایجاد'
+
+    def get_jalali_updated_at(self):
+        return jdatetime.datetime.fromgregorian(datetime=self.updated_at).strftime('%Y/%m/%d %H:%M:%S')
+    get_jalali_updated_at.short_description = 'تاریخ بروزرسانی' 

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from .models import Order, OrderItem, OrderStatusHistory
+from .models import Order, OrderItem, OrderStatusHistory, PaymentMethod
 from .forms import OrderForm
 from cart.cart import Cart
 from products.models import Product
@@ -83,13 +83,6 @@ def order_create(request):
                             order.unpaid_amount = order.final_amount - wallet.balance
                             wallet.balance = 0
                         wallet.save()
-                        if wallet_used > 0:
-                            WalletTransaction.objects.create(
-                                wallet=wallet,
-                                amount=wallet_used,
-                                type='withdraw',
-                                description=f'برداشت برای سفارش {order.order_number if order.order_number else "(در حال ثبت)"}'
-                            )
                     else:
                         order.payment_status = 'pending'
                         order.unpaid_amount = order.final_amount

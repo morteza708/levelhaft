@@ -1,12 +1,18 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Order, OrderItem, OrderStatusHistory
+from .models import Order, OrderItem, OrderStatusHistory, PaymentMethod
 from accounts.tasks import send_message_task
 import logging
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 
 logger = logging.getLogger(__name__)
+
+class PaymentMethodInline(admin.TabularInline):
+    model = PaymentMethod
+    extra = 0
+    readonly_fields = ['created_at', 'updated_at']
+    fields = ['payment_type', 'amount', 'status', 'transaction_id', 'created_at', 'updated_at']
 
 class OrderResource(resources.ModelResource):
     class Meta:
@@ -16,6 +22,37 @@ class OrderResource(resources.ModelResource):
                  'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_city', 
                  'receiver_postal_code', 'notes', 'tracking_code', 'created_at')
         export_order = fields
+
+    def get_export_headers(self):
+        headers = super().get_export_headers()
+        # اضافه کردن هدرهای مربوط به روش‌های پرداخت
+        headers.extend([
+            'روش پرداخت کیف پول',
+            'مبلغ پرداختی کیف پول',
+            'وضعیت پرداخت کیف پول',
+            'روش پرداخت درگاه',
+            'مبلغ پرداختی درگاه',
+            'وضعیت پرداخت درگاه',
+            'شماره تراکنش درگاه'
+        ])
+        return headers
+
+    def export_obj(self, obj):
+        data = super().export_obj(obj)
+        # اضافه کردن اطلاعات روش‌های پرداخت
+        wallet_payment = obj.payments.filter(payment_type='wallet').first()
+        gateway_payment = obj.payments.filter(payment_type='gateway').first()
+        
+        data.update({
+            'روش پرداخت کیف پول': wallet_payment.get_payment_type_display() if wallet_payment else '',
+            'مبلغ پرداختی کیف پول': wallet_payment.amount if wallet_payment else '',
+            'وضعیت پرداخت کیف پول': wallet_payment.get_status_display() if wallet_payment else '',
+            'روش پرداخت درگاه': gateway_payment.get_payment_type_display() if gateway_payment else '',
+            'مبلغ پرداختی درگاه': gateway_payment.amount if gateway_payment else '',
+            'وضعیت پرداخت درگاه': gateway_payment.get_status_display() if gateway_payment else '',
+            'شماره تراکنش درگاه': gateway_payment.transaction_id if gateway_payment else ''
+        })
+        return data
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -41,7 +78,7 @@ class OrderAdmin(ImportExportModelAdmin):
     ]
     list_filter = ['status', 'payment_status', 'created_at']
     search_fields = ['order_number', 'user__phone_number', 'user__email']
-    inlines = [OrderItemInline, OrderStatusHistoryInline]
+    inlines = [OrderItemInline, OrderStatusHistoryInline, PaymentMethodInline]
     readonly_fields = ['order_number', 'created_at', 'updated_at']
 
     def final_amount_display(self, obj):
@@ -86,4 +123,11 @@ class OrderStatusHistoryAdmin(admin.ModelAdmin):
     list_display = ['order', 'old_status', 'new_status', 'changed_by', 'get_jalali_changed_at']
     list_filter = ['changed_at']
     search_fields = ['order__order_number']
-    readonly_fields = ['changed_at', 'changed_by'] 
+    readonly_fields = ['changed_at', 'changed_by']
+
+@admin.register(PaymentMethod)
+class PaymentMethodAdmin(admin.ModelAdmin):
+    list_display = ['order', 'payment_type', 'amount', 'status', 'transaction_id', 'created_at']
+    list_filter = ['payment_type', 'status', 'created_at']
+    search_fields = ['order__order_number', 'transaction_id']
+    readonly_fields = ['created_at', 'updated_at'] 
