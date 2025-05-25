@@ -163,7 +163,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Kavenegar settings
-KAVENEGAR_API = env.str("KAVENEGAR_API")
+KAVENEGAR_API = os.environ.get("KAVENEGAR_API")
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_COOKIE_AGE = 1209600  # 14 days in seconds
