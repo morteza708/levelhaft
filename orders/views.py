@@ -16,7 +16,8 @@ from wallet.services.wallet_services import apply_order_reward, deposit_to_walle
 from accounts.tasks import send_message_task
 from django.conf import settings
 from wallet.services.sms_service import send_refund_sms, send_cancel_notification_to_admin
-import logging
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 logger = logging.getLogger(__name__)
 

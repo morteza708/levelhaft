@@ -1,0 +1,11 @@
+{
+  "port": 80,
+  "platform": "django",
+  "app": "levelhaft-test",
+  "build": {
+    "location": "iran"
+  },
+  "django": {
+    "pythonVersion": "3.12"
+  }
+}
