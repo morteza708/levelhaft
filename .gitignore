@@ -96,8 +96,7 @@ workshop-brands/
 workshops/
 brand-logos/
 
-# Static files
-static/
+
 
 # Backup files
 *.bak
