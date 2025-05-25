@@ -50,13 +50,13 @@ class WorkshopRegistrationForm(forms.ModelForm):
 
     def clean_first_name_en(self):
         first_name = self.cleaned_data.get('first_name_en')
-        if not re.match("^[a-zA-Z\s]*$", first_name):
+        if not re.match(r"^[a-zA-Z\s]*$", first_name):
             raise ValidationError('لطفاً فقط از حروف انگلیسی استفاده کنید')
         return first_name.title()
 
     def clean_last_name_en(self):
         last_name = self.cleaned_data.get('last_name_en')
-        if not re.match("^[a-zA-Z\s]*$", last_name):
+        if not re.match(r"^[a-zA-Z\s]*$", last_name):
             raise ValidationError('لطفاً فقط از حروف انگلیسی استفاده کنید')
         return last_name.title()
 
