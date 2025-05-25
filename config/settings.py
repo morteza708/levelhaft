@@ -66,6 +66,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -163,7 +164,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Kavenegar settings
-KAVENEGAR_API = os.environ.get("KAVENEGAR_API")
+Kavenegar_API = os.environ.get("KAVENEGAR_API")
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_COOKIE_AGE = 1209600  # 14 days in seconds
