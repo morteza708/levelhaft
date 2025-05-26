@@ -200,7 +200,7 @@
                             <label class="form-label">نام</label>
                             <div class="input-group">
                                 <i class="fas fa-user input-icon"></i>
-                                {{ form.first_name }}
+                                {{ form.first_name|as_crispy_field }}
                             </div>
                         </div>
                     </div>
@@ -209,7 +209,7 @@
                             <label class="form-label">نام خانوادگی</label>
                             <div class="input-group">
                                 <i class="fas fa-user input-icon"></i>
-                                {{ form.last_name }}
+                                {{ form.last_name|as_crispy_field }}
                             </div>
                         </div>
                     </div>
@@ -220,7 +220,7 @@
                         <div class="form-group">
                             <label class="form-label">تاریخ تولد</label>
                             <div class="input-group date-input">
-                                {{ form.birth_date }}
+                                {{ form.birth_date|as_crispy_field }}
                                 <i class="fas fa-calendar input-icon"></i>
                             </div>
                         </div>
@@ -229,7 +229,7 @@
                         <div class="form-group">
                             <label class="form-label">جنسیت</label>
                             <div class="input-group">
-                                {{ form.gender }}
+                                {{ form.gender|as_crispy_field }}
                                 <i class="fas fa-venus-mars input-icon"></i>
                             </div>
                         </div>
@@ -240,7 +240,7 @@
                     <label class="form-label">ایمیل</label>
                     <div class="input-group">
                         <i class="fas fa-envelope input-icon"></i>
-                        {{ form.email }}
+                        {{ form.email|as_crispy_field }}
                     </div>
                 </div>
 
