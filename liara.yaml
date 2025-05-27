@@ -39,7 +39,7 @@ env:
 
 disk:
   name: media
-  mount: /media
+  mountTo: /media
 
 services:
   - name: postgres
