@@ -39,8 +39,7 @@ env:
 
 disk:
   name: media
-  mount: /app/media
-  size: 1Gi
+  mount: /media
 
 services:
   - name: postgres
