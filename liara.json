@@ -11,7 +11,7 @@
   "disks":[
     {
       "name": "media",
-      "mountTo": "/app/media"
+      "mount": "/app/media"
     }
   ]
 }
