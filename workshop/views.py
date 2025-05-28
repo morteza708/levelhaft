@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from .models import Workshop, WorkshopBrand, WorkshopRegistration
 from .forms import WorkshopRegistrationForm
 from django.conf import settings
-from accounts.tasks import send_message_task
+from accounts.helper import send_message
 from django.db.models import Q
 
 # Create your views here.
@@ -118,19 +118,11 @@ class WorkshopRegistrationView(LoginRequiredMixin, CreateView):
         form.instance.workshop = workshop
         form.instance.user = self.request.user
         response = super().form_valid(form)
-        # ارسال پیامک به کاربر و ادمین (همانند قبل)
+        # ارسال پیامک به کاربر و ادمین
         message = f"..."
-        send_message_task.delay(
-            self.request.user.phone_number,
-            message,
-            template='workshop-registration'
-        )
+        send_message(self.request.user.phone_number, message, template='workshop-registration')
         message = f"{self.request.user.phone_number}"
-        send_message_task.delay(
-            settings.ADMIN_PHONE,
-            message,
-            template='manager-workshop-notification'
-        )
+        send_message(settings.ADMIN_PHONE, message, template='manager-workshop-notification')
         return response
     
     def get_success_url(self):

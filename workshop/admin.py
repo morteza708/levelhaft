@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.tasks import send_message_task
+from accounts.helper import send_message
 from .models import Workshop, WorkshopBrand, WorkshopRegistration, WorkshopRegistrationHistory
 from django.utils.html import format_html
 from django.contrib import messages
@@ -83,7 +83,7 @@ class WorkshopRegistrationAdmin(admin.ModelAdmin):
                 super().save_model(request, obj, form, change)
                 # ارسال پیامک به کاربر
                 message = f"{obj.barcode}"
-                send_message_task.delay(obj.user.phone_number, message, template='workshop-verification')
+                send_message(obj.user.phone_number, message, template='workshop-verification')
                 messages.success(request, f"پیامک تایید برای کاربر {obj.user.get_full_name()} ارسال شد.")
             else:
                 super().save_model(request, obj, form, change)

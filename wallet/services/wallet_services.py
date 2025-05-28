@@ -1,6 +1,6 @@
 import math
-from ..models import WalletTransaction
-from django.db import models
+from ..models import WalletTransaction, Wallet, Transaction
+from django.db import models, transaction
 from .sms_service import send_reward_sms
 
 def withdraw_from_wallet(wallet, amount, description="برداشت از کیف پول"):
@@ -42,26 +42,20 @@ def get_order_reward_amount(order):
 
     return math.ceil(order_amount * percent)
 
-def apply_order_reward(order):
-    user = order.user
-    wallet = user.wallet
-
-    # جلوگیری از اعمال پاداش در صورت لغو یا اعمال‌شده بودن
-    if order.status == 'cancelled':
-        return
-
-    if order.reward_applied:
-        return
-
-    reward = get_order_reward_amount(order)
-
-    # واریز به کیف پول
-    deposit_to_wallet(wallet, reward, transaction_type='reward', 
-                     description=f"پاداش سفارش {order.order_number}")
-
-    # ارسال پیامک پاداش
-    send_reward_sms(user, reward, order.order_number)
-
-    # علامت‌گذاری سفارش به‌عنوان پاداش داده‌شده
-    order.reward_applied = True
-    order.save()
+def apply_order_reward(user, amount, order_number):
+    """اعمال پاداش خرید به کیف پول"""
+    with transaction.atomic():
+        wallet, created = Wallet.objects.get_or_create(user=user)
+        transaction = Transaction.objects.create(
+            wallet=wallet,
+            amount=amount,
+            transaction_type='reward',
+            description=f'پاداش خرید سفارش {order_number}'
+        )
+        wallet.balance += amount
+        wallet.save()
+        
+        # ارسال پیامک پاداش
+        send_reward_sms(user.phone_number, amount)
+        
+        return transaction

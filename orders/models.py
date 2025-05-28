@@ -63,9 +63,12 @@ class Order(models.Model):
     get_jalali_updated_at.short_description = 'تاریخ بروزرسانی'
 
     def save(self, *args, **kwargs):
-        if not self.order_number:
-            self.order_number = self.generate_order_number()
+        is_new = self.pk is None
         super().save(*args, **kwargs)
+        
+        if is_new and self.status == 'completed':
+            # اعمال پاداش خرید
+            apply_order_reward(self.user, self.get_reward_amount(), self.order_number)
 
     def generate_order_number(self):
         import random

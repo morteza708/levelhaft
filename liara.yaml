@@ -24,10 +24,6 @@ env:
     value: ${DATABASE_URL}
   - name: KAVENEGAR_API
     value: ${KAVENEGAR_API}
-  - name: CELERY_BROKER_URL
-    value: ${REDIS_URL}
-  - name: CELERY_RESULT_BACKEND
-    value: ${REDIS_URL}
   - name: EMAIL_HOST
     value: smtp.gmail.com
   - name: EMAIL_PORT
@@ -44,7 +40,4 @@ disk:
 services:
   - name: postgres
     type: postgresql
-    plan: basic
-  - name: redis
-    type: redis
     plan: basic 
