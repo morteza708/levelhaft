@@ -1,10 +1,12 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Order, OrderItem, OrderStatusHistory, PaymentMethod
-from accounts.tasks import send_message_task
-import logging
+from accounts.helper import send_message
+from django.contrib import messages
+from django.conf import settings
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +27,6 @@ class OrderResource(resources.ModelResource):
 
     def get_export_headers(self):
         headers = super().get_export_headers()
-        # اضافه کردن هدرهای مربوط به روش‌های پرداخت
         headers.extend([
             'روش پرداخت کیف پول',
             'مبلغ پرداختی کیف پول',
@@ -39,7 +40,6 @@ class OrderResource(resources.ModelResource):
 
     def export_obj(self, obj):
         data = super().export_obj(obj)
-        # اضافه کردن اطلاعات روش‌های پرداخت
         wallet_payment = obj.payments.filter(payment_type='wallet').first()
         gateway_payment = obj.payments.filter(payment_type='gateway').first()
         
@@ -103,7 +103,7 @@ class OrderAdmin(ImportExportModelAdmin):
     def get_jalali_updated_at(self, obj):
         return obj.get_jalali_updated_at()
     get_jalali_updated_at.short_description = 'تاریخ بروزرسانی'
-
+    
     def save_model(self, request, obj, form, change):
         if change:  # فقط برای به‌روزرسانی
             try:
@@ -112,7 +112,7 @@ class OrderAdmin(ImportExportModelAdmin):
                 if old_obj.status != 'shipped' and obj.status == 'shipped':
                     # ارسال پیامک به مشتری
                     message = f'.'
-                    send_message_task.delay(
+                    send_message(
                         obj.user.phone_number,
                         message,
                         template='order-send-confirmation'
@@ -128,7 +128,19 @@ class OrderAdmin(ImportExportModelAdmin):
                 new_status=obj.status,
                 changed_by=request.user
             )
-        super().save_model(request, obj, form, change)
+            
+            if old_obj.status != 'cancelled' and obj.status == 'cancelled':
+                # ارسال پیامک به کاربر
+                message = f"{obj.order_number}"
+                send_message(obj.user.phone_number, message, template='order-cancelled')
+                # ارسال پیامک به ادمین
+                admin_message = f"{obj.order_number}"
+                send_message(settings.ADMIN_PHONE, admin_message, template='order-cancelled-admin')
+                messages.success(request, f"پیامک لغو سفارش برای کاربر {obj.user.get_full_name()} ارسال شد.")
+            
+            super().save_model(request, obj, form, change)
+        else:
+            super().save_model(request, obj, form, change)
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
