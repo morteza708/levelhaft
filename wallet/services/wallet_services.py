@@ -1,5 +1,5 @@
 import math
-from ..models import WalletTransaction, Wallet, Transaction
+from ..models import WalletTransaction, Wallet
 from django.db import models, transaction
 from .sms_service import send_reward_sms
 
@@ -46,10 +46,10 @@ def apply_order_reward(user, amount, order_number):
     """اعمال پاداش خرید به کیف پول"""
     with transaction.atomic():
         wallet, created = Wallet.objects.get_or_create(user=user)
-        transaction = Transaction.objects.create(
+        transaction = WalletTransaction.objects.create(
             wallet=wallet,
             amount=amount,
-            transaction_type='reward',
+            type='reward',
             description=f'پاداش خرید سفارش {order_number}'
         )
         wallet.balance += amount
