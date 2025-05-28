@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from .models import WorkshopRegistration, WorkshopRegistrationHistory
-from accounts.helper import send_message
+# from accounts.helper import send_message
 
 
 @receiver(post_save, sender=WorkshopRegistration)
@@ -14,34 +14,6 @@ def notify_new_registration(sender, instance, created, **kwargs):
         admin_message = f"ثبت نام جدید در ورکشاپ {instance.workshop.title}\nنام: {instance.user.get_full_name()}"
         # در اینجا می‌توانید شماره مدیر را از تنظیمات یا متغیرهای محیطی بخوانید
         # send_message_task.delay(ADMIN_PHONE, admin_message, template='workshop-admin-notification')
-
-
-@receiver(pre_save, sender=WorkshopRegistration)
-def handle_status_change(sender, instance, **kwargs):
-    """
-    مدیریت تغییر وضعیت ثبت‌نام و ارسال پیامک
-    """
-    try:
-        old_instance = sender.objects.get(pk=instance.pk)
-        if old_instance.status != instance.status:
-            if instance.status == 'approved':
-                # ارسال پیامک تایید به کاربر
-                message = f"{instance.barcode}"
-                send_message(
-                    instance.user.phone_number,
-                    message,
-                    template='workshop-verification'
-                )
-            elif instance.status == 'rejected':
-                # ارسال پیامک رد درخواست به کاربر
-                message = f"{instance.workshop.title}"
-                send_message(
-                    instance.user.phone_number,
-                    message,
-                    template='workshop-rejection'
-                )
-    except sender.DoesNotExist:
-        pass  # این مورد برای ثبت‌نام‌های جدید است
 
 
 @receiver(pre_save, sender=WorkshopRegistration)
