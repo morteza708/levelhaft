@@ -8,7 +8,7 @@ from django.conf import settings
 from . models import CustomUser, CustomerProfile
 from .forms import LoginForm, BeauticianForm, CustomerProfileForm, AddressForm, OTPForm, convert_persian_to_english, UpdateProfileForm
 from .helper import send_otp_code, get_random_otp, check_otp_expiration, send_message
-from .tasks import send_message_task
+
 
 
 class LoginView(View):
