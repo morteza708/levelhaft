@@ -4,7 +4,6 @@ from django.db.models import Q
 from django.db import transaction
 from .models import CustomUser, CustomerProfile, Address
 from .helper import send_message
-from .tasks import send_message_task
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 
@@ -44,10 +43,10 @@ class CustomUserAdmin(ImportExportModelAdmin):
                 user.is_beautician = True
             CustomUser.objects.bulk_update(users, ['is_beautician'])  # ذخیره گروهی
 
-            # ارسال پیامک غیرهمزمان
+            # ارسال پیامک مستقیم
             for user in users:
                 message = f"."
-                send_message_task.delay(user.phone_number, message, template='beautician-congrats')
+                send_message(user.phone_number, message, template='beautician-congrats')
     make_beautician.short_description = "تبدیل به بیوتیشن"
 
     def get_search_results(self, request, queryset, search_term):
@@ -87,7 +86,7 @@ class CustomerProfileAdmin(ImportExportModelAdmin):
             CustomUser.objects.bulk_update([profile.user for profile in profiles], ['is_beautician'])
             for profile in profiles:
                 message = f"."
-                send_message_task.delay(profile.user.phone_number, message, template='beautician-congrats')
+                send_message(profile.user.phone_number, message, template='beautician-congrats')
         self.message_user(request, "پروفایل‌ها به بیوتیشن تبدیل شدند.")
     make_beautician.short_description = "تبدیل به بیوتیشن"
 
@@ -100,7 +99,7 @@ class CustomerProfileAdmin(ImportExportModelAdmin):
                     obj.user.is_beautician = True
                     obj.user.save()
                     message = f"."
-                    send_message_task.delay(obj.user.phone_number, message, template='beautician-congrats')
+                    send_message(obj.user.phone_number, message, template='beautician-congrats')
                     self.message_user(request, "کاربر به بیوتیشن تبدیل شد و پیام تبریک ارسال شد.")
                 else:
                     super().save_model(request, obj, form, change)

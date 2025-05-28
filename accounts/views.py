@@ -24,7 +24,7 @@ class LoginView(View):
             phone_number = form.cleaned_data['phone_number']
             otp = get_random_otp()
             user, created = CustomUser.objects.update_or_create(phone_number=phone_number, defaults={'otp_code': otp,'is_active': False})
-            send_message_task.delay(phone_number, str(otp), template='levehaft-verification')  # غیرهمزمان
+            send_message(phone_number, str(otp), template='levehaft-verification')  # ارسال مستقیم پیامک
             request.session['phone_number'] = phone_number
             return redirect('accounts:verify')
         return render(request, self.template_name, {'form': form})
@@ -92,7 +92,7 @@ def beautician_request(request):
             form.save()
             admin_phone = settings.ADMIN_PHONE
             message = f"{request.user.phone_number}"
-            send_message(admin_phone, message, template='manager-notification')
+            send_message(admin_phone, message, template='manager-notification')  # ارسال مستقیم پیامک
             messages.success(request, 'درخواست بیوتیشن شدن شما کاربر عزیز با موفقیت ارسال گردید')
             return redirect('pages:home')
     else:
