@@ -34,7 +34,7 @@ def handle_status_change(sender, instance, **kwargs):
                 )
             elif instance.status == 'rejected':
                 # ارسال پیامک رد درخواست به کاربر
-                message = f"کاربر گرامی، متاسفانه ثبت نام شما در ورکشاپ {instance.workshop.title} تایید نشد."
+                message = f"{instance.workshop.title}"
                 send_message(
                     instance.user.phone_number,
                     message,

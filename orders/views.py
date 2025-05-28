@@ -14,7 +14,7 @@ from products.models import Product
 from django.db import transaction
 from wallet.models import Wallet, WalletTransaction
 from wallet.services.wallet_services import apply_order_reward, deposit_to_wallet
-from accounts.tasks import send_message_task
+from accounts.helper import send_message
 from django.conf import settings
 from wallet.services.sms_service import send_refund_sms, send_cancel_notification_to_admin
 from django.urls import reverse
@@ -66,14 +66,14 @@ def order_create(request):
                             
                             # ارسال پیامک به مشتری
                             message = f'....'
-                            send_message_task.delay(
+                            send_message(
                                 order.user.phone_number,
                                 message,
                                 template='order-confirmation'
                             )
                             
                             # ارسال پیامک به مدیر
-                            send_message_task.delay(
+                            send_message(
                                 settings.ADMIN_PHONE,
                                 message,
                                 template='manager-order-notification'
