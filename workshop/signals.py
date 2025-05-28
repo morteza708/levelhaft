@@ -1,9 +1,7 @@
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from django.core.mail import send_mail
-from django.conf import settings
-from accounts.tasks import send_message_task
 from .models import WorkshopRegistration, WorkshopRegistrationHistory
+from accounts.helper import send_message
 
 
 @receiver(post_save, sender=WorkshopRegistration)
@@ -29,7 +27,7 @@ def handle_status_change(sender, instance, **kwargs):
             if instance.status == 'approved':
                 # ارسال پیامک تایید به کاربر
                 message = f"{instance.barcode}"
-                send_message_task.delay(
+                send_message(
                     instance.user.phone_number,
                     message,
                     template='workshop-verification'
@@ -37,7 +35,7 @@ def handle_status_change(sender, instance, **kwargs):
             elif instance.status == 'rejected':
                 # ارسال پیامک رد درخواست به کاربر
                 message = f"کاربر گرامی، متاسفانه ثبت نام شما در ورکشاپ {instance.workshop.title} تایید نشد."
-                send_message_task.delay(
+                send_message(
                     instance.user.phone_number,
                     message,
                     template='workshop-rejection'
