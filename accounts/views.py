@@ -16,6 +16,9 @@ class LoginView(View):
     form_class = LoginForm
 
     def get(self, request):
+        # پاک کردن session قبلی در صورت وجود
+        if 'phone_number' in request.session:
+            del request.session['phone_number']
         return render(request, self.template_name, {'form': self.form_class})
 
     def post(self, request):
@@ -24,7 +27,7 @@ class LoginView(View):
             phone_number = form.cleaned_data['phone_number']
             otp = get_random_otp()
             user, created = CustomUser.objects.update_or_create(phone_number=phone_number, defaults={'otp_code': otp,'is_active': False})
-            send_message(phone_number, str(otp), template='levehaft-verification')  # ارسال مستقیم پیامک
+            send_message(phone_number, str(otp), template='levehaft-verification')
             request.session['phone_number'] = phone_number
             return redirect('accounts:verify')
         return render(request, self.template_name, {'form': form})
@@ -50,7 +53,11 @@ def verify_otp_view(request):
             user.is_active = True
             user.save(update_fields=['is_active'])
             login(request, user)
-            del request.session['phone_number']
+            
+            # پاک کردن session بعد از ورود موفق
+            if 'phone_number' in request.session:
+                del request.session['phone_number']
+            
             messages.success(request, 'ثبت نام / ورود با موفقیت انجام پذیرفت')
             
             profile = user.profile
