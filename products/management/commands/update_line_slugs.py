@@ -1,9 +1,9 @@
 from django.core.management.base import BaseCommand
 from products.models import Line
-from products.utils import create_persian_slug
+from slugify import slugify
 
 class Command(BaseCommand):
-    help = 'Updates slugs for all Line objects'
+    help = 'Updates slugs for all Line objects to English (transliterated) slugs.'
 
     def handle(self, *args, **options):
         lines = Line.objects.all()
@@ -11,7 +11,7 @@ class Command(BaseCommand):
         
         for line in lines:
             old_slug = line.slug
-            line.slug = create_persian_slug(line.name)
+            line.slug = slugify(line.name, separator='-')
             if old_slug != line.slug:
                 line.save()
                 updated += 1

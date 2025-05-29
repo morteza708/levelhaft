@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django_ckeditor_5.fields import CKEditor5Field
 from .utils import convert_to_english_digits, create_persian_slug
 from django.core.validators import MinValueValidator, MaxValueValidator
+from slugify import slugify
 
 User = get_user_model()
 
@@ -33,8 +34,7 @@ class Line(models.Model):
         return f"{self.brand.name} - {self.name}"
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = create_persian_slug(self.name)
+        self.slug = slugify(self.name, separator='-')
         super().save(*args, **kwargs)
 
     class Meta:
@@ -144,8 +144,7 @@ class Product(models.Model):
             self.price_level_2 = convert_to_english_digits(str(self.price_level_2))
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = create_persian_slug(self.name)
+        self.slug = slugify(self.name, separator='-')
         super().save(*args, **kwargs)
 
 class ProductImage(models.Model):
