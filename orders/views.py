@@ -13,7 +13,7 @@ from cart.cart import Cart
 from products.models import Product
 from django.db import transaction
 from wallet.models import Wallet, WalletTransaction
-from wallet.services.wallet_services import apply_order_reward, deposit_to_wallet
+from wallet.services.wallet_services import apply_order_reward, get_order_reward_amount, deposit_to_wallet
 from accounts.helper import send_message
 from django.conf import settings
 from wallet.services.sms_service import send_refund_sms, send_cancel_notification_to_admin
@@ -122,7 +122,8 @@ def order_create(request):
 
             # اعمال پاداش بلافاصله پس از پرداخت
             if order.payment_status == 'paid':
-                apply_order_reward(order)
+                reward = get_order_reward_amount(order)
+                apply_order_reward(order.user, reward, order.order_number)
             return redirect('orders:order_detail', order_id=order.id)
     else:
         form = OrderForm(user=request.user)

@@ -64,11 +64,10 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None
+        if is_new and not self.order_number:
+            self.order_number = self.generate_order_number()
         super().save(*args, **kwargs)
-        
-        if is_new and self.status == 'completed':
-            # اعمال پاداش خرید
-            apply_order_reward(self.user, self.get_reward_amount(), self.order_number)
+        # اگر منطق پاداش داری، اینجا بگذار (در صورت نیاز)
 
     def generate_order_number(self):
         import random

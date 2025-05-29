@@ -44,9 +44,10 @@ def get_order_reward_amount(order):
 
 def apply_order_reward(user, amount, order_number):
     """اعمال پاداش خرید به کیف پول"""
+    from django.db import transaction
     with transaction.atomic():
         wallet, created = Wallet.objects.get_or_create(user=user)
-        transaction = WalletTransaction.objects.create(
+        reward_txn = WalletTransaction.objects.create(
             wallet=wallet,
             amount=amount,
             type='reward',
@@ -58,4 +59,4 @@ def apply_order_reward(user, amount, order_number):
         # ارسال پیامک پاداش
         send_reward_sms(user.phone_number, amount)
         
-        return transaction
+        return reward_txn

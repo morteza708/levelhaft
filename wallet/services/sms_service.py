@@ -6,8 +6,8 @@ logger = logging.getLogger(__name__)
 
 def send_reward_sms(phone_number, amount):
     """ارسال پیامک پاداش خرید"""
-    message = str(amount)
-    send_message(phone_number, message, template='wallet-reward')
+    message = f"{amount:,}"
+    send_message(phone_number, message, template='wallet-reward-customer')
     logger.info(f"📤 پیامک پاداش خرید برای کاربر {phone_number} ارسال شد")
 
 def send_charge_sms(user, amount):
