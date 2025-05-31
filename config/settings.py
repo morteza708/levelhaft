@@ -103,7 +103,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': env.dj_db_url("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/levelhaft")
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'level_haft_db',
+        'USER': 'postgres',
+        'PASSWORD': '708708',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
 
 
@@ -200,7 +207,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 # media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/media'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # CKEditor5 settings
 CKEDITOR_5_CONFIGS = {
