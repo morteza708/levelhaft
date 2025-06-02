@@ -16,7 +16,11 @@ from wallet.services.wallet_services import apply_order_reward, deposit_to_walle
 from accounts.helper import send_message
 from django.conf import settings
 from wallet.services.sms_service import send_refund_sms, send_cancel_notification_to_admin
+from gateways.pasargad import request_payment_url, get_token, BASE_URL
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 import logging
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -113,15 +117,12 @@ def order_create(request):
             
             if order.payment_status == 'paid':
                 messages.success(request, 'سفارش شما با موفقیت ثبت و پرداخت شد (از کیف پول)')
-            elif wallet_used > 0:
-                messages.info(request, f'بخشی از مبلغ سفارش از کیف پول شما کسر شد. مبلغ باقی‌مانده: {order.unpaid_amount:,} ریال')
-            else:
-                messages.info(request, 'سفارش شما ثبت شد. لطفاً مبلغ را پرداخت کنید.')
-
-            # اعمال پاداش بلافاصله پس از پرداخت
-            if order.payment_status == 'paid':
                 apply_order_reward(order)
-            return redirect('orders:order_detail', order_id=order.id)
+                return redirect('orders:order_detail', order_id=order.id)
+            else:
+                # اگر سفارش هنوز پرداخت نشده (بخشی یا کل مبلغ باید آنلاین پرداخت شود)
+                messages.info(request, 'لطفاً مبلغ باقی‌مانده را پرداخت کنید.')
+                return redirect('orders:order_detail', order_id=order.id)
     else:
         form = OrderForm(user=request.user)
 
@@ -185,4 +186,53 @@ def order_cancel(request, order_id):
     return JsonResponse({
         'status': 'success',
         'message': 'سفارش با موفقیت لغو شد'
-    }) 
+    })
+
+# تابع verify پرداخت پاسارگاد
+
+def pasargad_verify_payment(invoice, amount):
+    token = get_token()
+    headers = {"Authorization": f"Bearer {token}"}
+    payload = {
+        "invoice": str(invoice),
+        "amount": int(amount),
+    }
+    response = requests.post(f"{BASE_URL}/verify", json=payload, headers=headers)
+    data = response.json()
+    return data
+
+@login_required
+def order_start_payment(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    if order.payment_status != 'paid':
+        callback_url = settings.SITE_URL + reverse('orders:order_payment_callback')
+        url = request_payment_url(
+            invoice_id=order.id,
+            amount=order.unpaid_amount,
+            callback_url=callback_url,
+            description=f"پرداخت سفارش {order.order_number}",
+            phone_number=order.receiver_phone
+        )
+        return redirect(url)
+    return redirect('orders:order_detail', order_id=order.id)
+
+@csrf_exempt
+def order_payment_callback(request):
+    # دریافت داده‌ها از GET یا POST
+    data = request.POST or request.GET
+    invoice_id = data.get("invoiceId") or data.get("invoice")
+    order = get_object_or_404(Order, id=invoice_id)
+
+    # verify پرداخت از سرور پاسارگاد
+    verify_result = pasargad_verify_payment(invoice=order.id, amount=order.unpaid_amount)
+    if verify_result.get("resultCode") == 0:
+        order.payment_status = 'paid'
+        order.status = 'processing'
+        order.save()
+        # اینجا می‌توانی پاداش و اطلاع‌رسانی اضافه کنی
+    else:
+        order.payment_status = 'failed'
+        order.save()
+        # اینجا می‌توانی پیام خطا یا اطلاع‌رسانی اضافه کنی
+
+    return redirect('orders:order_detail', order_id=order.id) 

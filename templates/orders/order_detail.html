@@ -195,12 +195,26 @@
             <p class="card-text mb-0">{{ order.notes }}</p>
         </div>
         {% endif %}
-        {% if order.can_be_cancelled %}
-        <div class="d-flex justify-content-end">
-            <button id="cancelOrderBtn" onclick="cancelOrder({{ order.id }})" class="btn btn-cancel">
-                لغو سفارش
-            </button>
-        </div>
+        {% if order.payment_status == 'pending' and order.unpaid_amount > 0 %}
+            <div class="alert alert-info text-center my-3" style="font-size:1.15rem;">
+                مبلغ قابل پرداخت از طریق درگاه:
+                <span class="fw-bold text-success">{{ order.unpaid_amount|intcomma:False }} ریال</span>
+            </div>
+        {% endif %}
+        {% if order.payment_status == 'pending' %}
+            <div class="d-grid gap-2 mt-4">
+                <a href="{% url 'orders:order_start_payment' order.id %}" class="btn btn-success btn-lg w-100" style="font-size:1.25rem;">
+                    پرداخت آنلاین
+                </a>
+            </div>
+        {% else %}
+            {% if order.can_be_cancelled %}
+                <div class="d-flex justify-content-end mt-4">
+                    <button id="cancelOrderBtn" onclick="cancelOrder({{ order.id }})" class="btn btn-cancel">
+                        لغو سفارش
+                    </button>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
 </div>

@@ -327,3 +327,10 @@ LOGGING = {
 ADMIN_SITE_HEADER = "پنل مدیریت لول هفت"
 ADMIN_SITE_TITLE = "لول هفت"
 ADMIN_INDEX_TITLE = "مدیریت سایت لول هفت"
+
+
+# PEP settings
+PEP_USERNAME = os.environ.get("PEP_USERNAME")
+PEP_PASSWORD = os.environ.get("PEP_PASSWORD")
+PEP_TERMINAL_NO = os.environ.get("PEP_TERMINAL_NO")
+SITE_URL = os.environ.get("SITE_URL")
