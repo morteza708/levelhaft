@@ -1,11 +1,11 @@
 from django.db import models
 from django.utils.text import slugify
 from django_ckeditor_5.fields import CKEditor5Field
-from .utils import create_persian_slug
+from .utils import  persian_to_english
 
 class BlogCategory(models.Model):
     name = models.CharField(max_length=255, verbose_name="نام دسته بندی")
-    slug = models.SlugField(max_length=255, allow_unicode=True, unique=True, verbose_name="اسلاگ دسته بندی")
+    slug = models.SlugField(max_length=255, allow_unicode=True, unique=True, blank=True, verbose_name="اسلاگ دسته بندی")
 
     class Meta:
         verbose_name = "دسته بندی مقاله"
@@ -16,7 +16,7 @@ class BlogCategory(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = create_persian_slug(self.name)
+            self.slug = persian_to_english(self.name)
         super().save(*args, **kwargs)
 
 class BlogPost(models.Model):
@@ -26,7 +26,7 @@ class BlogPost(models.Model):
     )
 
     title = models.CharField(max_length=255, verbose_name="عنوان مقاله")
-    slug = models.SlugField(max_length=255, allow_unicode=True, unique=True, verbose_name="اسلاگ مقاله")
+    slug = models.SlugField(max_length=255, allow_unicode=True, unique=True, blank=True, verbose_name="اسلاگ مقاله")
     category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name="posts", verbose_name="دسته بندی")
     summary = models.TextField(max_length=300, verbose_name="خلاصه متا توضیحات سئو")
     content = CKEditor5Field(verbose_name="محتوای مقاله")
@@ -46,7 +46,7 @@ class BlogPost(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = create_persian_slug(self.title)
+            self.slug = persian_to_english(self.title)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
