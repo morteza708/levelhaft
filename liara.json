@@ -2,12 +2,9 @@
   "app": "levelhaft-test",
   "platform": "django",
   "port": 80,
-  "django": {
-    "mirror": false,
-    "pythonVersion": "3.12",
-    "collectstatic": true,
-    "modifySettings": true
-  },
+  "pythonVersion": "3.12",
+  "collectstatic": true,
+  "modifySettings": true,
   "build": {
     "location": "iran"
   },
