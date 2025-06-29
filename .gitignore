@@ -96,7 +96,12 @@ workshop-brands/
 workshops/
 brand-logos/
 
+# Static files (for development)
+staticfiles/
 
+# Documentation files
+DEPLOYMENT.md
+README.md
 
 # Backup files
 *.bak
@@ -107,4 +112,8 @@ brand-logos/
 .DS_Store
 Thumbs.db 
 
+# Cursor IDE
 .cursor
+
+# Liara specific
+.liara/

@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", False)
 
-ALLOWED_HOSTS = ['*']  # در محیط تولید، دامنه‌های مجاز را مشخص کنید
+ALLOWED_HOSTS = ['levelhaft-test.liara.run']  # در محیط تولید، دامنه‌های مجاز را مشخص کنید
 
 
 # Application definition
@@ -102,16 +102,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'level_haft_db',
-        'USER': 'postgres',
-        'PASSWORD': '708708',
-        'HOST': 'localhost',
-        'PORT': '5432',
+# Use Liara database URL if available, otherwise use local settings
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'level_haft_db',
+            'USER': 'postgres',
+            'PASSWORD': '708708',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
 
 
 # Password validation
@@ -153,6 +160,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+# WhiteNoise configuration for static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -168,7 +177,16 @@ AUTHENTICATION_BACKENDS = [
 # Kavenegar settings
 Kavenegar_API = os.environ.get("KAVENEGAR_API")
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+# Cache settings - Using local cache for now
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Session settings - Using database sessions
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 1209600  # 14 days in seconds
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SAVE_EVERY_REQUEST = True

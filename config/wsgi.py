@@ -14,4 +14,8 @@ from whitenoise import WhiteNoise
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 application = get_wsgi_application()
-application = WhiteNoise(application, root='staticfiles')
+
+# WhiteNoise configuration for Liara
+application = WhiteNoise(application, root='staticfiles/')
+application.add_files('staticfiles/', prefix='static/')
+application.add_files('media/', prefix='media/')
