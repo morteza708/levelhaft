@@ -27,6 +27,8 @@ class WalletTransaction(models.Model):
     type = models.CharField(max_length=10, choices=TRANSACTION_TYPES)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    pasargad_url_id = models.CharField(max_length=200, blank=True, null=True, verbose_name="شناسه تراکنش پاسارگاد")
+
 
     class Meta:
         verbose_name = 'تراکنش کیف پول'

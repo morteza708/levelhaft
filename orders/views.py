@@ -16,7 +16,7 @@ from wallet.services.wallet_services import apply_order_reward, deposit_to_walle
 from accounts.helper import send_message
 from django.conf import settings
 from wallet.services.sms_service import send_refund_sms, send_cancel_notification_to_admin
-from gateways.pasargad import request_payment_url, get_token, BASE_URL
+from gateways.pasargad import request_payment_url, get_token
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 import logging
@@ -189,50 +189,62 @@ def order_cancel(request, order_id):
     })
 
 # تابع verify پرداخت پاسارگاد
-
-def pasargad_verify_payment(invoice, amount):
+def pasargad_verify_payment(invoice, url_id):
     token = get_token()
     headers = {"Authorization": f"Bearer {token}"}
     payload = {
         "invoice": str(invoice),
-        "amount": int(amount),
+        "urlId": url_id,
     }
-    response = requests.post(f"{BASE_URL}/verify", json=payload, headers=headers)
-    data = response.json()
-    return data
+    response = requests.post(
+        "https://pep.shaparak.ir/dorsa1/api/payment/verify-transactions",
+        json=payload,
+        headers=headers,
+        timeout=15
+    )
+    return response.json()
+
 
 @login_required
 def order_start_payment(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     if order.payment_status != 'paid':
-        callback_url = settings.SITE_URL + reverse('orders:order_payment_callback')
-        url = request_payment_url(
+        callback_url = settings.SITE_URL.rstrip('/') + reverse('orders:order_payment_callback')
+        result = request_payment_url(
             invoice_id=order.id,
             amount=order.unpaid_amount,
             callback_url=callback_url,
             description=f"پرداخت سفارش {order.order_number}",
-            phone_number=order.receiver_phone
+            phone_number=order.receiver_phone,
+            return_full=True    # تغییر مهم!
         )
-        return redirect(url)
+        order.pasargad_url_id = result.get("urlId")
+        order.save(update_fields=["pasargad_url_id"])
+        return redirect(result["url"])
     return redirect('orders:order_detail', order_id=order.id)
+
 
 @csrf_exempt
 def order_payment_callback(request):
-    # دریافت داده‌ها از GET یا POST
     data = request.POST or request.GET
     invoice_id = data.get("invoiceId") or data.get("invoice")
+    status = data.get("status")
     order = get_object_or_404(Order, id=invoice_id)
 
-    # verify پرداخت از سرور پاسارگاد
-    verify_result = pasargad_verify_payment(invoice=order.id, amount=order.unpaid_amount)
+    if status != "success":
+        order.payment_status = 'failed'
+        order.save()
+        return redirect('orders:order_detail', order_id=order.id)
+
+    verify_result = pasargad_verify_payment(invoice=order.id, url_id=order.pasargad_url_id)
     if verify_result.get("resultCode") == 0:
         order.payment_status = 'paid'
         order.status = 'processing'
         order.save()
-        # اینجا می‌توانی پاداش و اطلاع‌رسانی اضافه کنی
+        # ارسال پیامک/پاداش در صورت نیاز
     else:
         order.payment_status = 'failed'
         order.save()
-        # اینجا می‌توانی پیام خطا یا اطلاع‌رسانی اضافه کنی
+        # پیام خطا
 
-    return redirect('orders:order_detail', order_id=order.id) 
+    return redirect('orders:order_detail', order_id=order.id)

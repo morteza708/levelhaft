@@ -152,6 +152,58 @@
             margin-left: 6px !important;
         }
     }
+    .img-style {
+        width: 100% !important;
+        max-width: 875px !important;
+        height: auto !important;
+        aspect-ratio: 875 / 809 !important;
+        object-fit: cover !important;
+        display: block;
+    }
+    .img-category {
+        width: 100% !important;
+        max-width: 120px !important;
+        height: auto !important;
+        aspect-ratio: 1/1 !important;
+        object-fit: cover !important;
+        display: block;
+        margin: 0 auto;
+    }
+    .tf-categories-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 32px;
+    }
+    .img-product {
+        width: 100% !important;
+        max-width: 220px !important;
+        height: auto !important;
+        aspect-ratio: 1/1 !important;
+        object-fit: cover !important;
+        display: block;
+        margin: 0 auto;
+    }
+    .img-banner {
+        width: 98% !important;
+        max-width: 470px !important;
+        height: auto !important;
+        aspect-ratio: 470 / 400 !important;
+        object-fit: cover !important;
+        display: block;
+        margin: 0 auto 0 auto !important;
+        border-radius: 18px !important;
+    }
+    .collection-item-v6 .img-style {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    .collection-content {
+        margin-top: 0 !important;
+        padding-top: 20px !important;
+        border-radius: 18px !important;
+    }
 </style>
 {% endblock %}
 {% block content %}
@@ -164,56 +216,77 @@
                     <div class="swiper-slide" lazy="true">
                         <div class="collection-item hover-img">
                             <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="shop-default.html">
-                                    <img alt="slider-cosmetic" src="{% static "images/slider/slider-cosmetic1.jpg" %}" />
+                                <a class="collection-image rounded-0 img-style" href="#">
+                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner1.webp" %}" width="875" height="809" 
+                                        srcset="{% static 'images/slider/banner1.webp' %} 875w, {% static 'images/slider/banner1-400.webp' %} 400w"
+                                        sizes="(max-width: 600px) 100vw, 875px" />
                                 </a>
-                                <div class="collection-content">
-                                    <a class="tf-btn btn-light-icon animate-hover-btn btn-xl rounded-0"
-                                        href="shop-default.html"><span>پرفروش ترین زیبایی</span><i
-                                            class="icon fw-4 icon-arrow1-top-right"></i></a>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="swiper-slide" lazy="true">
                         <div class="collection-item hover-img">
                             <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="shop-default.html">
-                                    <img alt="slider-cosmetic" src="{% static "images/slider/slider-cosmetic2.jpg" %}" />
+                                <a class="collection-image rounded-0 img-style" href="{% url 'products:consult' %}">
+                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner2.webp" %}" width="875" height="809" 
+                                        srcset="{% static 'images/slider/banner2.webp' %} 875w, {% static 'images/slider/banner2-400.webp' %} 400w"
+                                        sizes="(max-width: 600px) 100vw, 875px" />
                                 </a>
-                                <div class="collection-content">
-                                    <a class="tf-btn btn-light-icon animate-hover-btn btn-xl rounded-0"
-                                        href="shop-default.html"><span>صورتی روی صورتی</span><i
-                                            class="icon fw-4 icon-arrow1-top-right"></i></a>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="swiper-slide" lazy="true">
                         <div class="collection-item hover-img">
                             <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="shop-default.html">
-                                    <img alt="slider-cosmetic" src="{%static "images/slider/slider-cosmetic3.jpg"%}" />
+                                <a class="collection-image rounded-0 img-style" href="{% url 'workshop:approved_registrations' %}">
+                                    <img alt="slider-cosmetic" src="{%static "images/slider/banner3.webp"%}" width="875" height="809" 
+                                        srcset="{% static 'images/slider/banner3.webp' %} 875w, {% static 'images/slider/banner3-400.webp' %} 400w"
+                                        sizes="(max-width: 600px) 100vw, 875px" />
                                 </a>
-                                <div class="collection-content">
-                                    <a class="tf-btn btn-light-icon animate-hover-btn btn-xl rounded-0"
-                                        href="shop-default.html"><span>ارغوانی روی ارغوانی</span><i
-                                            class="icon fw-4 icon-arrow1-top-right"></i></a>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="swiper-slide" lazy="true">
                         <div class="collection-item hover-img">
                             <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="shop-default.html">
-                                    <img alt="slider-cosmetic" src="{% static "images/slider/slider-cosmetic4.jpg" %}" />
+                                <a class="collection-image rounded-0 img-style" href="#">
+                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner4.webp" %}" width="875" height="809" 
+                                        srcset="{% static 'images/slider/banner4.webp' %} 875w, {% static 'images/slider/banner4-400.webp' %} 400w"
+                                        sizes="(max-width: 600px) 100vw, 875px" />
                                 </a>
-                                <div class="collection-content">
-                                    <a class="tf-btn btn-light-icon animate-hover-btn btn-xl rounded-0"
-                                        href="shop-default.html"><span>جدید از سای</span><i
-                                            class="icon fw-4 icon-arrow1-top-right"></i></a>
-                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide" lazy="true">
+                        <div class="collection-item hover-img">
+                            <div class="collection-inner">
+                                <a class="collection-image rounded-0 img-style" href="#">
+                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner5.webp" %}" width="875" height="809" 
+                                        srcset="{% static 'images/slider/banner5.webp' %} 875w, {% static 'images/slider/banner5-400.webp' %} 400w"
+                                        sizes="(max-width: 600px) 100vw, 875px" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide" lazy="true">
+                        <div class="collection-item hover-img">
+                            <div class="collection-inner">
+                                <a class="collection-image rounded-0 img-style" href="{% url 'workshop:approved_registrations' %}">
+                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner6.webp" %}" width="875" height="809" 
+                                        srcset="{% static 'images/slider/banner6.webp' %} 875w, {% static 'images/slider/banner6-400.webp' %} 400w"
+                                        sizes="(max-width: 600px) 100vw, 875px" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide" lazy="true">
+                        <div class="collection-item hover-img">
+                            <div class="collection-inner">
+                                <a class="collection-image rounded-0 img-style" href="#">
+                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner7.webp" %}" width="875" height="809" 
+                                        srcset="{% static 'images/slider/banner7.webp' %} 875w, {% static 'images/slider/banner7-400.webp' %} 400w"
+                                        sizes="(max-width: 600px) 100vw, 875px" />
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -236,79 +309,55 @@
                     <div class="tf-categories-container">
                         <div class="collection-item-circle style-2 hover-img">
                             <a class="collection-image img-style" href="shop-collection-list.html">
-                                <img alt="collection-img" class="lazyload"
-                                    data-src="{%static "images/collections/cls-cosmetic2.jpg"%}"
-                                    src="{%static "images/collections/cls-cosmetic2.jpg"%}" />
+                                <img alt="collection-img" class="lazyload img-category"
+                                    src="{%static "images/collections/belter.webp"%}" width="120" height="120" />
                             </a>
                             <div class="collection-content text-center">
-                                <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
-                                </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">دکتر بلتر</a>
                             </div>
                         </div>
                         <div class="collection-item-circle style-2 hover-img">
                             <a class="collection-image img-style" href="shop-collection-list.html">
-                                <img alt="collection-img" class="lazyload"
-                                    data-src="{%static "images/collections/cls-cosmetic2.jpg"%}"
-                                    src="{%static "images/collections/cls-cosmetic2.jpg"%}" />
+                                <img alt="collection-img" class="lazyload img-category"
+                                    src="{%static "images/collections/rimpler.webp"%}" width="120" height="120" />
                             </a>
                             <div class="collection-content text-center">
-                                <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
-                                </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">دکتر ریمپلر</a>
                             </div>
                         </div>
                         <div class="collection-item-circle style-2 hover-img">
                             <a class="collection-image img-style" href="shop-collection-list.html">
-                                <img alt="collection-img" class="lazyload"
-                                    data-src="{%static "images/collections/cls-cosmetic2.jpg"%}"
-                                    src="{%static "images/collections/cls-cosmetic2.jpg"%}" />
+                                <img alt="collection-img" class="lazyload img-category"
+                                    src="{%static "images/collections/isabel-lancry.webp"%}" width="120" height="120" />
                             </a>
                             <div class="collection-content text-center">
-                                <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
-                                </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">ایزابل لنکری</a>
                             </div>
                         </div>
                         <div class="collection-item-circle style-2 hover-img">
                             <a class="collection-image img-style" href="shop-collection-list.html">
-                                <img alt="collection-img" class="lazyload"
-                                    data-src="{%static "images/collections/cls-cosmetic2.jpg"%}"
-                                    src="{%static "images/collections/cls-cosmetic2.jpg"%}" />
+                                <img alt="collection-img" class="lazyload img-category"
+                                    src="{%static "images/collections/racuten.webp"%}" width="120" height="120" />
                             </a>
                             <div class="collection-content text-center">
-                                <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
-                                </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">راکوتن</a>
                             </div>
                         </div>
                         <div class="collection-item-circle style-2 hover-img">
                             <a class="collection-image img-style" href="shop-collection-list.html">
-                                <img alt="collection-img" class="lazyload"
-                                    data-src="{%static "images/collections/cls-cosmetic2.jpg"%}"
-                                    src="{%static "images/collections/cls-cosmetic2.jpg"%}" />
+                                <img alt="collection-img" class="lazyload img-category"
+                                    src="{%static "images/collections/DSV-LINE.webp"%}" width="120" height="120" />
                             </a>
                             <div class="collection-content text-center">
-                                <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
-                                </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">DSV-LINE</a>
                             </div>
                         </div>
                         <div class="collection-item-circle style-2 hover-img">
                             <a class="collection-image img-style" href="shop-collection-list.html">
-                                <img alt="collection-img" class="lazyload"
-                                    data-src="{%static "images/collections/cls-cosmetic2.jpg"%}"
-                                    src="{%static "images/collections/cls-cosmetic2.jpg"%}" />
+                                <img alt="collection-img" class="lazyload img-category"
+                                    src="{%static "images/collections/casi.webp"%}" width="120" height="120" />
                             </a>
                             <div class="collection-content text-center">
-                                <div class="flag-container mb-2">
-                                    <img src="{% static 'images/logo/Germany_flag.svg' %}" alt="Germany" style="width: 30px; height: 20px;" />
-                                </div>
                                 <a class="link title fw-6" href="shop-collection-list.html">کیسی</a>
                             </div>
                         </div>
@@ -318,116 +367,6 @@
             </div>
         </section>
         <!-- /Categories -->
-        <!-- محصولات پیشنهادی لول هفت -->
-        <section class="flat-spacing-21 bg_light-grey-4">
-            <div class="container">
-                <div class="flat-title wow fadeInUp" data-wow-delay="0s">
-                    <span class="title fw-6">محصولات پیشنهادی لول هفت</span>
-                </div>
-                <div class="wrap-carousel">
-                    <div class="swiper tf-sw-product-sell" >
-                        <div class="swiper-wrapper">
-                            {% for product in featured_products %}
-                            <div class="swiper-slide">
-                                <div class="card-product style-10">
-                                    <div class="card-product-wrapper">
-                                        <a class="product-img" href="{% url 'products:product_detail' product.slug %}">
-                                            {% if product.images.all %}
-                                                <img alt="{{ product.name }}" class="lazy-load img-product"
-                                                    data-src="{{ product.images.first.image.url }}"
-                                                    src="{{ product.images.first.image.url }}" />
-                                            {% endif %}
-                                        </a>
-                                    </div>
-                                    <div class="card-product-info text-center">
-                                        <a class="title link fw-4 fs-10" href="{% url 'products:product_detail' product.slug %}">{{ product.brand.name }}</a>
-                                        <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
-                                        <div class="product-price-area">
-                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
-                                                {% if user.is_authenticated and user.profile.is_beautician %}
-                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                                {% else %}
-                                                    <div class="beautician-badge">
-                                                        <i class="fas fa-spa"></i>
-                                                        <span>بیوتیشن</span>
-                                                    </div>
-                                                {% endif %}
-                                            {% else %}
-                                                {% if user.is_authenticated and user.profile.is_beautician %}
-                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                                {% else %}
-                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
-                                                {% endif %}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>                 
-                </div>
-            </div>
-        </section>
-        <!-- /محصولات پیشنهادی لول هفت -->
-        <!-- محصولات دکتر بلتر -->
-        {% if belter_products %}
-        <section class="flat-spacing-21">
-            <div class="container">
-                <div class="flat-title wow fadeInUp" data-wow-delay="0s">
-                    <span class="title fw-6">محصولات دکتر بلتر</span>
-                </div>
-                <div class="wrap-carousel">
-                    <div class="swiper tf-sw-product-sell">
-                        <div class="swiper-wrapper">
-                            {% for product in belter_products %}
-                            <div class="swiper-slide">
-                                <div class="card-product style-10">
-                                    <div class="card-product-wrapper">
-                                        <a class="product-img" href="{% url 'products:product_detail' product.slug %}">
-                                            {% with product.images.all|first as first_image %}
-                                                {% if first_image %}
-                                                    <img alt="{{ product.name }}" class="lazy-load img-product"
-                                                        data-src="{{ first_image.image.url }}"
-                                                        src="{{ first_image.image.url }}" />
-                                                {% endif %}
-                                            {% endwith %}
-                                        </a>
-                                    </div>
-                                    <div class="card-product-info text-center">
-                                        <a class="title link fw-4 fs-10" href="{% url 'products:product_detail' product.slug %}">
-                                            {{ product.brand.name }}
-                                        </a>
-                                        <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
-                                        <div class="product-price-area">
-                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
-                                                {% if user.is_authenticated and user.profile.is_beautician %}
-                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                                {% else %}
-                                                    <div class="beautician-badge">
-                                                        <i class="fas fa-spa"></i>
-                                                        <span>بیوتیشن</span>
-                                                    </div>
-                                                {% endif %}
-                                            {% else %}
-                                                {% if user.is_authenticated and user.profile.is_beautician %}
-                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
-                                                {% else %}
-                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
-                                                {% endif %}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        {% endif %}
-        <!-- /محصولات دکتر بلتر -->
         <!-- محصولات راکوتن   -->
         {% if racuten_products %}
         <section class="flat-spacing-21 bg_light-grey-4">
@@ -447,7 +386,7 @@
                                                 {% if first_image %}
                                                     <img alt="{{ product.name }}" class="lazy-load img-product"
                                                         data-src="{{ first_image.image.url }}"
-                                                        src="{{ first_image.image.url }}" />
+                                                        src="{{ first_image.image.url }}" width="220" height="220" loading="lazy" />
                                                 {% endif %}
                                             {% endwith %}
                                         </a>
@@ -486,46 +425,153 @@
         </section>
         {% endif %}
         <!-- /محصولات راکوتن   -->
+        <!-- محصولات پیشنهادی لول هفت -->
+        <section class="flat-spacing-21 ">
+            <div class="container">
+                <div class="flat-title wow fadeInUp" data-wow-delay="0s">
+                    <span class="title fw-6">محصولات پیشنهادی لول هفت</span>
+                </div>
+                <div class="wrap-carousel">
+                    <div class="swiper tf-sw-product-sell" >
+                        <div class="swiper-wrapper">
+                            {% for product in featured_products %}
+                            <div class="swiper-slide">
+                                <div class="card-product style-10">
+                                    <div class="card-product-wrapper">
+                                        <a class="product-img" href="{% url 'products:product_detail' product.slug %}">
+                                            {% if product.images.all %}
+                                                <img alt="{{ product.name }}" class="lazy-load img-product"
+                                                    data-src="{{ product.images.first.image.url }}"
+                                                    src="{{ product.images.first.image.url }}" width="220" height="220" loading="lazy" />
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="card-product-info text-center">
+                                        <a class="title link fw-4 fs-10" href="{% url 'products:product_detail' product.slug %}">{{ product.brand.name }}</a>
+                                        <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
+                                        <div class="product-price-area">
+                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <div class="beautician-badge">
+                                                        <i class="fas fa-spa"></i>
+                                                        <span>بیوتیشن</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>                 
+                </div>
+            </div>
+        </section>
+        <!-- /محصولات پیشنهادی لول هفت -->
+        <!-- محصولات دکتر بلتر -->
+        {% if belter_products %}
+        <section class="flat-spacing-21 bg_light-grey-4">
+            <div class="container">
+                <div class="flat-title wow fadeInUp" data-wow-delay="0s">
+                    <span class="title fw-6">محصولات دکتر بلتر</span>
+                </div>
+                <div class="wrap-carousel">
+                    <div class="swiper tf-sw-product-sell">
+                        <div class="swiper-wrapper">
+                            {% for product in belter_products %}
+                            <div class="swiper-slide">
+                                <div class="card-product style-10">
+                                    <div class="card-product-wrapper">
+                                        <a class="product-img" href="{% url 'products:product_detail' product.slug %}">
+                                            {% with product.images.all|first as first_image %}
+                                                {% if first_image %}
+                                                    <img alt="{{ product.name }}" class="lazy-load img-product"
+                                                        data-src="{{ first_image.image.url }}"
+                                                        src="{{ first_image.image.url }}" width="220" height="220" loading="lazy" />
+                                                {% endif %}
+                                            {% endwith %}
+                                        </a>
+                                    </div>
+                                    <div class="card-product-info text-center">
+                                        <a class="title link fw-4 fs-10" href="{% url 'products:product_detail' product.slug %}">
+                                            {{ product.brand.name }}
+                                        </a>
+                                        <p class="fs-10">{{ product.name|truncatewords:2 }}</p>
+                                        <div class="product-price-area">
+                                            {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <div class="beautician-badge">
+                                                        <i class="fas fa-spa"></i>
+                                                        <span>بیوتیشن</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if user.is_authenticated and user.profile.is_beautician %}
+                                                    <span class="price fs-10">{{ product.price_level_1|intcomma:False }} ریال</span>
+                                                {% else %}
+                                                    <span class="price fs-10">{{ product.price_level_2|intcomma:False }} ریال</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        <!-- /محصولات دکتر بلتر -->
         <!-- Banner Collection -->
-        <section class="flat-spacing-1 bg_light-grey-4">
+        <section class="flat-spacing-1">
             <div class="container">
                 <div class="tf-grid-layout md-col-3 gap30">
                     <div class="collection-item-v6 hover-img">
                         <a class="collection-inner" href="{% url 'products:consult' %}">
                             <div class="img-style">
-                                <img alt="collection-img" class="lazyload"
-                                    data-src="{%static "images/collections/cls-banner-cosmetic1.jpg"%}"
-                                    src="{%static "images/collections/cls-banner-cosmetic1.jpg"%}" />
+                                <img alt="collection-img" class="lazyload img-banner"
+                                    src="{%static "images/collections/AIsearch.webp"%}" width="470" height="400" />
                             </div>
                             <div class="collection-content position-relative text-center bg_dark-pink">
                                 <h5 class="heading text-white fw-6 wow fadeInUp" data-wow-delay="0s">مشاوره هوشمند خرید</h5>
-                                <p class="subheading text-white wow fadeInUp" data-wow-delay="0s">محصول مورد نظر را زودتر از همه بیابید</p>
+                                <p class="subheading text-white wow fadeInUp mt-2" data-wow-delay="0s">محصول مورد نظر را زودتر از همه بیابید</p>
                             </div>
                         </a>
                     </div>
                     <div class="collection-item-v6 hover-img">
                         <a class="collection-inner" href="{% url 'workshop:workshop_list' %}">
                             <div class="img-style">
-                                <img alt="collection-img" class="lazyload"
-                                    data-src="{%static "images/collections/cls-banner-cosmetic2.jpg"%}"
-                                    src="{%static "images/collections/cls-banner-cosmetic2.jpg"%}" />
+                                <img alt="collection-img" class="lazyload img-banner"
+                                    src="{%static "images/collections/IMG_2347.webp"%}" width="470" height="400" />
                             </div>
-                            <div class="collection-content position-relative text-center bg_dark-yellow">
+                            <div class="collection-content position-relative text-center" style="background-color:rgb(128, 177, 245);">
                                 <h5 class="heading text-white fw-6 wow fadeInUp" data-wow-delay="0s">ورکشاپ های لول هفت</h5>
-                                <p class="subheading text-white wow fadeInUp" data-wow-delay="0s">برای شرکت در ورکشاپ ها لطفا کلیک کنید</p>
+                                <p class="subheading text-white wow fadeInUp mt-2" data-wow-delay="0s">برای شرکت در ورکشاپ ها لطفا کلیک کنید</p>
                             </div>
                         </a>
                     </div>
                     <div class="collection-item-v6 hover-img">
                         <a class="collection-inner" href="{% url 'accounts:beautician_request' %}">
                             <div class="img-style">
-                                <img alt="collection-img" class="lazyload"
-                                    data-src="{%static "images/collections/cls-banner-cosmetic3.jpg"%}"
-                                    src="{%static "images/collections/cls-banner-cosmetic3.jpg"%}" />
+                                <img alt="collection-img" class="lazyload img-banner"
+                                    src="{%static "images/collections/beautician 1.webp"%}" width="470" height="400" />
                             </div>
                             <div class="collection-content position-relative text-center bg_violet-2">
-                                <h5 class="heading text-white fw-6 wow fadeInUp" data-wow-delay="0s">آیا میخواهید کاربر بیوتیشن سایت شوید</h5>
-                                <p class="subheading text-white wow fadeInUp" data-wow-delay="0s">برای اینکه کاربر بیوتیشن سایت شوید لطفا کلیک کنید</p>
+                                <h5 class="heading-sm text-white fw-6 wow fadeInUp" data-wow-delay="0s">آیا میخواهید کاربر بیوتیشن شوید</h5>
+                                <p class="subheading text-white wow fadeInUp mt-2" data-wow-delay="0s">برای اینکه کاربر بیوتیشن سایت شوید لطفا کلیک کنید</p>
                             </div>
                         </a>
                     </div>
@@ -533,127 +579,9 @@
             </div>
         </section>
         <!-- /Banner Collection -->
-        <!-- Shoppable video -->
-        <section class="flat-spacing-27 bg_light-grey-4">
-            <div class="container">
-                <div class="flat-title wow fadeInUp" data-wow-delay="0s">
-                    <span class="title fw-6">ویدیوهای قابل خرید</span>
-                </div>
-                <div class="wrap-carousel">
-                    <div class="swiper tf-sw-collection" data-auto-play="false" data-loop="false" data-mobile="1"
-                        data-preview="3" data-space="15" data-space-lg="30" data-space-md="30" data-tablet="2"
-                        dir="rtl">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="collection-video wow fadeInUp">
-                                    <div class="banner-video">
-                                        <video autoplay="" loop="" muted="" playsinline="">
-                                            <source src="{%static "images/video/cosmetic1.mp4"%}" type="video/mp4">مرورگر شما از
-                                            برچسب ویدیو پشتیبانی نمی کند.</source>
-                                        </video>
-                                    </div>
-                                    <div class="cls-content">
-                                        <div class="avatar d-none d-xl-block">
-                                            <img alt="avt" src="{%static "images/video/avt-cosmetic1.jpg"%}" />
-                                        </div>
-                                        <div class="info">
-                                            <div>
-                                                <a class="title link text-line-clamp-1" href="product-detail.html">اسپری
-                                                    صورت نجات روزانه SOS</a>
-                                                <span class="price">24.00 تومان</span>
-                                            </div>
-                                            <a class="box-icon" data-bs-toggle="modal" href="#quick_view"><i
-                                                    class="icon icon-view"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="collection-video wow fadeInUp">
-                                    <div class="banner-video">
-                                        <video autoplay="" loop="" muted="" playsinline="">
-                                            <source src="{%static "images/video/cosmetic2.mp4"%}" type="video/mp4">مرورگر شما از
-                                            برچسب ویدیو پشتیبانی نمی کند.</source>
-                                        </video>
-                                    </div>
-                                    <div class="cls-content">
-                                        <div class="avatar d-none d-xl-block">
-                                            <img alt="avt" src="{%static "images/video/avt-cosmetic2.jpg"%}" />
-                                        </div>
-                                        <div class="info">
-                                            <div>
-                                                <a class="title link text-line-clamp-1"
-                                                    href="product-detail.html">کانسیلر کرمی درخشان</a>
-                                                <span class="price">64.00 تومان</span>
-                                            </div>
-                                            <a class="box-icon" data-bs-toggle="modal" href="#quick_view"><i
-                                                    class="icon icon-view"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="collection-video wow fadeInUp">
-                                    <div class="banner-video">
-                                        <video autoplay="" loop="" muted="" playsinline="">
-                                            <source src="{%static "images/video/cosmetic3.mp4"%}" type="video/mp4">مرورگر شما از
-                                            برچسب ویدیو پشتیبانی نمی کند.</source>
-                                        </video>
-                                    </div>
-                                    <div class="cls-content">
-                                        <div class="avatar d-none d-xl-block">
-                                            <img alt="avt" src="{%static "images/video/avt-cosmetic3.jpg"%}" />
-                                        </div>
-                                        <div class="info">
-                                            <div>
-                                                <a class="title link text-line-clamp-1" href="product-detail.html">فیل
-                                                    مست</a>
-                                                <span class="price">32.00 تومان</span>
-                                            </div>
-                                            <a class="box-icon" data-bs-toggle="modal" href="#quick_view"><i
-                                                    class="icon icon-view"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="collection-video wow fadeInUp">
-                                    <div class="banner-video">
-                                        <video autoplay="" loop="" muted="" playsinline="">
-                                            <source src="{%static "images/video/cosmetic4.mp4"%}" type="video/mp4">مرورگر شما از
-                                            برچسب ویدیو پشتیبانی نمی کند.</source>
-                                        </video>
-                                    </div>
-                                    <div class="cls-content">
-                                        <div class="avatar d-none d-xl-block">
-                                            <img alt="avt" src="{%static "images/video/avt-cosmetic4.jpg"%}" />
-                                        </div>
-                                        <div class="info">
-                                            <div>
-                                                <a class="title link text-line-clamp-1" href="product-detail.html">سایه
-                                                    چشم Sephora Colorful®</a>
-                                                <span class="price">18.00 تومان</span>
-                                            </div>
-                                            <a class="box-icon" data-bs-toggle="modal" href="#quick_view"><i
-                                                    class="icon icon-view"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="nav-sw style-white style-disabled-dark nav-next-slider nav-next-collection lg"><span
-                            class="icon icon-arrow-left"></span></div>
-                    <div class="nav-sw style-white style-disabled-dark nav-prev-slider nav-prev-collection lg"><span
-                            class="icon icon-arrow-right"></span></div>
-                    <div class="sw-dots style-2 sw-pagination-collection justify-content-center"></div>
-                </div>
-            </div>
-        </section>
-        <!-- /Shoppable video -->
         <!-- محصولات دکتر ریمپلر -->
         {% if rimpler_products %}
-        <section class="flat-spacing-21">
+        <section class="flat-spacing-21 bg_light-grey-4">
             <div class="container">
                 <div class="flat-title wow fadeInUp" data-wow-delay="0s">
                     <span class="title fw-6">محصولات دکتر ریمپلر</span>
@@ -670,7 +598,7 @@
                                                 {% if first_image %}
                                                     <img alt="{{ product.name }}" class="lazy-load img-product"
                                                         data-src="{{ first_image.image.url }}"
-                                                        src="{{ first_image.image.url }}" />
+                                                        src="{{ first_image.image.url }}" width="220" height="220" loading="lazy" />
                                                 {% endif %}
                                             {% endwith %}
                                         </a>
@@ -711,7 +639,7 @@
         <!-- /محصولات دکتر ریمپلر -->
         <!-- محصولات دکتر ایزابل لنکری -->
         {% if isabelle_products %}
-        <section class="flat-spacing-21 bg_light-grey-4">
+        <section class="flat-spacing-21">
             <div class="container">
                 <div class="flat-title wow fadeInUp" data-wow-delay="0s">
                     <span class="title fw-6">محصولات ایزابل لنکری</span>
@@ -728,7 +656,7 @@
                                                 {% if first_image %}
                                                     <img alt="{{ product.name }}" class="lazy-load img-product"
                                                         data-src="{{ first_image.image.url }}"
-                                                        src="{{ first_image.image.url }}" />
+                                                        src="{{ first_image.image.url }}" width="220" height="220" loading="lazy" />
                                                 {% endif %}
                                             {% endwith %}
                                         </a>
@@ -769,7 +697,7 @@
         <!-- /محصولات دکتر ایزابل لنکری -->
         <!-- محصولات DSV-LINE  -->
         {% if ds_line_products %}
-        <section class="flat-spacing-21">
+        <section class="flat-spacing-21 bg_light-grey-4">
             <div class="container">
                 <div class="flat-title wow fadeInUp" data-wow-delay="0s">
                     <span class="title fw-6">محصولات DSV-LINE</span>
@@ -786,7 +714,7 @@
                                                 {% if first_image %}
                                                     <img alt="{{ product.name }}" class="lazy-load img-product"
                                                         data-src="{{ first_image.image.url }}"
-                                                        src="{{ first_image.image.url }}" />
+                                                        src="{{ first_image.image.url }}" width="220" height="220" loading="lazy" />
                                                 {% endif %}
                                             {% endwith %}
                                         </a>
@@ -827,7 +755,7 @@
         <!-- /محصولات DSV-LINE -->
         <!--  اکسسوری های لول هفت  -->
         {% if accessories_products %}
-        <section class="flat-spacing-21 bg_light-grey-4">
+        <section class="flat-spacing-21">
             <div class="container">
                 <div class="flat-title wow fadeInUp" data-wow-delay="0s">
                     <span class="title fw-6">اکسسوری های لول هفت</span>
@@ -844,7 +772,7 @@
                                                 {% if first_image %}
                                                     <img alt="{{ product.name }}" class="lazy-load img-product"
                                                         data-src="{{ first_image.image.url }}"
-                                                        src="{{ first_image.image.url }}" />
+                                                        src="{{ first_image.image.url }}" width="220" height="220" loading="lazy" />
                                                 {% endif %}
                                             {% endwith %}
                                         </a>
@@ -904,9 +832,9 @@
                 clickable: true,
             },
             breakpoints: {
-                320: { slidesPerView: 3.5, spaceBetween: 10 }, // موبایل
-                768: { slidesPerView: 4, spaceBetween: 15 }, // تبلت
-                1024: { slidesPerView: 6, spaceBetween: 20 }, // دسکتاپ
+                320: { slidesPerView: 2, slidesPerGroup: 1, spaceBetween: 15 }, // موبایل
+                768: { slidesPerView: 4, slidesPerGroup: 1, spaceBetween: 15 }, // تبلت
+                1024: { slidesPerView: 6, slidesPerGroup: 1, spaceBetween: 20 }, // دسکتاپ
             },
         });
     });

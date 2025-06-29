@@ -31,6 +31,7 @@ class Order(models.Model):
     discount_amount = models.PositiveIntegerField(default=0, verbose_name="مبلغ تخفیف (ریال)")
     final_amount = models.PositiveBigIntegerField(verbose_name="مبلغ نهایی (ریال)")
     unpaid_amount = models.PositiveBigIntegerField(default=0, verbose_name="مبلغ پرداخت نشده (ریال)")
+    pasargad_url_id = models.CharField(max_length=200, blank=True, null=True, verbose_name="شناسه تراکنش پاسارگاد")
     reward_applied = models.BooleanField(default=False, verbose_name="پاداش اعمال شده")
     
     # اطلاعات گیرنده
