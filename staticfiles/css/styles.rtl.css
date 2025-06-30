@@ -1,6 +1,6 @@
 @import url(font-ir.css);
 
-@import url(./bootstrap-select.min.css);
+@import url(./bootstrap-select.min.rtl.css);
 :root {
     --main: #000000;
     --white: #ffffff;
@@ -1923,8 +1923,8 @@ label {
 }
 
 .logo-header img {
-    width: 75px;
-    padding: 3px;
+    width: 85px;
+    padding: 5px;
 }
 
 .box-nav-ul .menu-item {
@@ -7963,10 +7963,6 @@ header.header-bg {
     background-color: transparent;
     border: 0;
     outline: none;
-}
-
-.form-sign-in .modal-dialog {
-    max-width: 640px;
 }
 
 .form-sign-in .modal-dialog .modal-content {
@@ -18521,8 +18517,8 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
         line-height: 24px;
     }
     .logo-header img {
-        width: 75px;
-        padding: 3px;
+        width: 85px;
+        padding: 5px;
     }
     .canvas-mb {
         width: 100% !important;
@@ -19041,10 +19037,6 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     }
     .widget-tab-4 .nav-tab-item:not(:last-child) .nav-tab-link {
         border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-    }
-    .widget-tab-4 .nav-tab-item .nav-tab-link {
-        justify-content: space-between;
-        padding: 10px 0px;
     }
     .widget-tab-4 .nav-tab-item .nav-tab-link .text {
         font-size: 22px;
@@ -23293,131 +23285,4 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
 .footer-logo img {
     width: 100px;  /* یا هر سایزی که مناسب طراحی شماست */
     height: auto;  /* ارتفاع خودکار برای حفظ تناسب تصویر */
-}
-.brand-logo {
-    object-fit: contain;
-    max-height: 50%;
-    border-radius: 4px;
-} 
-.cart-count-badge {
-    padding: 0.13em 0.45em;
-    font-size: 0.75rem;
-    font-weight: 700;
-    border: 2px solid #fff;
-    background: #dc3545;
-    color: #fff;
-    box-shadow: 0 2px 8px #dc354522;
-    top: -3px !important;
-    right: -6px !important;
-    left: auto !important;
-    min-width: 18px;
-    min-height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.toolbar-cart-badge {
-    padding: 0.13em 0.45em;
-    font-size: 0.75rem;
-    font-weight: 700;
-    border: 2px solid #fff;
-    background: #dc3545;
-    color: #fff;
-    box-shadow: 0 2px 8px #dc354522;
-    top: -3px !important;
-    right: -6px !important;
-    left: auto !important;
-    min-width: 18px;
-    min-height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    position: absolute;
-    z-index: 2;
-}
-.wallet-btn {
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 15px;
-    transition: all 0.2s;
-}
-.wallet-btn:hover, .wallet-btn:focus {
-    background: #218838 !important;
-    color: #fff !important;
-    text-decoration: none;
-    box-shadow: 0 2px 8px #28a74533;
-}
-.wallet-balance {
-    margin-left: 0 !important;
-    margin-right: 6px !important;
-}
-.wallet-btn .fa-wallet {
-    margin-left: 0 !important;
-    margin-right: 8px !important;
-}
-@media (max-width: 576px) {
-    .wallet-btn {
-        background: none !important;
-        color: inherit !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-        min-width: 0;
-        box-shadow: none !important;
-        border: none !important;
-        justify-content: center;
-    }
-    .wallet-balance,
-    .wallet-currency {
-        display: none !important;
-    }
-    .wallet-btn .fa-wallet,
-    .wallet-icon {
-        font-size: 22px !important;
-        margin-right: 0 !important;
-        color: #222 !important;
-    }
-}
-.wallet-btn {
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 15px;
-    transition: all 0.2s;
-}
-.wallet-btn:hover, .wallet-btn:focus {
-    background: #218838 !important;
-    color: #fff !important;
-    text-decoration: none;
-    box-shadow: 0 2px 8px #28a74533;
-}
-.wallet-balance {
-    margin-left: 0 !important;
-    margin-right: 6px !important;
-}
-.wallet-btn .fa-wallet {
-    margin-left: 0 !important;
-    margin-right: 8px !important;
-}
-/* فقط آیکون ساده و بدون پس‌زمینه در موبایل */
-@media (max-width: 576px) {
-    .wallet-btn {
-        background: none !important;
-        color: inherit !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-        min-width: 0;
-        box-shadow: none !important;
-        border: none !important;
-        justify-content: center;
-    }
-    .wallet-balance,
-    .wallet-currency {
-        display: none !important;
-    }
-    .wallet-btn .fa-wallet,
-    .wallet-icon {
-        font-size: 22px !important;
-        margin-right: 0 !important;
-        color: #222 !important;
-    }
 }
