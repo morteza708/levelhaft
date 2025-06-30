@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", False)
 
-ALLOWED_HOSTS = ['levelhaft-test.liara.run']  # در محیط تولید، دامنه‌های مجاز را مشخص کنید
+ALLOWED_HOSTS = ['levelhaft.com']  # در محیط تولید، دامنه‌های مجاز را مشخص کنید
 
 
 # Application definition

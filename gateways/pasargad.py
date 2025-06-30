@@ -10,6 +10,7 @@ def get_token():
             "username": settings.PEP_USERNAME,
             "password": settings.PEP_PASSWORD
         },
+        headers={"Referer": "https://levelhaft.com"},
         timeout=15
     )
     response.raise_for_status()
@@ -20,7 +21,7 @@ def get_token():
 
 def request_payment_url(invoice_id, amount, callback_url, description, phone_number, return_full=False):
     token = get_token()
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {"Authorization": f"Bearer {token}", "Referer": "https://levelhaft.com"}
     payload = {
         "invoice": str(invoice_id),
         "invoiceDate": jdatetime.date.today().strftime("%Y/%m/%d"),
