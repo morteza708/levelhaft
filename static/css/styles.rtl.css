@@ -1,6 +1,6 @@
 @import url(font-ir.css);
 
-@import url(./bootstrap-select.min.css);
+@import url(./bootstrap-select.min.rtl.css);
 :root {
     --main: #000000;
     --white: #ffffff;
@@ -7963,10 +7963,6 @@ header.header-bg {
     background-color: transparent;
     border: 0;
     outline: none;
-}
-
-.form-sign-in .modal-dialog {
-    max-width: 640px;
 }
 
 .form-sign-in .modal-dialog .modal-content {
@@ -19041,10 +19037,6 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     }
     .widget-tab-4 .nav-tab-item:not(:last-child) .nav-tab-link {
         border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-    }
-    .widget-tab-4 .nav-tab-item .nav-tab-link {
-        justify-content: space-between;
-        padding: 10px 0px;
     }
     .widget-tab-4 .nav-tab-item .nav-tab-link .text {
         font-size: 22px;
