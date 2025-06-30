@@ -22,8 +22,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.rtl.min.css' %}" /> 
     
     <!-- Favicon and Touch Icons  -->
-    <link rel="shortcut icon" href="{% static 'images/logo/levelhaft_logo.svg' %}">
-    <link rel="apple-touch-icon-precomposed" href="{% static 'images/logo/levelhaft_logo.svg' %}">
+    <link rel="shortcut icon" href="{% static 'images/logo/levelhaft_logo.webp' %}">
+    <link rel="apple-touch-icon-precomposed" href="{% static 'images/logo/levelhaft_logo.webp' %}">
     {%block extra_css%}
     {%endblock%}
     <style>
@@ -219,13 +219,6 @@
 </head>
 
 <body class="preload-wrapper">
-     <!-- preload -->
-     <div class="preload preload-container">
-         <div class="preload-logo">
-             <div class="spinner"></div>
-         </div>
-     </div>
-     <!-- /preload -->
      <div id="wrapper">
          <!-- Header -->
          <header class="header-default" id="header">
@@ -243,7 +236,7 @@
                      </div>
                      <div class="col-xl-3 col-md-4 col-6">
                          <a class="logo-header" href="{% url 'pages:home' %}">
-                             <img alt="logo" class="logo" src="{% static 'images/logo/levelhaft_logo.svg' %}" width="85" height="40" />
+                             <img alt="logo" class="logo" src="{% static 'images/logo/levelhaft_logo.webp' %}" width="85" height="40" />
                          </a>
                      </div>
                      <div class="col-xl-6 d-none d-xl-block">
@@ -484,13 +477,13 @@
                                  <div class="footer-infor">
                                     <div class="logo-container d-flex justify-content-center gap-3">
                                         <div class="header-logo footer-logo">
-                                            <a href="index.html">
-                                                <img alt="" src="{% static 'images/logo/levelhaft_logo.svg' %}" width="85" height="40" />
+                                            <a href="{% url 'pages:home' %}">
+                                                <img alt="" src="{% static 'images/logo/levelhaft_logo.webp' %}" width="85" height="40" />
                                             </a>
                                         </div>
                                         <div class="header-logo footer-logo">
-                                            <a href="index.html">
-                                                <img alt="" src="{% static 'images/logo/levelhaft_logo.svg' %}" width="85" height="40" />
+                                            <a href="{% url 'pages:home' %}">
+                                                <img alt="" src="{% static 'images/logo/levelhaft_logo.webp' %}" width="85" height="40" />
                                             </a>
                                         </div>
                                     </div>
@@ -529,16 +522,16 @@
                                  </div>
                                  <ul class="footer-menu-list tf-collapse-content">
                                      <li>
-                                         <a class="footer-menu_item" href="privacy-policy.html">فروشگاه</a>
+                                         <a class="footer-menu_item" href="{% url 'pages:home' %}">خانه</a>
                                      </li>
                                      <li>
-                                         <a class="footer-menu_item" href="delivery-return.html">وبلاگ</a>
+                                         <a class="footer-menu_item" href="{% url 'blogs:post_list' %}">وبلاگ</a>
                                      </li>
                                      <li>
-                                         <a class="footer-menu_item" href="shipping-delivery.html">ورکشاپ</a>
+                                         <a class="footer-menu_item" href="{% url 'workshop:workshop_list' %}">ورکشاپ</a>
                                      </li>
                                      <li>
-                                         <a class="footer-menu_item" href="terms-conditions.html">نحوه ارسال</a>
+                                         <a class="footer-menu_item" href="{% url 'products:consult' %}">مشاوره هوشمند</a>
                                      </li>
                                  </ul>
                              </div>
@@ -551,10 +544,10 @@
                                  </div>
                                  <ul class="footer-menu-list tf-collapse-content">
                                      <li>
-                                         <a class="footer-menu_item" href="about-us.html">درباره ما</a>
+                                         <a class="footer-menu_item" href="{% url 'pages:about_us' %}">درباره ما</a>
                                      </li>
                                      <li>
-                                         <a class="footer-menu_item" href="our-store.html">تماس باما</a>
+                                         <a class="footer-menu_item" href="{% url 'pages:contact_us' %}">تماس باما</a>
                                      </li>
                                  </ul>
                              </div>
@@ -651,7 +644,7 @@
         <div class="canvas-header d-flex align-items-center justify-content-between">
             <div class="canvas-header-logo text-center flex-grow-1">
                 <a href="#">
-                    <img src="{% static 'images/logo/levelhaft_logo.svg' %}" alt="Logo" width="50" height="50" style="height: 50px; margin-top: 10px; object-fit: contain;" />
+                    <img src="{% static 'images/logo/levelhaft_logo.webp' %}" alt="Logo" width="50" height="50" style="height: 50px; margin-top: 10px; object-fit: contain;" />
                 </a>
             </div>
         </div>
