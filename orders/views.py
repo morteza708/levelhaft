@@ -241,10 +241,20 @@ def order_payment_callback(request):
         order.payment_status = 'paid'
         order.status = 'processing'
         order.save()
-        # ارسال پیامک/پاداش در صورت نیاز
+        # ارسال پیامک به مشتری
+        message = f'....'
+        send_message(
+            order.user.phone_number,
+            message,
+            template='order-confirmation'
+        )
+        # ارسال پیامک به مدیر
+        send_message(
+            settings.ADMIN_PHONE,
+            message,
+            template='manager-order-notification'
+        )
     else:
         order.payment_status = 'failed'
         order.save()
-        # پیام خطا
-
     return redirect('orders:order_detail', order_id=order.id)

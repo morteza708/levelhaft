@@ -311,7 +311,7 @@ CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 CKEDITOR_5_UPLOAD_PATH = "uploads/"
 
 # Admin phone number for notifications
-ADMIN_PHONE = '09125373320'  # Replace with actual admin phone number
+ADMIN_PHONE = '09059762196'  # Replace with actual admin phone number
 
 # Cart settings
 CART_SESSION_ID = 'cart'
