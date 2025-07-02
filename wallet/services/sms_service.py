@@ -36,7 +36,7 @@ def send_refund_sms(user, amount, order_number):
 
 def send_cancel_notification_to_admin(order):
     """ارسال پیامک اطلاع‌رسانی لغو سفارش به مدیر"""
-    message = f"..."
+    message = f"."
     send_message(
         settings.ADMIN_PHONE,
         message,

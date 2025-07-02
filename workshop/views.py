@@ -119,7 +119,7 @@ class WorkshopRegistrationView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         response = super().form_valid(form)
         # ارسال پیامک به کاربر و ادمین
-        message = f"..."
+        message = f"."
         send_message(self.request.user.phone_number, message, template='workshop-registration')
         message = f"{self.request.user.phone_number}"
         send_message(settings.ADMIN_PHONE, message, template='manager-workshop-notification')

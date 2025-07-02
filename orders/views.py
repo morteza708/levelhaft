@@ -67,7 +67,7 @@ def order_create(request):
                             order.unpaid_amount = 0
                             
                             # ارسال پیامک به مشتری
-                            message = f'....'
+                            message = f'.'
                             send_message(
                                 order.user.phone_number,
                                 message,
@@ -242,7 +242,7 @@ def order_payment_callback(request):
         order.status = 'processing'
         order.save()
         # ارسال پیامک به مشتری
-        message = f'....'
+        message = f'.'
         send_message(
             order.user.phone_number,
             message,
