@@ -73,17 +73,19 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
             product.save()
             logger.info(f"✅ موجودی '{product.name}' افزایش یافت: +{item.quantity}")
 
-        # 2. بازگشت مبلغ سفارش به کیف پول
-        if instance.payment_status == 'paid':
-            wallet = instance.user.wallet
-            refund_amount = instance.final_amount
+        # 2. بازگشت مبالغ پرداخت‌شده (کیف پول و درگاه) به کیف پول
+        payments = instance.payments.filter(status='completed')
+        wallet = instance.user.wallet
+
+        for payment in payments:
+            refund_amount = payment.amount
 
             # جلوگیری از واریز تکراری
             already_refunded = WalletTransaction.objects.filter(
                 wallet=wallet,
                 amount=refund_amount,
                 type='deposit',
-                description__icontains=f'بازگشت مبلغ سفارش لغو شده {instance.order_number}'
+                description__icontains=f'بازگشت مبلغ {payment.get_payment_type_display()} سفارش لغو شده {instance.order_number}'
             ).exists()
 
             if not already_refunded:
@@ -94,9 +96,10 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
                     wallet=wallet,
                     amount=refund_amount,
                     type='deposit',
-                    description=f'بازگشت مبلغ سفارش لغو شده {instance.order_number}'
+                    description=f'بازگشت مبلغ {payment.get_payment_type_display()} سفارش لغو شده {instance.order_number}'
                 )
-                logger.info(f"💰 مبلغ {refund_amount} ریال به کیف پول بازگردانده شد.")
+                logger.info(f"💰 مبلغ {refund_amount} ریال از طریق {payment.get_payment_type_display()} به کیف پول بازگردانده شد.")
+
 
         # 3. حذف پاداش از کیف پول (در صورت وجود)
         if instance.reward_applied:

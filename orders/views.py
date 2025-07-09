@@ -100,6 +100,13 @@ def order_create(request):
                         product = Product.objects.get(id=item['product_id'])
                         product.stock -= item['quantity']
                         product.save()
+                    if wallet_used > 0:
+                        PaymentMethod.objects.create(
+                        order=order,
+                        payment_type='wallet',
+                        amount=wallet_used,
+                        status='completed'
+                    )
                 product_ids = [item['product_id'] for item in cart]
                 products = Product.objects.in_bulk(product_ids)
                 for item in cart:
@@ -241,6 +248,13 @@ def order_payment_callback(request):
         order.payment_status = 'paid'
         order.status = 'processing'
         order.save()
+        PaymentMethod.objects.create(
+        order=order,
+        payment_type='gateway',
+        amount=order.unpaid_amount,
+        status='completed',
+        transaction_id=verify_result.get("transactionId")
+        )
         # ارسال پیامک به مشتری
         message = f'.'
         send_message(
