@@ -245,13 +245,15 @@ def order_payment_callback(request):
 
     verify_result = pasargad_verify_payment(invoice=order.id, url_id=order.pasargad_url_id)
     if verify_result.get("resultCode") == 0:
+        gateway_payment_amount = order.unpaid_amount
         order.payment_status = 'paid'
         order.status = 'pending'
+        order.unpaid_amount = 0
         order.save()
         PaymentMethod.objects.create(
         order=order,
         payment_type='gateway',
-        amount=order.unpaid_amount,
+        amount=gateway_payment_amount,
         status='completed',
         transaction_id=verify_result.get("transactionId")
         )
