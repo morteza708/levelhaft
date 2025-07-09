@@ -327,7 +327,7 @@
                     <i class="fas fa-user-circle"></i>
                     نوع پوست شما چیست؟
                 </label>
-                <select name="skin_type" id="skin_type" class="form-select" required>
+                <select name="skin_type" id="skin_type" class="form-select">
                     <option value="">انتخاب کنید...</option>
                     {% for st in skin_types %}
                         <option value="{{ st.id }}">{{ st.name }}</option>
@@ -353,7 +353,7 @@
                     <i class="fas fa-bullseye"></i>
                     هدف استفاده شما چیست؟
                 </label>
-                <select name="model" id="model" class="form-select" required>
+                <select name="model" id="model" class="form-select">
                     <option value="">انتخاب کنید...</option>
                     {% for m in models %}
                         <option value="{{ m.id }}">{{ m.name }}</option>
@@ -408,11 +408,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     form.addEventListener('submit', function(e) {
         const skinType = document.getElementById('skin_type').value;
+        const skinCondition = document.getElementById('skin_condition').value;
         const model = document.getElementById('model').value;
         
-        if (!skinType || !model) {
+        // حداقل یکی از فیلدها باید پر شود
+        if (!skinType && !skinCondition && !model) {
             e.preventDefault();
-            alert('لطفاً فیلدهای ضروری را پر کنید');
+            alert('لطفاً حداقل یکی از فیلدها را انتخاب کنید');
             return;
         }
         
