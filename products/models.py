@@ -103,7 +103,7 @@ class ProductManager(models.Manager):
         return self.get_queryset().filter(price_level_2__isnull=True)
 
 class Product(models.Model):
-    barcode = models.CharField(max_length=6, unique=True, verbose_name="کد محصول")
+    barcode = models.CharField(max_length=12, unique=True, verbose_name="کد محصول")
     name = models.CharField(max_length=255, verbose_name="نام محصول")
     slug = models.SlugField(blank=True, allow_unicode=True, verbose_name="اسلاگ محصول")
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True, related_name="products", verbose_name="برند")
