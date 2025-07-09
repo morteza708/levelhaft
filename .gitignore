@@ -102,7 +102,7 @@ staticfiles/
 # Documentation files
 DEPLOYMENT.md
 README.md
-
+ERROR_PAGES_README.md
 # Backup files
 *.bak
 *.backup

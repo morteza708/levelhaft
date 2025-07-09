@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}خطای سرور - 500{% endblock %}
+
+{% block extra_css %}
+<style>
+.error-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fff8f8 0%, #ffe6e6 100%);
+    padding: 2rem 0;
+}
+
+.error-card {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    background: #fff;
+    border-radius: 2rem;
+    box-shadow: 0 20px 60px rgba(220, 53, 69, 0.15);
+    padding: 3rem 2rem;
+    border: 1px solid rgba(220, 53, 69, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.error-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #dc3545, #fd7e14, #dc3545);
+}
+
+.error-number {
+    font-size: 8rem;
+    font-weight: 900;
+    color: #dc3545;
+    line-height: 1;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(220, 53, 69, 0.2);
+    animation: shake 2s infinite;
+}
+
+.error-icon {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    box-shadow: 0 15px 35px rgba(220, 53, 69, 0.3);
+    animation: pulse 2s infinite;
+}
+
+.error-icon i {
+    font-size: 3rem;
+    color: #fff;
+}
+
+.error-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.2rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.error-btn {
+    padding: 1rem 2rem;
+    border-radius: 1.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-btn-primary {
+    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    color: #fff;
+    border: none;
+}
+
+.error-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(220, 53, 69, 0.4);
+    color: #fff;
+    text-decoration: none;
+}
+
+.error-btn-secondary {
+    background: #f8f9fa;
+    color: #6c757d;
+    border: 2px solid #e9ecef;
+}
+
+.error-btn-secondary:hover {
+    background: #e9ecef;
+    color: #495057;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.error-info {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.error-info h4 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.error-info p {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .error-container {
+        padding: 1rem;
+    }
+    
+    .error-card {
+        padding: 2rem 1.5rem;
+        border-radius: 1.5rem;
+    }
+    
+    .error-number {
+        font-size: 6rem;
+    }
+    
+    .error-icon {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .error-icon i {
+        font-size: 2.5rem;
+    }
+    
+    .error-title {
+        font-size: 2rem;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .error-btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .error-number {
+        font-size: 5rem;
+    }
+    
+    .error-title {
+        font-size: 1.8rem;
+    }
+    
+    .error-message {
+        font-size: 1.1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-card">
+        <div class="error-number">500</div>
+        
+        <div class="error-icon">
+            <i class="fas fa-tools"></i>
+        </div>
+        
+        <h1 class="error-title">خطای سرور!</h1>
+        
+        <p class="error-message">
+            متأسفانه مشکلی در سرور رخ داده است. تیم فنی ما در حال بررسی و رفع مشکل است.
+        </p>
+        
+        <div class="error-actions">
+            <button onclick="location.reload()" class="error-btn error-btn-primary">
+                <i class="fas fa-redo"></i>
+                تلاش مجدد
+            </button>
+            <a href="{% url 'pages:home' %}" class="error-btn error-btn-secondary">
+                <i class="fas fa-home"></i>
+                بازگشت به خانه
+            </a>
+        </div>
+        
+        <div class="error-info">
+            <h4>اطلاعات بیشتر:</h4>
+            <p>• این خطا موقتی است و به زودی برطرف خواهد شد</p>
+            <p>• اگر مشکل ادامه داشت، با پشتیبانی تماس بگیرید</p>
+            <p>• می‌توانید چند دقیقه بعد دوباره تلاش کنید</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

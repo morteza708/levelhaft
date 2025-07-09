@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}تست صفحات خطا{% endblock %}
+
+{% block extra_css %}
+<style>
+.test-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 2rem 0;
+}
+
+.test-card {
+    max-width: 800px;
+    width: 100%;
+    background: #fff;
+    border-radius: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.test-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+}
+
+.test-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.test-btn {
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    border: 2px solid transparent;
+}
+
+.test-btn-404 {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: #fff;
+}
+
+.test-btn-404:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+    color: #fff;
+    text-decoration: none;
+}
+
+.test-btn-500 {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    color: #fff;
+}
+
+.test-btn-500:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3);
+    color: #fff;
+    text-decoration: none;
+}
+
+.test-btn-403 {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+    color: #fff;
+}
+
+.test-btn-403:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
+    color: #fff;
+    text-decoration: none;
+}
+
+.test-btn-400 {
+    background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+    color: #fff;
+}
+
+.test-btn-400:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(13, 110, 253, 0.3);
+    color: #fff;
+    text-decoration: none;
+}
+
+.test-btn i {
+    font-size: 2rem;
+}
+
+.test-description {
+    color: #6c757d;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .test-container {
+        padding: 1rem;
+    }
+    
+    .test-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .test-title {
+        font-size: 2rem;
+    }
+    
+    .test-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="test-container">
+    <div class="test-card">
+        <h1 class="test-title">تست صفحات خطا</h1>
+        
+        <p class="test-description">
+            برای مشاهده صفحات خطای مختلف، روی دکمه‌های زیر کلیک کنید. این صفحات در محیط تولید (DEBUG=False) نمایش داده می‌شوند.
+        </p>
+        
+        <div class="test-grid">
+            <a href="/nonexistent-page/" class="test-btn test-btn-404">
+                <i class="fas fa-search"></i>
+                <span>خطای 404</span>
+                <small>صفحه یافت نشد</small>
+            </a>
+            
+            <a href="/test-500/" class="test-btn test-btn-500">
+                <i class="fas fa-tools"></i>
+                <span>خطای 500</span>
+                <small>خطای سرور</small>
+            </a>
+            
+            <a href="/test-403/" class="test-btn test-btn-403">
+                <i class="fas fa-lock"></i>
+                <span>خطای 403</span>
+                <small>دسترسی ممنوع</small>
+            </a>
+            
+            <a href="/test-400/" class="test-btn test-btn-400">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>خطای 400</span>
+                <small>درخواست نامعتبر</small>
+            </a>
+        </div>
+        
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e9ecef;">
+            <p style="color: #6c757d; font-size: 0.9rem;">
+                <strong>نکته:</strong> این صفحه فقط برای تست است. در محیط تولید، صفحات خطا به صورت خودکار نمایش داده می‌شوند.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
