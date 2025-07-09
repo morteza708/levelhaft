@@ -139,17 +139,21 @@ def handle_payment_method_save(sender, instance, created, **kwargs):
     # محاسبه مجموع مبالغ پرداخت شده
     total_paid = sum(payment.amount for payment in payments if payment.status == 'completed')
     
-    # به‌روزرسانی مبلغ پرداخت نشده
-    order.unpaid_amount = max(0, order.final_amount - total_paid)
-    
-    # به‌روزرسانی وضعیت پرداخت سفارش
+    # اگر کل مبلغ پرداخت شده باشد
     if total_paid >= order.final_amount:
         order.payment_status = 'paid'
-    elif total_paid > 0:
-        order.payment_status = 'partial'
-    else:
+        order.unpaid_amount = 0
+
+    # اگر پرداختی انجام نشده باشد
+    elif total_paid == 0:
         order.payment_status = 'pending'
-    
+        order.unpaid_amount = order.final_amount
+
+    # اگر بخشی پرداخت شده باشد
+    else:
+        order.payment_status = 'paid'
+        order.unpaid_amount = order.final_amount - total_paid
+
     order.save(update_fields=['unpaid_amount', 'payment_status'])
 
 @receiver(post_save, sender=Order)
