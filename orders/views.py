@@ -246,7 +246,7 @@ def order_payment_callback(request):
     verify_result = pasargad_verify_payment(invoice=order.id, url_id=order.pasargad_url_id)
     if verify_result.get("resultCode") == 0:
         order.payment_status = 'paid'
-        order.status = 'processing'
+        order.status = 'pending'
         order.save()
         PaymentMethod.objects.create(
         order=order,
