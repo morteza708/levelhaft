@@ -7,73 +7,425 @@
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 <style>
 .consult-container {
-    margin-top: 5rem;
+    margin-top: 3rem;
     margin-bottom: 5rem;
+    min-height: 70vh;
     display: flex;
+    align-items: center;
     justify-content: center;
+    background: linear-gradient(135deg, #f8fff8 0%, #e6ffe6 100%);
+    padding: 2rem 0;
 }
+
 .consult-card {
-    max-width: 500px;
+    max-width: 600px;
     width: 100%;
+    border-radius: 2rem;
+    box-shadow: 0 20px 60px rgba(40, 167, 69, 0.15);
+    padding: 3rem 2.5rem;
+    background: #fff;
+    border: 1px solid rgba(40, 167, 69, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.consult-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #28a745, #20c997, #28a745);
+}
+
+.consult-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.consult-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+}
+
+.consult-icon i {
+    font-size: 2.5rem;
+    color: #fff;
+}
+
+.consult-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.consult-subtitle {
+    color: #6c757d;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.form-label i {
+    color: #28a745;
+    font-size: 1.2rem;
+    width: 20px;
+}
+
+.form-select {
+    border: 2px solid #e9ecef;
     border-radius: 1rem;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    padding: 2rem 1.5rem;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.form-select:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
     background: #fff;
 }
-@media (max-width: 576px) {
-    .consult-card { padding: 1.25rem 0.5rem; }
+
+.form-select option {
+    padding: 0.5rem;
 }
-.consult-title {
-    font-size: 1.8rem;
-    white-space: nowrap;
+
+.submit-btn {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    border-radius: 1.5rem;
+    padding: 1.25rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    width: 100%;
+    transition: all 0.3s ease;
+    position: relative;
     overflow: hidden;
-    text-overflow: ellipsis;
+    margin-top: 1rem;
 }
+
+.submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.submit-btn:hover::before {
+    left: 100%;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.submit-btn i {
+    margin-left: 0.5rem;
+}
+
+.features-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.features-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: #f8fff8;
+    border: 1px solid rgba(40, 167, 69, 0.1);
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.15);
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+}
+
+.feature-icon i {
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+.feature-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .consult-container {
+        margin-top: 2rem;
+        padding: 1rem;
+    }
+    
+    .consult-card {
+        padding: 2rem 1.5rem;
+        border-radius: 1.5rem;
+    }
+    
+    .consult-title {
+        font-size: 1.8rem;
+    }
+    
+    .consult-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .consult-icon i {
+        font-size: 2rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 576px) {
+    .consult-card {
+        padding: 1.5rem 1rem;
+    }
+    
     .consult-title {
         font-size: 1.6rem;
-        white-space: normal;
     }
+    
+    .form-label {
+        font-size: 1rem;
+    }
+    
+    .submit-btn {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Animation for form elements */
+.form-group {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading state for submit button */
+.submit-btn.loading {
+    pointer-events: none;
+}
+
+.submit-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container consult-container">
+<div class="consult-container">
     <div class="card consult-card">
-        <div class="card-body">
-            <h2 class="mb-4 text-center consult-title">مشاوره هوشمند خرید</h2>
-            <form method="get" action="{% url 'products:consult_search' %}">
-                <div class="mb-3">
-                    <label for="skin_type" class="form-label">نوع پوست شما چیست؟</label>
-                    <select name="skin_type" id="skin_type" class="form-select">
-                        <option value="">انتخاب کنید...</option>
-                        {% for st in skin_types %}
-                            <option value="{{ st.id }}">{{ st.name }}</option>
-                        {% endfor %}
-                    </select>
+        <div class="consult-header">
+            <div class="consult-icon">
+                <i class="fas fa-magic"></i>
+            </div>
+            <h2 class="consult-title">مشاوره هوشمند خرید</h2>
+            <p class="consult-subtitle">با پاسخ به چند سوال ساده، بهترین محصولات مناسب پوست شما را پیدا کنید</p>
+        </div>
+        
+        <form method="get" action="{% url 'products:consult_search' %}" id="consultForm">
+            <div class="form-group">
+                <label for="skin_type" class="form-label">
+                    <i class="fas fa-user-circle"></i>
+                    نوع پوست شما چیست؟
+                </label>
+                <select name="skin_type" id="skin_type" class="form-select" required>
+                    <option value="">انتخاب کنید...</option>
+                    {% for st in skin_types %}
+                        <option value="{{ st.id }}">{{ st.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="skin_condition" class="form-label">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    عارضه پوستی خاصی دارید؟
+                </label>
+                <select name="skin_condition" id="skin_condition" class="form-select">
+                    <option value="">انتخاب کنید...</option>
+                    {% for sc in skin_conditions %}
+                        <option value="{{ sc.id }}">{{ sc.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="model" class="form-label">
+                    <i class="fas fa-bullseye"></i>
+                    هدف استفاده شما چیست؟
+                </label>
+                <select name="model" id="model" class="form-select" required>
+                    <option value="">انتخاب کنید...</option>
+                    {% for m in models %}
+                        <option value="{{ m.id }}">{{ m.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn submit-btn">
+                <i class="fas fa-search"></i>
+                جستجوی محصولات مناسب من
+            </button>
+        </form>
+        
+        <div class="features-section">
+            <h3 class="features-title">چرا مشاوره هوشمند؟</h3>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="feature-text">هوش مصنوعی</div>
                 </div>
-                <div class="mb-3">
-                    <label for="skin_condition" class="form-label">عارضه پوستی خاصی دارید؟</label>
-                    <select name="skin_condition" id="skin_condition" class="form-select">
-                        <option value="">انتخاب کنید...</option>
-                        {% for sc in skin_conditions %}
-                            <option value="{{ sc.id }}">{{ sc.name }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="feature-text">سریع و آسان</div>
                 </div>
-                <div class="mb-3">
-                    <label for="model" class="form-label">هدف استفاده شما چیست؟</label>
-                    <select name="model" id="model" class="form-select">
-                        <option value="">انتخاب کنید...</option>
-                        {% for m in models %}
-                            <option value="{{ m.id }}">{{ m.name }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-text">مطمئن و دقیق</div>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">جستجوی محصولات مناسب من</button>
-            </form>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="feature-text">شخصی‌سازی شده</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('consultForm');
+    const submitBtn = form.querySelector('.submit-btn');
+    
+    form.addEventListener('submit', function(e) {
+        const skinType = document.getElementById('skin_type').value;
+        const model = document.getElementById('model').value;
+        
+        if (!skinType || !model) {
+            e.preventDefault();
+            alert('لطفاً فیلدهای ضروری را پر کنید');
+            return;
+        }
+        
+        // Add loading state
+        submitBtn.classList.add('loading');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال جستجو...';
+    });
+    
+    // Add smooth transitions for form elements
+    const formGroups = document.querySelectorAll('.form-group');
+    formGroups.forEach((group, index) => {
+        group.style.animationDelay = `${index * 0.1}s`;
+    });
+});
+</script>
 {% endblock %} 
