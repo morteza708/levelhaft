@@ -14,6 +14,15 @@ def send_reward_sms(user, amount, order_number):
     )
     logger.info(f"📤 پیامک پاداش خرید برای سفارش {order_number} ارسال شد")
 
+def send_gift_wallet_sms(user, amount):
+    """ارسال پیامک گیفت کیف پول"""
+    message = f"{amount:,}"
+    send_message(
+        user.phone_number,
+        message,
+        template='wallet-gift-customer'
+    )
+    
 def send_charge_sms(user, amount):
     """ارسال پیامک شارژ کیف پول"""
     message = f"{amount:,}"

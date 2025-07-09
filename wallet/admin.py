@@ -4,7 +4,7 @@ from django.utils.html import format_html
 from django.urls import path, reverse
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from .services.sms_service import send_charge_sms
+from .services.sms_service import send_gift_wallet_sms
 from django.contrib.admin import SimpleListFilter
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.safestring import mark_safe
@@ -101,7 +101,7 @@ class WalletAdmin(admin.ModelAdmin):
                     type='deposit',
                     description=description
                 )
-                send_charge_sms(wallet.user, amount)
+                send_gift_wallet_sms(wallet.user, amount)
                 messages.success(request, f'کیف پول با موفقیت شارژ شد و پیامک ارسال گردید ({intcomma(amount)} ریال).')
                 return redirect(f'/admin/wallet/wallet/{wallet.id}/change/')
         return render(request, 'admin/wallet/gift_wallet.html', {'wallet': wallet})
