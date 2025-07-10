@@ -94,19 +94,22 @@ def order_create(request):
                     order.payment_status = 'pending'
                     order.unpaid_amount = order.final_amount
                 order.save()
+                
+                # ایجاد PaymentMethod برای پرداخت کیف پول (کامل یا جزئی)
+                if wallet_used > 0:
+                    PaymentMethod.objects.create(
+                        order=order,
+                        payment_type='wallet',
+                        amount=wallet_used,
+                        status='completed'
+                    )
+                
                 # کاهش موجودی محصولات فقط اگر پرداخت کامل شد
                 if order.payment_status == 'paid':
                     for item in cart:
                         product = Product.objects.get(id=item['product_id'])
                         product.stock -= item['quantity']
                         product.save()
-                    if wallet_used > 0:
-                        PaymentMethod.objects.create(
-                        order=order,
-                        payment_type='wallet',
-                        amount=wallet_used,
-                        status='completed'
-                    )
                 product_ids = [item['product_id'] for item in cart]
                 products = Product.objects.in_bulk(product_ids)
                 for item in cart:

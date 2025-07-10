@@ -76,16 +76,20 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
         # 2. بازگشت مبالغ پرداخت‌شده (کیف پول و درگاه) به کیف پول
         payments = instance.payments.filter(status='completed')
         wallet = instance.user.wallet
-
-        for payment in payments:
-            refund_amount = payment.amount
-
+        
+        # محاسبه کل مبلغ پرداخت شده
+        total_paid = sum(payment.amount for payment in payments)
+        
+        # اگر کل مبلغ سفارش پرداخت شده باشد، کل مبلغ را بازگردان
+        if total_paid >= instance.final_amount:
+            refund_amount = instance.final_amount
+            
             # جلوگیری از واریز تکراری
             already_refunded = WalletTransaction.objects.filter(
                 wallet=wallet,
                 amount=refund_amount,
                 type='deposit',
-                description__icontains=f'بازگشت مبلغ {payment.get_payment_type_display()} سفارش لغو شده {instance.order_number}'
+                description__icontains=f'بازگشت کل مبلغ سفارش لغو شده {instance.order_number}'
             ).exists()
 
             if not already_refunded:
@@ -96,9 +100,33 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
                     wallet=wallet,
                     amount=refund_amount,
                     type='deposit',
-                    description=f'بازگشت مبلغ {payment.get_payment_type_display()} سفارش لغو شده {instance.order_number}'
+                    description=f'بازگشت کل مبلغ سفارش لغو شده {instance.order_number}'
                 )
-                logger.info(f"💰 مبلغ {refund_amount} ریال از طریق {payment.get_payment_type_display()} به کیف پول بازگردانده شد.")
+                logger.info(f"💰 کل مبلغ {refund_amount} ریال به کیف پول بازگردانده شد.")
+        else:
+            # بازگشت مبالغ پرداخت‌شده به صورت جداگانه
+            for payment in payments:
+                refund_amount = payment.amount
+
+                # جلوگیری از واریز تکراری
+                already_refunded = WalletTransaction.objects.filter(
+                    wallet=wallet,
+                    amount=refund_amount,
+                    type='deposit',
+                    description__icontains=f'بازگشت مبلغ {payment.get_payment_type_display()} سفارش لغو شده {instance.order_number}'
+                ).exists()
+
+                if not already_refunded:
+                    wallet.balance += refund_amount
+                    wallet.save()
+
+                    WalletTransaction.objects.create(
+                        wallet=wallet,
+                        amount=refund_amount,
+                        type='deposit',
+                        description=f'بازگشت مبلغ {payment.get_payment_type_display()} سفارش لغو شده {instance.order_number}'
+                    )
+                    logger.info(f"💰 مبلغ {refund_amount} ریال از طریق {payment.get_payment_type_display()} به کیف پول بازگردانده شد.")
 
 
         # 3. حذف پاداش از کیف پول (در صورت وجود)
@@ -151,7 +179,7 @@ def handle_payment_method_save(sender, instance, created, **kwargs):
 
     # اگر بخشی پرداخت شده باشد
     else:
-        order.payment_status = 'paid'
+        order.payment_status = 'pending'  # تغییر: اگر بخشی پرداخت شده، هنوز pending است
         order.unpaid_amount = order.final_amount - total_paid
 
     order.save(update_fields=['unpaid_amount', 'payment_status'])
