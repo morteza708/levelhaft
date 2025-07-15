@@ -32,7 +32,7 @@ class CustomUserAdmin(ImportExportModelAdmin):
     resource_class = CustomUserResource
     list_display = ('phone_number', 'first_name', 'last_name', 'email', 'is_beautician')
     actions = ['make_beautician']
-    fields = ('phone_number', 'is_beautician', 'first_name', 'last_name', 'email', 'is_staff', 'is_superuser', 'is_active')
+    fields = ('phone_number', 'is_beautician', 'first_name', 'last_name', 'email', 'is_staff', 'is_superuser', 'is_active', 'password', 'permissions')
     search_fields = ['phone_number', 'first_name', 'last_name']
 
     def make_beautician(self, request, queryset):
