@@ -144,7 +144,17 @@ class Product(models.Model):
             self.price_level_2 = convert_to_english_digits(str(self.price_level_2))
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name, separator='-')
+        if not self.slug:
+            base_slug = slugify(self.name, separator='-')
+            slug = base_slug
+            counter = 1
+            
+            # بررسی یکتا بودن اسلاگ
+            while Product.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            
+            self.slug = slug
         super().save(*args, **kwargs)
 
 class ProductImage(models.Model):
