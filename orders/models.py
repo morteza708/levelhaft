@@ -122,13 +122,7 @@ class OrderStatusHistory(models.Model):
         return jdatetime.datetime.fromgregorian(datetime=self.changed_at).strftime('%Y/%m/%d %H:%M:%S')
     get_jalali_changed_at.short_description = 'تاریخ تغییر' 
 
-@receiver(post_save, sender=Order)
-def handle_order_status_change(sender, instance, created, **kwargs):
-    if not created and instance.payment_status == 'paid' and not instance.reward_applied:
-        print(f"[سیگنال سفارش] پاداش برای سفارش {instance.order_number} در حال اعمال است...")
-        apply_order_reward(instance)
-        instance.reward_applied = True
-        instance.save(update_fields=["reward_applied"]) 
+
 
 class PaymentMethod(models.Model):
     PAYMENT_TYPES = (
