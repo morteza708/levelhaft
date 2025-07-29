@@ -192,18 +192,7 @@ def handle_payment_method_save(sender, instance, created, **kwargs):
 
     order.save(update_fields=['unpaid_amount', 'payment_status'])
 
-@receiver(post_save, sender=Order)
-def handle_order_status_change(sender, instance, created, **kwargs):
-    """
-    اعمال پاداش سفارش و همگام‌سازی با روش‌های پرداخت
-    """
-    # بررسی اینکه سفارش پرداخت شده و پاداش اعمال نشده باشد
-    if instance.payment_status == 'paid' and not instance.reward_applied:
-        print(f"[سیگنال سفارش] پاداش برای سفارش {instance.order_number} در حال اعمال است...")
-        apply_order_reward(instance)
-        # اگر پاداش اعمال شد، علامت‌گذاری کن
-        if instance.reward_applied:
-            instance.save(update_fields=["reward_applied"])
+
 
 @receiver(pre_save, sender=PaymentMethod)
 def validate_payment_method(sender, instance, **kwargs):
