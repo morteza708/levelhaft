@@ -97,4 +97,4 @@ def apply_order_reward(order):
 
     # علامت‌گذاری سفارش به‌عنوان پاداش داده‌شده
     order.reward_applied = True
-    order.save()
+    order.save(update_fields=["reward_applied"])

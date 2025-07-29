@@ -197,11 +197,13 @@ def handle_order_status_change(sender, instance, created, **kwargs):
     """
     اعمال پاداش سفارش و همگام‌سازی با روش‌های پرداخت
     """
-    if not created and instance.payment_status == 'paid' and not instance.reward_applied:
+    # بررسی اینکه سفارش پرداخت شده و پاداش اعمال نشده باشد
+    if instance.payment_status == 'paid' and not instance.reward_applied:
         print(f"[سیگنال سفارش] پاداش برای سفارش {instance.order_number} در حال اعمال است...")
         apply_order_reward(instance)
-        instance.reward_applied = True
-        instance.save(update_fields=["reward_applied"])
+        # اگر پاداش اعمال شد، علامت‌گذاری کن
+        if instance.reward_applied:
+            instance.save(update_fields=["reward_applied"])
 
 @receiver(pre_save, sender=PaymentMethod)
 def validate_payment_method(sender, instance, **kwargs):

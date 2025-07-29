@@ -260,6 +260,10 @@ def order_payment_callback(request):
         status='completed',
         transaction_id=verify_result.get("transactionId")
         )
+        
+        # اعمال پاداش سفارش
+        apply_order_reward(order)
+        
         # ارسال پیامک به مشتری
         message = f'.'
         send_message(
