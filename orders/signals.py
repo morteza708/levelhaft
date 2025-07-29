@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+from django.db import models
 from .models import Order, PaymentMethod
 from products.models import Product
 from wallet.models import Wallet, WalletTransaction
@@ -132,7 +133,14 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
         # 3. حذف پاداش از کیف پول (در صورت وجود)
         if instance.reward_applied:
             wallet = instance.user.wallet
-            reward = get_order_reward_amount(instance)
+            
+            # محاسبه مبلغ پرداخت شده از درگاه برای محاسبه پاداش
+            gateway_payment = instance.payments.filter(
+                payment_type='gateway', 
+                status='completed'
+            ).aggregate(total=models.Sum('amount'))['total'] or 0
+            
+            reward = get_order_reward_amount(instance, gateway_payment)
 
             already_withdrawn = WalletTransaction.objects.filter(
                 wallet=wallet,

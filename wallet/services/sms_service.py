@@ -6,6 +6,11 @@ logger = logging.getLogger(__name__)
 
 def send_reward_sms(user, amount, order_number):
     """ارسال پیامک پاداش خرید"""
+    # اگر مبلغ صفر باشد، پیامک ارسال نشود
+    if amount <= 0:
+        logger.info(f"📤 پیامک پاداش خرید برای سفارش {order_number} ارسال نشد (مبلغ صفر)")
+        return
+        
     message = f"{amount:,}"
     send_message(
         user.phone_number,
