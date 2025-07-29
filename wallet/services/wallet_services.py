@@ -28,7 +28,7 @@ def deposit_to_wallet(wallet, amount, transaction_type='deposit', description="Ø
 
 def get_order_reward_amount(order):
     user = order.user
-    order_amount = order.total_amount
+    order_amount = order.unpaid_amount
 
     if user.profile.is_beautician:
         if order_amount < 200_000_000:
