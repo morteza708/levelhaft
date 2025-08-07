@@ -59,6 +59,7 @@ class WorkshopRegistrationAdmin(admin.ModelAdmin):
     list_filter = ['status', 'workshop__brand', 'city']
     search_fields = ['user__first_name', 'user__last_name', 'first_name_en', 'last_name_en', 'barcode']
     readonly_fields = ['barcode', 'created_at']
+    autocomplete_fields = ['user', 'workshop']
     
     def full_name(self, obj):
         return obj.user.get_full_name()

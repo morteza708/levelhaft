@@ -100,6 +100,9 @@ brand-logos/
 staticfiles/
 
 # Documentation files
+.windsurfrules
+.superdesign/
+CLAUDE.md
 DEPLOYMENT.md
 README.md
 ERROR_PAGES_README.md
