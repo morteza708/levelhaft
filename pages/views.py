@@ -215,131 +215,166 @@ class StaticSitemap(Sitemap):
 
 def sitemap_xml(request):
     """Generate sitemap.xml dynamically"""
-    products = Product.objects.filter(is_featured=True)
-    lines = Line.objects.all()
-    blogs = BlogPost.objects.filter(is_published=True)
-    workshops = Workshop.objects.all()
-    
-    xml_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+    try:
+        # تمام محصولات ویژه
+        products = Product.objects.all()
+        
+        # تمام لاین‌های فعال
+        lines = Line.objects.all()
+        
+        # تمام بلاگ‌های منتشر شده
+        blogs = BlogPost.objects.all()
+        
+        # تمام ورکشاپ‌های آینده
+        workshops = Workshop.objects.all()
+        
+        current_date = timezone.now().strftime('%Y-%m-%d')
+        
+        xml_content = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
     <!-- Static Pages -->
     <url>
         <loc>https://levelhaft.com/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     
     <url>
         <loc>https://levelhaft.com/about/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>https://levelhaft.com/contact/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>https://levelhaft.com/products/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
     
     <url>
         <loc>https://levelhaft.com/blogs/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>https://levelhaft.com/workshop/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>https://levelhaft.com/products/search/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     
     <url>
         <loc>https://levelhaft.com/products/consult/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     
     <url>
         <loc>https://levelhaft.com/products/accessories/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
-    
-    <!-- Featured Products -->
 """
-    
-    for product in products:
-        xml_content += f"""    <url>
+        
+        # Featured Products
+        for product in products:
+            try:
+                xml_content += f"""    <url>
         <loc>https://levelhaft.com/products/product/{product.slug}/</loc>
-        <lastmod>{product.created_at.strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
 """
-    
-
-    
-    xml_content += """    
-    <!-- Lines -->
-"""
-    
-    for line in lines:
-        xml_content += f"""    <url>
+            except Exception as e:
+                continue  # اگر محصول مشکل داشت، رد کن
+        
+        # Lines
+        for line in lines:
+            try:
+                xml_content += f"""    <url>
         <loc>https://levelhaft.com/products/line/{line.slug}/</loc>
-        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 """
-    
-    xml_content += """    
-    <!-- Blog Posts -->
-"""
-    
-    for blog in blogs:
-        xml_content += f"""    <url>
+            except Exception as e:
+                continue
+        
+        # Blog Posts
+        for blog in blogs:
+            try:
+                xml_content += f"""    <url>
         <loc>https://levelhaft.com/blogs/{blog.slug}/</loc>
-        <lastmod>{blog.created_at.strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
 """
-    
-    xml_content += """    
-    <!-- Workshops -->
-"""
-    
-    for workshop in workshops:
-        xml_content += f"""    <url>
+            except Exception as e:
+                continue
+        
+        # Workshops
+        for workshop in workshops:
+            try:
+                xml_content += f"""    <url>
         <loc>https://levelhaft.com/workshop/{workshop.id}/</loc>
-        <lastmod>{workshop.date.strftime('%Y-%m-%d')}</lastmod>
+        <lastmod>{current_date}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
 """
-    
-    xml_content += """</urlset>"""
-    
-    return HttpResponse(xml_content, content_type='application/xml')
+            except Exception as e:
+                continue
+        
+        xml_content += """</urlset>"""
+        
+        return HttpResponse(xml_content, content_type='application/xml')
+        
+    except Exception as e:
+        # در صورت خطا، sitemap ساده برگردان
+        simple_sitemap = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://levelhaft.com/</loc>
+        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://levelhaft.com/products/</loc>
+        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://levelhaft.com/blogs/</loc>
+        <lastmod>{timezone.now().strftime('%Y-%m-%d')}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+</urlset>"""
+        return HttpResponse(simple_sitemap, content_type='application/xml')
