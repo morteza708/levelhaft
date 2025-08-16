@@ -1,0 +1,35 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /accounts/login/
+Disallow: /accounts/register/
+Disallow: /accounts/verify/
+Disallow: /accounts/logout/
+Disallow: /cart/add/
+Disallow: /cart/remove/
+Disallow: /cart/update/
+Disallow: /orders/create/
+Disallow: /orders/payment/
+Disallow: /wallet/charge/
+Disallow: /wallet/transactions/
+Disallow: /workshop/register/
+Disallow: /workshop/approved-registrations/
+Disallow: /static/admin/
+Disallow: /media/admin/
+Disallow: /ckeditor5/upload/
+
+# Allow public pages
+Allow: /products/
+Allow: /blogs/
+Allow: /about/
+Allow: /contact/
+Allow: /workshop/
+Allow: /accounts/profile/
+
+# Sitemap location
+Sitemap: https://levelhaft.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1

@@ -3,9 +3,21 @@ from .models import Product, Comment
 from .utils import convert_to_english_digits
 
 class ProductForm(forms.ModelForm):
-    price_level_1 = forms.CharField(widget=forms.TextInput(attrs={'dir': 'ltr'}), required=False)
-    price_level_2 = forms.CharField(widget=forms.TextInput(attrs={'dir': 'ltr'}), required=False)
-    volume_value = forms.CharField(widget=forms.TextInput(attrs={'dir': 'ltr'}), required=False)
+    price_level_1 = forms.CharField(
+        widget=forms.TextInput(attrs={'dir': 'ltr'}), 
+        required=False,
+        label="قیمت بیوتیشن"
+    )
+    price_level_2 = forms.CharField(
+        widget=forms.TextInput(attrs={'dir': 'ltr'}), 
+        required=False,
+        label="قیمت عادی"
+    )
+    volume_value = forms.CharField(
+        widget=forms.TextInput(attrs={'dir': 'ltr'}), 
+        required=False,
+        label="مقدار حجم"
+    )
 
     class Meta:
         model = Product

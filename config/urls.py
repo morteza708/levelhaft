@@ -51,6 +51,10 @@ urlpatterns = [
     path('orders/', include('orders.urls', namespace='orders')),
     path('wallet/', include('wallet.urls', namespace='wallet')),
     
+    # SEO URLs
+    path('sitemap.xml', include('pages.urls')),
+    path('robots.txt', lambda request: HttpResponse(open('robots.txt').read(), content_type='text/plain')),
+    
     # Test URLs for error pages (only in development)
     path('test-errors/', test_error_pages, name='test_errors'),
     path('test-500/', test_500, name='test_500'),

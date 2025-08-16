@@ -352,3 +352,17 @@ PEP_USERNAME = os.environ.get("PEP_USERNAME")
 PEP_PASSWORD = os.environ.get("PEP_PASSWORD")
 PEP_TERMINAL_NO = os.environ.get("PEP_TERMINAL_NO")
 SITE_URL = os.environ.get("SITE_URL")
+
+# # SEO Settings
+# SITE_NAME = "LevelHaft"
+# SITE_DESCRIPTION = "فروشگاه مراقبت از پوست LevelHaft - ارائه محصولات مراقبت از پوست با کیفیت بالا و قیمت مناسب"
+# SITE_KEYWORDS = "مراقبت از پوست, محصولات آرایشی, لوازم آرایشی, پوست, زیبایی, LevelHaft"
+# SITE_AUTHOR = "LevelHaft"
+# SITE_URL = "https://levelhaft.com"
+
+# Sitemap settings
+# SITEMAP_INCLUDE_PRODUCTS = True
+# SITEMAP_INCLUDE_BLOGS = True
+# # SITEMAP_INCLUDE_BRANDS = True
+# SITEMAP_INCLUDE_LINES = True
+# SITEMAP_INCLUDE_WORKSHOPS = True
