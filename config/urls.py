@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from django.http import HttpResponse
 from django.shortcuts import render
 from products.views import upload_file
+from pages.views import sitemap_xml
 
 admin.site.site_header = settings.ADMIN_SITE_HEADER
 admin.site.site_title = settings.ADMIN_SITE_TITLE
@@ -52,7 +53,7 @@ urlpatterns = [
     path('wallet/', include('wallet.urls', namespace='wallet')),
     
     # SEO URLs
-    path('sitemap.xml', include('pages.urls')),
+    path('sitemap.xml', sitemap_xml, name='sitemap'),
     path('robots.txt', lambda request: HttpResponse(open('robots.txt').read(), content_type='text/plain')),
     
     # Test URLs for error pages (only in development)

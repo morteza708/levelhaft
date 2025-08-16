@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
-from products.models import Product, Brand, Line
+from products.models import Product, Line
 from blogs.models import BlogPost
 from workshop.models import Workshop
 from django.utils import timezone
@@ -216,7 +216,6 @@ class StaticSitemap(Sitemap):
 def sitemap_xml(request):
     """Generate sitemap.xml dynamically"""
     products = Product.objects.filter(is_featured=True)
-    brands = Brand.objects.filter(is_active=True)
     lines = Line.objects.all()
     blogs = BlogPost.objects.filter(is_published=True)
     workshops = Workshop.objects.all()
