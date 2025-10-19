@@ -50,12 +50,12 @@ class CustomerProfile(models.Model):
     gender = models.CharField(max_length=10, choices=[('male', 'مرد'), ('female', 'زن')], blank=True, null=True,
                               verbose_name="جنسیت")
     email = models.EmailField(blank=True, null=True)
-    clinic_name = models.CharField(max_length=100, blank=True, null=True, verbose_name="نام کلینیک")
-    activity_city = models.CharField(max_length=50, blank=True, null=True, verbose_name="شهر محل فعالیت")
-    activity_history = models.CharField(max_length=100, blank=True, null=True, verbose_name="سابقه فعالیت")
-    brand_used = models.CharField(max_length=255, blank=True, null=True,
+    clinic_name = models.CharField(max_length=100, blank=False, null=False, verbose_name="نام کلینیک")
+    activity_city = models.CharField(max_length=50, blank=False, null=False, verbose_name="شهر محل فعالیت")
+    activity_history = models.CharField(max_length=100, blank=False, null=False, verbose_name="سابقه فعالیت")
+    brand_used = models.CharField(max_length=255, blank=False, null=False,
                                   verbose_name="چه برند هایی تاکنون استفاده کرده اید؟")
-    instagram_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="لینک پیج اینستاگرام")
+    instagram_url = models.CharField(max_length=255, blank=False, null=False, verbose_name="لینک پیج اینستاگرام")
     is_beautician = models.BooleanField(default=False, verbose_name="بیوتیشن")
 
     def __str__(self):
