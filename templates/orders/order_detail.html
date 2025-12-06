@@ -189,6 +189,9 @@
                 </tfoot>
             </table>
         </div>
+        <div class="mt-3 text-center mb-4">
+            <small class="text-danger">هزینه ارسال به عهده مشتری می باشد</small>
+        </div>
         {% if order.notes %}
         <div class="order-notes-card mb-4">
             <h6 class="card-title mb-2">توضیحات سفارش</h6>
@@ -202,6 +205,10 @@
             </div>
         {% endif %}
         {% if order.payment_status == 'pending' %}
+            <div class="alert alert-warning text-center my-3" style="font-size:1rem;">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                لطفا هنگام اتصال به درگاه بانکی VPN خود را خاموش کنید
+            </div>
             <div class="d-grid gap-2 mt-4">
                 <a href="{% url 'orders:order_start_payment' order.id %}" class="btn btn-success btn-lg w-100" style="font-size:1.25rem;">
                     پرداخت آنلاین
