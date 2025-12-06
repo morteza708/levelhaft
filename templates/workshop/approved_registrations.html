@@ -87,11 +87,39 @@
                         </li>
                         {% endif %}
 
-                        {% for num in page_obj.paginator.page_range %}
-                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                            <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+                        {% if page_obj.number > 3 %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">1</a>
                         </li>
+                        {% if page_obj.number > 4 %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                        {% endif %}
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+                            </li>
+                            {% endif %}
                         {% endfor %}
+
+                        {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                        {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ page_obj.paginator.num_pages }}</a>
+                        </li>
+                        {% endif %}
 
                         {% if page_obj.has_next %}
                         <li class="page-item">
@@ -250,10 +278,14 @@
         margin-top: 2rem;
         display: flex;
         justify-content: center;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .pagination {
         margin-bottom: 0;
+        flex-wrap: nowrap;
+        white-space: nowrap;
     }
 
     .page-link {
@@ -263,6 +295,14 @@
         border-radius: 8px;
         color: #2c3e50;
         transition: all 0.3s ease;
+        white-space: nowrap;
+        min-width: 44px;
+        text-align: center;
+    }
+
+    .page-item.disabled .page-link {
+        cursor: default;
+        opacity: 0.6;
     }
 
     .page-item.active .page-link {
@@ -270,7 +310,7 @@
         color: white;
     }
 
-    .page-link:hover {
+    .page-link:hover:not(.disabled) {
         background-color: rgba(40, 167, 69, 0.1);
         color: #28a745;
     }
@@ -333,6 +373,23 @@
             padding: 0.4rem 0.8rem;
             font-size: 0.85rem;
         }
+
+        .pagination-wrapper {
+            margin: 1.5rem -1.5rem 0;
+            padding: 0 1.5rem;
+            overflow-x: auto;
+        }
+
+        .pagination {
+            justify-content: flex-start;
+        }
+
+        .page-link {
+            padding: 0.6rem 1rem;
+            font-size: 0.95rem;
+            margin: 0 0.15rem;
+            min-width: 42px;
+        }
     }
 
     @media (max-width: 576px) {
@@ -361,9 +418,20 @@
         .date-col { min-width: 110px; }
         .barcode-col { min-width: 140px; }
 
+        .pagination-wrapper {
+            margin: 1.5rem -1.5rem 0;
+            padding: 0 1.5rem;
+        }
+
+        .pagination {
+            justify-content: flex-start;
+        }
+
         .page-link {
             padding: 0.5rem 0.8rem;
             font-size: 0.9rem;
+            margin: 0 0.15rem;
+            min-width: 40px;
         }
     }
 </style>
