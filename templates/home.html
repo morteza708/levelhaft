@@ -215,10 +215,36 @@
                 data-loop="false" data-mobile="1" data-preview="3" data-space="5" data-speed="1000" data-tablet="2"
                 dir="rtl">
                 <div class="swiper-wrapper">
+                    {% for slide in slider_slides %}
                     <div class="swiper-slide" lazy="true">
                         <div class="collection-item hover-img">
                             <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="https://levelhaft.com/workshop/14/">
+                                {% if slide.link_type == 'named_url' and slide.link_url %}
+                                    <a class="collection-image rounded-0 img-style" href="{% url slide.link_url %}">
+                                {% elif slide.link_url %}
+                                    <a class="collection-image rounded-0 img-style" href="{{ slide.link_url }}">
+                                {% else %}
+                                    <a class="collection-image rounded-0 img-style" href="#">
+                                {% endif %}
+                                    {% if slide.image_mobile %}
+                                        <img alt="slider-cosmetic" src="{{ slide.image.url }}" width="875" height="809" 
+                                            srcset="{{ slide.image.url }} 875w, {{ slide.image_mobile.url }} 400w"
+                                            sizes="(max-width: 600px) 100vw, 875px" />
+                                    {% else %}
+                                        <img alt="slider-cosmetic" src="{{ slide.image.url }}" width="875" height="809" 
+                                            srcset="{{ slide.image.url }} 875w, {{ slide.image.url }} 400w"
+                                            sizes="(max-width: 600px) 100vw, 875px" />
+                                    {% endif %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    {# اگر اسلایدی وجود نداشت، اسلایدهای پیش‌فرض نمایش داده می‌شود #}
+                    <div class="swiper-slide" lazy="true">
+                        <div class="collection-item hover-img">
+                            <div class="collection-inner">
+                                <a class="collection-image rounded-0 img-style" href="#">
                                     <img alt="slider-cosmetic" src="{% static "images/slider/racuten.webp" %}" width="875" height="809" 
                                         srcset="{% static 'images/slider/racuten.webp' %} 875w, {% static 'images/slider/racuten.webp' %} 400w"
                                         sizes="(max-width: 600px) 100vw, 875px" />
@@ -226,72 +252,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="swiper-slide" lazy="true">
-                        <div class="collection-item hover-img">
-                            <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="{% url 'products:consult' %}">
-                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner2.webp" %}" width="875" height="809" 
-                                        srcset="{% static 'images/slider/banner2.webp' %} 875w, {% static 'images/slider/banner2-400.webp' %} 400w"
-                                        sizes="(max-width: 600px) 100vw, 875px" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide" lazy="true">
-                        <div class="collection-item hover-img">
-                            <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="{% url 'workshop:approved_registrations' %}">
-                                    <img alt="slider-cosmetic" src="{%static "images/slider/banner3.webp"%}" width="875" height="809" 
-                                        srcset="{% static 'images/slider/banner3.webp' %} 875w, {% static 'images/slider/banner3-400.webp' %} 400w"
-                                        sizes="(max-width: 600px) 100vw, 875px" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide" lazy="true">
-                        <div class="collection-item hover-img">
-                            <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="#">
-                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner4.webp" %}" width="875" height="809" 
-                                        srcset="{% static 'images/slider/banner4.webp' %} 875w, {% static 'images/slider/banner4-400.webp' %} 400w"
-                                        sizes="(max-width: 600px) 100vw, 875px" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide" lazy="true">
-                        <div class="collection-item hover-img">
-                            <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="#">
-                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner5.webp" %}" width="875" height="809" 
-                                        srcset="{% static 'images/slider/banner5.webp' %} 875w, {% static 'images/slider/banner5-400.webp' %} 400w"
-                                        sizes="(max-width: 600px) 100vw, 875px" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide" lazy="true">
-                        <div class="collection-item hover-img">
-                            <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="{% url 'workshop:approved_registrations' %}">
-                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner6.webp" %}" width="875" height="809" 
-                                        srcset="{% static 'images/slider/banner6.webp' %} 875w, {% static 'images/slider/banner6-400.webp' %} 400w"
-                                        sizes="(max-width: 600px) 100vw, 875px" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide" lazy="true">
-                        <div class="collection-item hover-img">
-                            <div class="collection-inner">
-                                <a class="collection-image rounded-0 img-style" href="#">
-                                    <img alt="slider-cosmetic" src="{% static "images/slider/banner7.webp" %}" width="875" height="809" 
-                                        srcset="{% static 'images/slider/banner7.webp' %} 875w, {% static 'images/slider/banner7-400.webp' %} 400w"
-                                        sizes="(max-width: 600px) 100vw, 875px" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
             <div class="nav-sw nav-next-slider navigation-next-slider box-icon w_46 round"><span

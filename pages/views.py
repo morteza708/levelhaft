@@ -12,6 +12,7 @@ from blogs.models import BlogPost
 from workshop.models import Workshop
 from django.utils import timezone
 from datetime import datetime
+from .models import SliderSlide
 
 
 
@@ -71,6 +72,9 @@ def home_page_view(request):
     cace_products = home_products.filter(brand__name='کیسی').exclude(line__name='اکسسوری')
     accessories_products = home_products.filter(line__name='اکسسوری')
     
+    # دریافت اسلایدهای فعال
+    slider_slides = SliderSlide.objects.filter(is_active=True).order_by('order', '-created_at')
+    
     context = {
         'featured_products': featured_products,
         'home_products': home_products,
@@ -80,7 +84,8 @@ def home_page_view(request):
         'isabelle_products': isabelle_products,
         'ds_line_products': ds_line_products,
         'cace_products': cace_products,
-        'accessories_products': accessories_products
+        'accessories_products': accessories_products,
+        'slider_slides': slider_slides
     }
     
     return render(request, 'home.html', context)
@@ -148,6 +153,9 @@ class HomeView(TemplateView):
         context['ds_line_products'] = home_products.filter(brand__name='DS V-LINE').exclude(line__name='اکسسوری')
         context['cace_products'] = home_products.filter(brand__name='کیسی').exclude(line__name='اکسسوری')
         context['accessories_products'] = home_products.filter(line__name='اکسسوری')
+        
+        # دریافت اسلایدهای فعال
+        context['slider_slides'] = SliderSlide.objects.filter(is_active=True).order_by('order', '-created_at')
         
         return context
 
