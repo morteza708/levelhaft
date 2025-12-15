@@ -4,5 +4,5 @@ from django.apps import AppConfig
 class PagesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'pages'
-    verbose_name = "پیام های کاربران"
+    verbose_name = "عمومی"
 
