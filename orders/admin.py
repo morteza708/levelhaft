@@ -74,7 +74,8 @@ class OrderStatusHistoryInline(admin.TabularInline):
 class OrderAdmin(ImportExportModelAdmin):
     resource_class = OrderResource
     list_display = [
-        'order_number', 'user', 'status', 'payment_status', 'final_amount_display', 'get_jalali_created_at'
+        'order_number', 'user', 'status', 'payment_status',
+        'discount_amount_display', 'final_amount_display', 'get_jalali_created_at',
     ]
     list_filter = ['status', 'payment_status', 'created_at']
     search_fields = ['order_number', 'user__phone_number', 'user__email']
@@ -82,7 +83,11 @@ class OrderAdmin(ImportExportModelAdmin):
     readonly_fields = ['order_number', 'get_jalali_created_at', 'get_jalali_updated_at', 'created_at', 'updated_at']
     fieldsets = (
         (None, {
-            'fields': ('order_number', 'user', 'status', 'payment_status', 'total_amount', 'discount_amount', 'final_amount', 'unpaid_amount', 'reward_applied')
+            'fields': (
+                'order_number', 'user', 'status', 'payment_status',
+                'total_amount', 'discount_amount', 'business_discount',
+                'final_amount', 'unpaid_amount', 'reward_applied',
+            )
         }),
         ('اطلاعات گیرنده', {
             'fields': ('receiver_name', 'receiver_phone', 'receiver_address', 'receiver_city', 'receiver_postal_code')
@@ -91,6 +96,17 @@ class OrderAdmin(ImportExportModelAdmin):
             'fields': ('notes', 'tracking_code', 'get_jalali_created_at', 'get_jalali_updated_at')
         }),
     )
+
+    def discount_amount_display(self, obj):
+        if obj.discount_amount:
+            code = obj.business_discount.code if obj.business_discount_id else '-'
+            return format_html(
+                '<span style="direction:ltr">{}</span> <small class="text-muted">({})</small>',
+                f'{obj.discount_amount:,}',
+                code,
+            )
+        return '-'
+    discount_amount_display.short_description = 'تخفیف'
 
     def final_amount_display(self, obj):
         return format_html('<span style="direction:ltr">{}</span>', f"{obj.final_amount:,}")

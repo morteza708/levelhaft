@@ -29,6 +29,14 @@ class Order(models.Model):
     payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending', verbose_name="وضعیت پرداخت")
     total_amount = models.PositiveBigIntegerField(verbose_name="مبلغ کل (ریال)")
     discount_amount = models.PositiveIntegerField(default=0, verbose_name="مبلغ تخفیف (ریال)")
+    business_discount = models.ForeignKey(
+        'business_discounts.BusinessDiscount',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='orders',
+        verbose_name='کد تخفیف بیزنس',
+    )
     final_amount = models.PositiveBigIntegerField(verbose_name="مبلغ نهایی (ریال)")
     unpaid_amount = models.PositiveBigIntegerField(default=0, verbose_name="مبلغ پرداخت نشده (ریال)")
     pasargad_url_id = models.CharField(max_length=200, blank=True, null=True, verbose_name="شناسه تراکنش پاسارگاد")

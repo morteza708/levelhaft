@@ -49,6 +49,49 @@
     .order-form-card .invalid-feedback {
         font-size: 0.92rem;
     }
+    .discount-code-card {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f1fff6 0%, #ffffff 55%, #e9fff3 100%);
+        border: 1px solid #9be7b5;
+        border-radius: 16px;
+        padding: 1.1rem 1rem;
+        box-shadow: 0 8px 24px rgba(40, 167, 69, 0.12);
+    }
+    .discount-code-card::before {
+        content: "";
+        position: absolute;
+        inset-inline-start: 0;
+        top: 0;
+        bottom: 0;
+        width: 5px;
+        background: linear-gradient(180deg, #28a745, #20c997);
+    }
+    .discount-code-card .discount-code-title {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: #198754;
+        font-weight: 800;
+        font-size: 1.05rem;
+        margin-bottom: 0.35rem;
+    }
+    .discount-code-card .discount-code-help {
+        color: #5f6f64;
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
+    }
+    .discount-code-card input {
+        background: #fff;
+        border: 1px solid #8fdca9;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+    .discount-code-card input:focus {
+        border-color: #20c997;
+        box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.18);
+    }
     .order-summary-card {
         background: #f8f9fa;
         border-radius: 14px;
@@ -107,6 +150,12 @@
         }
         .order-summary-card {
             padding: 1rem 0.5rem 0.5rem 0.5rem;
+        }
+        .discount-code-card {
+            padding: 1rem 0.9rem;
+        }
+        .discount-code-card .discount-code-title {
+            font-size: 1rem;
         }
         .order-summary-table td {
             font-size: 0.98rem;
@@ -202,6 +251,20 @@
                     </div>
                     {% else %}
                     <div class="text-muted small mt-2"><i class="fas fa-info-circle me-1"></i> موجودی کیف پول شما صفر است.</div>
+                    {% endif %}
+                </div>
+                <div class="discount-code-card mb-4">
+                    <div class="discount-code-title">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>کد تخفیف دارید؟</span>
+                    </div>
+                    <p class="discount-code-help">کد بیزنس یا هدیه خود را اینجا وارد کنید تا روی مبلغ سفارش اعمال شود.</p>
+                    <label for="{{ form.discount_code.id_for_label }}" class="form-label visually-hidden">کد تخفیف</label>
+                    {{ form.discount_code }}
+                    {% if form.discount_code.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.discount_code.errors }}
+                    </div>
                     {% endif %}
                 </div>
                 <div class="order-summary-card mb-4">

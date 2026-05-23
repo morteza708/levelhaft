@@ -1,0 +1,428 @@
+{% extends 'admin/base_site.html' %}
+{% load humanize %}
+
+{% block title %}گزارش تخفیف‌های بیزنس{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .discount-report-page {
+        direction: rtl;
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 1.25rem;
+        color: #1f2933;
+    }
+    .discount-report-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+    .discount-report-title {
+        margin: 0 0 0.35rem;
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: #166534;
+    }
+    .discount-report-subtitle {
+        margin: 0;
+        color: #6b7280;
+        font-size: 0.92rem;
+    }
+    .discount-report-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        padding: 0.55rem 0.9rem;
+        border-radius: 10px;
+        border: 1px solid #bbf7d0;
+        background: #f0fdf4;
+        color: #166534 !important;
+        font-weight: 700;
+        text-decoration: none !important;
+        white-space: nowrap;
+    }
+    .discount-report-btn.primary {
+        border-color: #22c55e;
+        background: linear-gradient(90deg, #16a34a, #22c55e);
+        color: #fff !important;
+    }
+    .discount-report-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+        margin-bottom: 1.25rem;
+        overflow: hidden;
+    }
+    .discount-report-card-header {
+        padding: 0.9rem 1rem;
+        border-bottom: 1px solid #eef2f7;
+        color: #166534;
+        font-weight: 800;
+        background: linear-gradient(90deg, #f0fdf4, #ffffff);
+    }
+    .discount-report-card-body {
+        padding: 1rem;
+    }
+    .discount-report-filter-grid {
+        display: grid;
+        grid-template-columns: minmax(210px, 1.5fr) repeat(4, minmax(150px, 1fr)) auto;
+        gap: 0.85rem;
+        align-items: end;
+    }
+    .discount-report-field label {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: #374151;
+        font-weight: 700;
+        font-size: 0.86rem;
+    }
+    .discount-report-field input,
+    .discount-report-field select {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 38px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #fff;
+        color: #111827;
+        padding: 0.45rem 0.65rem;
+        font-size: 0.9rem;
+    }
+    .discount-report-field input:focus,
+    .discount-report-field select:focus {
+        border-color: #22c55e;
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14);
+        outline: none;
+    }
+    .discount-report-date-help {
+        display: block;
+        margin-top: 0.25rem;
+        color: #6b7280;
+        font-size: 0.75rem;
+    }
+    .discount-report-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+    .discount-report-stat {
+        padding: 1rem;
+        border-radius: 16px;
+        border: 1px solid #bbf7d0;
+        background: linear-gradient(135deg, #f0fdf4, #ffffff);
+        box-shadow: 0 8px 22px rgba(22, 163, 74, 0.08);
+    }
+    .discount-report-stat-label {
+        color: #6b7280;
+        font-size: 0.82rem;
+        margin-bottom: 0.45rem;
+    }
+    .discount-report-stat-value {
+        color: #166534;
+        font-size: 1.35rem;
+        font-weight: 900;
+        line-height: 1.7;
+    }
+    .discount-report-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .discount-report-table {
+        width: 100%;
+        min-width: 860px;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.86rem;
+    }
+    .discount-report-table th,
+    .discount-report-table td {
+        padding: 0.75rem 0.65rem;
+        text-align: right;
+        border-bottom: 1px solid #eef2f7;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    .discount-report-table th {
+        background: #f8fafc;
+        color: #475569;
+        font-weight: 800;
+    }
+    .discount-report-table tbody tr:hover {
+        background: #f9fafb;
+    }
+    .discount-report-strong {
+        color: #166534;
+        font-weight: 900;
+    }
+    .discount-report-code {
+        direction: ltr;
+        display: inline-block;
+        border-radius: 8px;
+        background: #f3f4f6;
+        color: #111827;
+        padding: 0.18rem 0.45rem;
+        font-weight: 800;
+    }
+    .discount-report-empty {
+        padding: 1.5rem !important;
+        text-align: center !important;
+        color: #6b7280;
+    }
+    .discount-report-pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.85rem 1rem;
+        background: #fff;
+    }
+    .discount-report-pagination-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    @media (max-width: 1100px) {
+        .discount-report-filter-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (max-width: 700px) {
+        .discount-report-page {
+            padding: 0.75rem 0.5rem;
+        }
+        .discount-report-header,
+        .discount-report-pagination {
+            align-items: stretch;
+            flex-direction: column;
+        }
+        .discount-report-title {
+            font-size: 1.25rem;
+        }
+        .discount-report-filter-grid,
+        .discount-report-stats {
+            grid-template-columns: 1fr;
+        }
+        .discount-report-card-body {
+            padding: 0.75rem;
+        }
+        .discount-report-table {
+            min-width: 760px;
+            font-size: 0.78rem;
+        }
+        .discount-report-table th,
+        .discount-report-table td {
+            padding: 0.6rem 0.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="discount-report-page">
+    <div class="discount-report-header">
+        <div>
+            <h2 class="discount-report-title">گزارش تخفیف‌های بیزنس</h2>
+            <p class="discount-report-subtitle">فقط سفارش‌های پرداخت‌شده و لغونشده در جمع‌ها لحاظ می‌شوند.</p>
+        </div>
+        <a href="{% url 'admin:business_discounts_businessdiscount_changelist' %}" class="discount-report-btn">
+            بازگشت به کدهای تخفیف
+        </a>
+    </div>
+
+    <div class="discount-report-card">
+        <div class="discount-report-card-body">
+            <form method="get" class="discount-report-filter-grid">
+                <div class="discount-report-field">
+                    <label>جستجو</label>
+                    <input type="text" name="q" value="{{ filters.q }}"
+                           placeholder="نماینده، کد، سفارش، موبایل">
+                </div>
+                <div class="discount-report-field">
+                    <label>نماینده</label>
+                    <select name="sales_representative">
+                        <option value="">همه</option>
+                        {% for rep in representatives %}
+                        <option value="{{ rep }}" {% if filters.sales_representative == rep %}selected{% endif %}>{{ rep }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="discount-report-field">
+                    <label>کد تخفیف</label>
+                    <select name="discount_id">
+                        <option value="">همه</option>
+                        {% for d in discounts %}
+                        <option value="{{ d.id }}" {% if filters.discount_id == d.id|stringformat:"s" %}selected{% endif %}>
+                            {{ d.code }} — {{ d.sales_representative }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="discount-report-field">
+                    <label>از تاریخ</label>
+                    <input type="text" name="date_from" value="{{ filters.date_from }}" inputmode="numeric"
+                           placeholder="مثلاً ۱۴۰۴/۰۳/۰۱">
+                    <span class="discount-report-date-help">فرمت شمسی: ۱۴۰۴/۰۳/۰۱</span>
+                </div>
+                <div class="discount-report-field">
+                    <label>تا تاریخ</label>
+                    <input type="text" name="date_to" value="{{ filters.date_to }}" inputmode="numeric"
+                           placeholder="مثلاً ۱۴۰۴/۰۳/۳۱">
+                    <span class="discount-report-date-help">فرمت شمسی: ۱۴۰۴/۰۳/۳۱</span>
+                </div>
+                <div class="discount-report-field">
+                    <button type="submit" class="discount-report-btn primary">اعمال</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="discount-report-stats">
+        <div class="discount-report-stat">
+            <div class="discount-report-stat-label">تعداد سفارش</div>
+            <div class="discount-report-stat-value">{{ totals.order_count|intcomma:False }}</div>
+        </div>
+        <div class="discount-report-stat">
+            <div class="discount-report-stat-label">مشتریان یکتا</div>
+            <div class="discount-report-stat-value">{{ totals.customer_count|intcomma:False }}</div>
+        </div>
+        <div class="discount-report-stat">
+            <div class="discount-report-stat-label">جمع فروش نهایی</div>
+            <div class="discount-report-stat-value">{{ totals.total_final|intcomma:False }} ریال</div>
+        </div>
+    </div>
+
+    <div class="discount-report-card">
+        <div class="discount-report-card-header">خلاصه نماینده‌ها</div>
+        <div class="discount-report-table-wrap">
+            <table class="discount-report-table">
+                <thead>
+                    <tr>
+                        <th>نماینده</th>
+                        <th>کدهای استفاده‌شده</th>
+                        <th>سفارش</th>
+                        <th>مشتری</th>
+                        <th>جمع قبل تخفیف</th>
+                        <th>جمع تخفیف</th>
+                        <th>جمع نهایی</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in representative_summary %}
+                    <tr>
+                        <td>{{ row.sales_representative }}</td>
+                        <td>{{ row.codes_used|intcomma:False }}</td>
+                        <td>{{ row.order_count|intcomma:False }}</td>
+                        <td>{{ row.customer_count|intcomma:False }}</td>
+                        <td>{{ row.total_before_discount|intcomma:False }}</td>
+                        <td>{{ row.total_discount|intcomma:False }}</td>
+                        <td class="discount-report-strong">{{ row.total_final|intcomma:False }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="discount-report-empty">داده‌ای یافت نشد.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="discount-report-card">
+        <div class="discount-report-card-header">خلاصه کدهای تخفیف</div>
+        <div class="discount-report-table-wrap">
+            <table class="discount-report-table">
+                <thead>
+                    <tr>
+                        <th>کد</th>
+                        <th>عنوان</th>
+                        <th>نماینده</th>
+                        <th>سفارش</th>
+                        <th>مشتری</th>
+                        <th>قبل تخفیف</th>
+                        <th>تخفیف</th>
+                        <th>نهایی</th>
+                        <th>میانگین سفارش</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in code_summary %}
+                    <tr>
+                        <td><span class="discount-report-code">{{ row.code }}</span></td>
+                        <td>{{ row.title }}</td>
+                        <td>{{ row.sales_representative }}</td>
+                        <td>{{ row.order_count|intcomma:False }}</td>
+                        <td>{{ row.customer_count|intcomma:False }}</td>
+                        <td>{{ row.total_before_discount|intcomma:False }}</td>
+                        <td>{{ row.total_discount|intcomma:False }}</td>
+                        <td class="discount-report-strong">{{ row.total_final|intcomma:False }}</td>
+                        <td>{{ row.avg_final|intcomma:False }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="9" class="discount-report-empty">داده‌ای یافت نشد.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="discount-report-card">
+        <div class="discount-report-card-header">جزئیات سفارش‌ها</div>
+        <div class="discount-report-table-wrap">
+            <table class="discount-report-table">
+                <thead>
+                    <tr>
+                        <th>تاریخ</th>
+                        <th>سفارش</th>
+                        <th>کاربر</th>
+                        <th>کد</th>
+                        <th>نماینده</th>
+                        <th>قبل تخفیف</th>
+                        <th>تخفیف</th>
+                        <th>نهایی</th>
+                        <th>وضعیت</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usage in order_details_page %}
+                    <tr>
+                        <td>{{ usage.order.get_jalali_created_at }}</td>
+                        <td>
+                            <a href="{% url 'admin:orders_order_change' usage.order_id %}">{{ usage.order.order_number }}</a>
+                        </td>
+                        <td>{{ usage.user.phone_number }}</td>
+                        <td><span class="discount-report-code">{{ usage.discount.code }}</span></td>
+                        <td>{{ usage.discount.sales_representative }}</td>
+                        <td>{{ usage.order.total_amount|intcomma:False }}</td>
+                        <td>{{ usage.amount|intcomma:False }}</td>
+                        <td class="discount-report-strong">{{ usage.order.final_amount|intcomma:False }}</td>
+                        <td>{{ usage.order.get_status_display }} / {{ usage.order.get_payment_status_display }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="9" class="discount-report-empty">سفارشی یافت نشد.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if order_details_page.paginator.num_pages > 1 %}
+        <div class="discount-report-pagination">
+            <span>
+                صفحه {{ order_details_page.number }} از {{ order_details_page.paginator.num_pages }}
+            </span>
+            <div class="discount-report-pagination-actions">
+                {% if order_details_page.has_previous %}
+                <a class="discount-report-btn"
+                   href="?{{ query_string }}&page={{ order_details_page.previous_page_number }}">قبلی</a>
+                {% endif %}
+                {% if order_details_page.has_next %}
+                <a class="discount-report-btn"
+                   href="?{{ query_string }}&page={{ order_details_page.next_page_number }}">بعدی</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

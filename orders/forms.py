@@ -3,6 +3,15 @@ from .models import Order
 
 class OrderForm(forms.ModelForm):
     use_wallet = forms.BooleanField(required=False, label='استفاده از موجودی کیف پول برای پرداخت سفارش')
+    discount_code = forms.CharField(
+        required=False,
+        label='کد تخفیف',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'کد تخفیف را وارد کنید (اختیاری)',
+            'autocomplete': 'off',
+        }),
+    )
     class Meta:
         model = Order
         fields = [

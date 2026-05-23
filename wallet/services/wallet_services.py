@@ -44,18 +44,8 @@ def get_order_reward_amount(order, gateway_amount=None):
     if gateway_amount == 0:
         return 0
     
-    # محاسبه درصد پاداش بر اساس نوع کاربر
-    if user.profile.is_beautician:
-        if gateway_amount < 200_000_000:
-            percent = 0.05
-        elif gateway_amount < 400_000_000:
-            percent = 0.08
-        else:
-            percent = 0.10
-    else:
-        percent = 0.03
-
-    return math.ceil(gateway_amount * percent)
+    # پاداش خرید (کش‌بک) غیرفعال است
+    return 0
 
 def apply_order_reward(order):
     """

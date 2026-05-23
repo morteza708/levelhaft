@@ -5,6 +5,7 @@ from .models import Order, PaymentMethod
 from products.models import Product
 from wallet.models import Wallet, WalletTransaction
 from wallet.services.wallet_services import get_order_reward_amount, apply_order_reward
+from business_discounts.services import release_discount_usage
 import logging
 
 logger = logging.getLogger(__name__)
@@ -67,14 +68,17 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
     if old_order.status != 'cancelled' and instance.status == 'cancelled':
         logger.info(f"📦 لغو سفارش: {instance.order_number}")
 
-        # 1. بازگرداندن موجودی کالاها
+        # 1. بازگرداندن مصرف کد تخفیف
+        release_discount_usage(instance)
+
+        # 2. بازگرداندن موجودی کالاها
         for item in instance.items.all():
             product = item.product
             product.stock += item.quantity
             product.save()
             logger.info(f"✅ موجودی '{product.name}' افزایش یافت: +{item.quantity}")
 
-        # 2. بازگشت مبالغ پرداخت‌شده (کیف پول و درگاه) به کیف پول
+        # 3. بازگشت مبالغ پرداخت‌شده (کیف پول و درگاه) به کیف پول
         payments = instance.payments.filter(status='completed')
         wallet = instance.user.wallet
         
@@ -130,7 +134,7 @@ def handle_order_cancellation_pre_save(sender, instance, **kwargs):
                     logger.info(f"💰 مبلغ {refund_amount} ریال از طریق {payment.get_payment_type_display()} به کیف پول بازگردانده شد.")
 
 
-        # 3. حذف پاداش از کیف پول (در صورت وجود)
+        # 4. حذف پاداش از کیف پول (در صورت وجود)
         if instance.reward_applied:
             wallet = instance.user.wallet
             

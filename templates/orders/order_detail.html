@@ -182,8 +182,21 @@
                     {% endfor %}
                 </tbody>
                 <tfoot>
-                    <tr class="fw-bold">
-                        <td colspan="3" class="text-end">مبلغ کل:</td>
+                    <tr>
+                        <td colspan="3" class="text-end">جمع محصولات:</td>
+                        <td class="text-end">{{ order.total_amount|intcomma:False }} ریال</td>
+                    </tr>
+                    {% if order.discount_amount %}
+                    <tr>
+                        <td colspan="3" class="text-end text-success">
+                            تخفیف
+                            {% if order.business_discount %}({{ order.business_discount.code }}){% endif %}:
+                        </td>
+                        <td class="text-end text-success">-{{ order.discount_amount|intcomma:False }} ریال</td>
+                    </tr>
+                    {% endif %}
+                    <tr class="fw-bold border-top">
+                        <td colspan="3" class="text-end">مبلغ نهایی:</td>
                         <td class="text-end">{{ order.final_amount|intcomma:False }} ریال</td>
                     </tr>
                 </tfoot>

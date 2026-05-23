@@ -13,6 +13,11 @@ from products.models import Product
 from django.db import transaction
 from wallet.models import Wallet, WalletTransaction
 from wallet.services.wallet_services import apply_order_reward, deposit_to_wallet
+from business_discounts.services import (
+    validate_and_calculate_discount,
+    consume_discount,
+)
+from django.core.exceptions import ValidationError as DjangoValidationError
 from accounts.helper import send_message
 from django.conf import settings
 from wallet.services.sms_service import send_refund_sms, send_cancel_notification_to_admin
@@ -45,12 +50,30 @@ def order_create(request):
                 price = item['price']
                 total_amount += price * quantity
 
-            # محاسبه هزینه ارسال (مثال ساده)
-            shipping_cost = 0  # 50,000 ریال
-            
             order.total_amount = total_amount
-            order.shipping_cost = shipping_cost
-            order.final_amount = total_amount + shipping_cost
+            order.discount_amount = 0
+            order.final_amount = total_amount
+
+            discount_code = form.cleaned_data.get('discount_code', '').strip()
+            if discount_code:
+                try:
+                    discount_result = validate_and_calculate_discount(
+                        discount_code,
+                        request.user,
+                        total_amount,
+                    )
+                    order.discount_amount = discount_result.discount_amount
+                    order.final_amount = total_amount - discount_result.discount_amount
+                    order.business_discount = discount_result.discount
+                except DjangoValidationError as exc:
+                    error_msg = exc.messages[0] if getattr(exc, 'messages', None) else str(exc)
+                    messages.error(request, error_msg)
+                    return render(request, 'orders/order_create.html', {
+                        'form': form,
+                        'cart': cart,
+                        'wallet_balance': getattr(request.user.wallet, 'balance', 0)
+                        if hasattr(request.user, 'wallet') else 0,
+                    })
 
             use_wallet = form.cleaned_data.get('use_wallet', False)
             unpaid_amount = order.final_amount
@@ -94,6 +117,14 @@ def order_create(request):
                     order.payment_status = 'pending'
                     order.unpaid_amount = order.final_amount
                 order.save()
+
+                if order.business_discount_id and order.discount_amount > 0:
+                    consume_discount(
+                        order.business_discount,
+                        request.user,
+                        order,
+                        order.discount_amount,
+                    )
                 
                 # ایجاد PaymentMethod برای پرداخت کیف پول (کامل یا جزئی)
                 if wallet_used > 0:
@@ -149,7 +180,11 @@ def order_create(request):
 
 @login_required
 def order_detail(request, order_id):
-    order = get_object_or_404(Order, id=order_id, user=request.user)
+    order = get_object_or_404(
+        Order.objects.select_related('business_discount'),
+        id=order_id,
+        user=request.user,
+    )
     return render(request, 'orders/order_detail.html', {
         'order': order
     })
