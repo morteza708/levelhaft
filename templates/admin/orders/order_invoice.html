@@ -1,0 +1,658 @@
+{% load static %}
+{% load humanize %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>فاکتور سفارش {{ order.order_number }}</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 6mm;
+        }
+
+        :root {
+            --ink: #17212b;
+            --muted: #667085;
+            --line: #d7dee8;
+            --soft: #f4f7fb;
+            --brand: #2f7f95;
+            --brand-dark: #1f5f70;
+            --success: #15803d;
+            --warning: #a16207;
+            --danger: #b91c1c;
+            --radius-lg: 18px;
+            --radius-md: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #eef2f6;
+            color: var(--ink);
+            font-family: Tahoma, "Vazirmatn", "IRANSans", Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.55;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+        }
+
+        .toolbar a,
+        .toolbar button {
+            border: 0;
+            border-radius: 999px;
+            background: var(--brand);
+            color: #fff;
+            cursor: pointer;
+            font: inherit;
+            padding: 8px 18px;
+            text-decoration: none;
+        }
+
+        .toolbar a {
+            background: #475467;
+        }
+
+        .invoice-page {
+            width: 277mm;
+            max-width: 100%;
+            margin: 0 auto 18px;
+            padding: 12px;
+            background: #fff;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 18px 50px rgba(23, 33, 43, 0.13);
+        }
+
+        .invoice-header {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr 1.1fr;
+            gap: 16px;
+            align-items: center;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            color: #fff;
+            border-radius: var(--radius-lg);
+            background:
+                radial-gradient(circle at 8% 10%, rgba(255,255,255,0.18), transparent 34%),
+                linear-gradient(135deg, var(--brand-dark), var(--brand));
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            display: grid;
+            place-items: center;
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.96);
+            padding: 8px;
+        }
+
+        .logo-box img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .brand-title {
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .brand-subtitle {
+            opacity: 0.86;
+            font-size: 11px;
+        }
+
+        .invoice-title {
+            text-align: center;
+        }
+
+        .invoice-title h1 {
+            margin: 0;
+            font-size: 24px;
+            line-height: 1.2;
+        }
+
+        .meta-grid {
+            display: grid;
+            gap: 5px;
+            justify-self: end;
+            min-width: 210px;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 2px;
+        }
+
+        .meta-row strong {
+            direction: ltr;
+            unicode-bidi: embed;
+            text-align: left;
+        }
+
+        .content {
+            padding: 0 4px 4px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            background: #fff;
+            overflow: hidden;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .card-title {
+            background: var(--soft);
+            border-bottom: 1px solid var(--line);
+            color: var(--brand-dark);
+            font-weight: 800;
+            padding: 6px 11px;
+            font-size: 11px;
+        }
+
+        .card-body {
+            display: grid;
+            gap: 4px;
+            padding: 8px 11px;
+        }
+
+        .field {
+            display: grid;
+            grid-template-columns: 78px 1fr;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .field-label {
+            color: var(--muted);
+        }
+
+        .field-value {
+            min-width: 0;
+        }
+
+        .phone-value {
+            display: block;
+            direction: ltr;
+            unicode-bidi: embed;
+            text-align: center;
+            font-family: Tahoma, Arial, sans-serif;
+            letter-spacing: 0.02em;
+        }
+
+        .ltr-inline {
+            direction: ltr;
+            unicode-bidi: embed;
+            display: inline-block;
+        }
+
+        .badge {
+            display: inline-block;
+            border-radius: 999px;
+            padding: 2px 9px;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .items-card .card-body {
+            padding: 0;
+        }
+
+        .items-table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        .items-table thead {
+            display: table-header-group;
+        }
+
+        .items-table th {
+            background: #e9f3f6;
+            color: var(--brand-dark);
+            font-weight: 800;
+            padding: 7px 8px;
+            font-size: 11px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+        }
+
+        .items-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #edf1f5;
+            vertical-align: middle;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        .items-table tbody tr:nth-child(even) td {
+            background: #fafcff;
+        }
+
+        .items-table tbody tr {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .items-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .cell-center {
+            text-align: center;
+        }
+
+        .cell-barcode {
+            direction: ltr;
+            unicode-bidi: embed;
+            text-align: center;
+            font-family: Tahoma, Arial, sans-serif;
+            white-space: nowrap;
+        }
+
+        .cell-product {
+            text-align: right;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        .cell-money {
+            direction: ltr;
+            unicode-bidi: embed;
+            text-align: center;
+            font-family: Tahoma, Arial, sans-serif;
+            white-space: nowrap;
+        }
+
+        .invoice-bottom {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .summary-wrap {
+            display: grid;
+            grid-template-columns: 1.12fr 0.88fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .summary-table td {
+            border-bottom: 1px solid #edf1f5;
+            padding: 6px 9px;
+            vertical-align: middle;
+        }
+
+        .summary-table .label {
+            color: var(--muted);
+            text-align: right;
+        }
+
+        .summary-table .value {
+            direction: ltr;
+            unicode-bidi: embed;
+            text-align: center;
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        .final-row td {
+            background: #e9f3f6;
+            color: var(--brand-dark);
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 12px;
+            margin-top: 8px;
+            padding: 4px 4px 0;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .signature {
+            min-width: 200px;
+            border-top: 1px dashed #98a2b3;
+            padding-top: 6px;
+            text-align: center;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                font-size: 10px;
+                line-height: 1.4;
+            }
+
+            .toolbar {
+                display: none;
+            }
+
+            .invoice-page {
+                width: auto;
+                max-width: none;
+                margin: 0;
+                padding: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .invoice-header {
+                border-radius: var(--radius-md);
+                margin-bottom: 8px;
+                padding: 10px 14px;
+                gap: 10px;
+            }
+
+            .logo-box {
+                width: 46px;
+                height: 46px;
+                padding: 6px;
+            }
+
+            .brand-title {
+                font-size: 17px;
+            }
+
+            .brand-subtitle {
+                font-size: 9px;
+            }
+
+            .invoice-title h1 {
+                font-size: 18px;
+            }
+
+            .info-grid {
+                gap: 7px;
+                margin-bottom: 7px;
+            }
+
+            .card-title {
+                padding: 4px 9px;
+                font-size: 10px;
+            }
+
+            .card-body {
+                padding: 5px 9px;
+                gap: 3px;
+            }
+
+            .field {
+                grid-template-columns: 68px 1fr;
+                gap: 6px;
+            }
+
+            .items-table th,
+            .items-table td {
+                padding: 4px 5px;
+                font-size: 9.5px;
+            }
+
+            .summary-wrap {
+                margin-top: 7px;
+                gap: 7px;
+            }
+
+            .summary-table td {
+                padding: 4px 7px;
+            }
+
+            .final-row td {
+                font-size: 12px;
+            }
+
+            .footer {
+                margin-top: 5px;
+                font-size: 9px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button type="button" onclick="window.print()">چاپ / ذخیره PDF</button>
+        <a href="{% url 'admin:orders_order_change' order.pk %}">بازگشت به سفارش</a>
+    </div>
+
+    <main class="invoice-page">
+        <header class="invoice-header">
+            <section class="brand-box">
+                <div class="logo-box">
+                    <img src="{% static 'images/logo/levelhaft_logo.svg' %}" alt="LevelHaft">
+                </div>
+                <div>
+                    <div class="brand-title">LevelHaft</div>
+                    <div class="brand-subtitle">فروشگاه تخصصی مراقبت از پوست</div>
+                </div>
+            </section>
+
+            <section class="invoice-title">
+                <h1>فاکتور فروش</h1>
+            </section>
+
+            <section class="meta-grid">
+                <div class="meta-row">
+                    <span>شماره سفارش</span>
+                    <strong>{{ order.order_number }}</strong>
+                </div>
+                <div class="meta-row">
+                    <span>تاریخ ثبت</span>
+                    <strong>{{ order.get_jalali_created_at }}</strong>
+                </div>
+                <div class="meta-row">
+                    <span>وضعیت پرداخت</span>
+                    <strong>{{ order.get_payment_status_display }}</strong>
+                </div>
+            </section>
+        </header>
+
+        <section class="content">
+            <div class="info-grid">
+                <article class="card">
+                    <div class="card-title">اطلاعات مشتری</div>
+                    <div class="card-body">
+                        <div class="field">
+                            <span class="field-label">کاربر:</span>
+                            <span class="field-value"><strong>{{ order.user.get_full_name|default:order.user.phone_number }}</strong></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-label">موبایل:</span>
+                            <span class="field-value phone-value">{{ order.user.phone_number }}</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-label">ایمیل:</span>
+                            <span class="field-value">{{ order.user.email|default:"-" }}</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-title">اطلاعات سفارش</div>
+                    <div class="card-body">
+                        <div class="field">
+                            <span class="field-label">وضعیت:</span>
+                            <span class="field-value">
+                                <span class="badge {% if order.status == 'cancelled' %}badge-danger{% elif order.status == 'pending' %}badge-warning{% else %}badge-success{% endif %}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="field">
+                            <span class="field-label">پرداخت:</span>
+                            <span class="field-value">
+                                <span class="badge {% if order.payment_status == 'paid' %}badge-success{% elif order.payment_status == 'failed' %}badge-danger{% else %}badge-warning{% endif %}">
+                                    {{ order.get_payment_status_display }}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="field">
+                            <span class="field-label">رهگیری:</span>
+                            <span class="field-value"><span class="ltr-inline">{{ order.tracking_code|default:"-" }}</span></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-title">اطلاعات گیرنده</div>
+                    <div class="card-body">
+                        <div class="field">
+                            <span class="field-label">نام:</span>
+                            <span class="field-value"><strong>{{ order.receiver_name }}</strong></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-label">موبایل:</span>
+                            <span class="field-value phone-value">{{ order.receiver_phone }}</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-label">شهر/کدپستی:</span>
+                            <span class="field-value">{{ order.receiver_city }} / <span class="ltr-inline">{{ order.receiver_postal_code }}</span></span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <article class="card items-card">
+                <div class="card-title">اقلام سفارش</div>
+                <div class="card-body">
+                    <table class="items-table">
+                        <colgroup>
+                            <col style="width: 5%;">
+                            <col style="width: 11%;">
+                            <col style="width: 38%;">
+                            <col style="width: 8%;">
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="cell-center">ردیف</th>
+                                <th class="cell-center">بارکد</th>
+                                <th class="cell-product">نام محصول</th>
+                                <th class="cell-center">تعداد</th>
+                                <th class="cell-center">قیمت واحد</th>
+                                <th class="cell-center">قیمت کل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td class="cell-center">{{ forloop.counter }}</td>
+                                <td class="cell-barcode">{{ item.product.barcode }}</td>
+                                <td class="cell-product">{{ item.product.name }}</td>
+                                <td class="cell-center">{{ item.quantity }}</td>
+                                <td class="cell-money">{{ item.unit_price|intcomma:False }} ریال</td>
+                                <td class="cell-money">{{ item.total_price|intcomma:False }} ریال</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="cell-product">برای این سفارش آیتمی ثبت نشده است.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <div class="invoice-bottom">
+                <div class="summary-wrap">
+                    <article class="card">
+                        <div class="card-title">آدرس و توضیحات</div>
+                        <div class="card-body">
+                            <div><span class="field-label">آدرس:</span> {{ order.receiver_address }}</div>
+                            <div><span class="field-label">توضیحات:</span> {{ order.notes|default:"-" }}</div>
+                            <div><span class="field-label">یادداشت:</span> هزینه ارسال به عهده مشتری می‌باشد.</div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div class="card-title">خلاصه مالی</div>
+                        <table class="summary-table">
+                            <tr>
+                                <td class="label">جمع محصولات</td>
+                                <td class="value">{{ order.total_amount|intcomma:False }} ریال</td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    تخفیف
+                                    {% if order.business_discount %}({{ order.business_discount.code }}){% endif %}
+                                </td>
+                                <td class="value">{{ order.discount_amount|intcomma:False }} ریال</td>
+                            </tr>
+                            <tr>
+                                <td class="label">مبلغ پرداخت‌شده</td>
+                                <td class="value">{{ paid_total|intcomma:False }} ریال</td>
+                            </tr>
+                            <tr>
+                                <td class="label">مبلغ پرداخت‌نشده</td>
+                                <td class="value">{{ order.unpaid_amount|intcomma:False }} ریال</td>
+                            </tr>
+                            <tr class="final-row">
+                                <td>مبلغ نهایی</td>
+                                <td class="value">{{ order.final_amount|intcomma:False }} ریال</td>
+                            </tr>
+                        </table>
+                    </article>
+                </div>
+
+                <footer class="footer">
+                    <span>این فاکتور به صورت سیستمی از پنل مدیریت LevelHaft تولید شده است.</span>
+                    <span class="signature">مهر / امضای فروشگاه</span>
+                </footer>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

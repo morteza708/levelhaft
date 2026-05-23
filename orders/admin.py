@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.shortcuts import render
+from django.urls import path, reverse
 from django.utils.html import format_html
 from import_export.fields import Field
 
@@ -160,11 +162,16 @@ class OrderAdmin(ExportOnlyModelAdmin):
     list_display = [
         'order_number', 'user', 'status', 'payment_status',
         'discount_amount_display', 'final_amount_display', 'get_jalali_created_at',
+        'invoice_button',
     ]
     list_filter = ['status', 'payment_status', 'created_at']
     search_fields = ['order_number', 'user__phone_number', 'user__email']
+    autocomplete_fields = ['user', 'business_discount']
     inlines = [OrderItemInline, OrderStatusHistoryInline, PaymentMethodInline]
-    readonly_fields = ['order_number', 'get_jalali_created_at', 'get_jalali_updated_at', 'created_at', 'updated_at']
+    readonly_fields = [
+        'order_number', 'invoice_link', 'get_jalali_created_at',
+        'get_jalali_updated_at', 'created_at', 'updated_at',
+    ]
     fieldsets = (
         (None, {
             'fields': (
@@ -177,9 +184,61 @@ class OrderAdmin(ExportOnlyModelAdmin):
             'fields': ('receiver_name', 'receiver_phone', 'receiver_address', 'receiver_city', 'receiver_postal_code')
         }),
         ('اطلاعات تکمیلی', {
-            'fields': ('notes', 'tracking_code', 'get_jalali_created_at', 'get_jalali_updated_at')
+            'fields': ('notes', 'tracking_code', 'invoice_link', 'get_jalali_created_at', 'get_jalali_updated_at')
         }),
     )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                '<path:object_id>/invoice/',
+                self.admin_site.admin_view(self.invoice_view),
+                name='orders_order_invoice',
+            ),
+        ]
+        return custom_urls + urls
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+            'user', 'business_discount',
+        ).prefetch_related('items__product', 'payments')
+
+    def _invoice_url(self, obj):
+        return reverse('admin:orders_order_invoice', args=[obj.pk])
+
+    def invoice_button(self, obj):
+        if not obj.pk:
+            return '-'
+        return format_html(
+            '<a class="button" href="{}" target="_blank" rel="noopener">فاکتور</a>',
+            self._invoice_url(obj),
+        )
+    invoice_button.short_description = 'فاکتور'
+
+    def invoice_link(self, obj):
+        if not obj or not obj.pk:
+            return '-'
+        return format_html(
+            '<a class="button" href="{}" target="_blank" rel="noopener">مشاهده و چاپ فاکتور</a>',
+            self._invoice_url(obj),
+        )
+    invoice_link.short_description = 'فاکتور خرید'
+
+    def invoice_view(self, request, object_id):
+        order = self.get_queryset(request).get(pk=object_id)
+        paid_total = sum(
+            payment.amount
+            for payment in order.payments.all()
+            if payment.status == 'completed'
+        )
+        context = {
+            **self.admin_site.each_context(request),
+            'order': order,
+            'paid_total': paid_total,
+            'title': f'فاکتور سفارش {order.order_number}',
+        }
+        return render(request, 'admin/orders/order_invoice.html', context)
 
     def discount_amount_display(self, obj):
         if obj.discount_amount:
