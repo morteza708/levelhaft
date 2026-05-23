@@ -113,10 +113,35 @@ class OrderResource(BaseExportResource):
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    raw_id_fields = ['product']
     extra = 0
-    readonly_fields = ['total_price']
-    fields = ['product', 'quantity', 'unit_price', 'total_price']
+    readonly_fields = ['product_id_display', 'product_barcode', 'product_name', 'total_price']
+    fields = [
+        'product_id_display',
+        'product_barcode',
+        'product_name',
+        'quantity',
+        'unit_price',
+        'total_price',
+    ]
+
+    def product_id_display(self, obj):
+        return obj.product_id or '-'
+    product_id_display.short_description = 'ID محصول'
+
+    def product_barcode(self, obj):
+        if obj.product_id:
+            return obj.product.barcode
+        return '-'
+    product_barcode.short_description = 'بارکد محصول'
+
+    def product_name(self, obj):
+        if obj.product_id:
+            return obj.product.name
+        return '-'
+    product_name.short_description = 'نام محصول'
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 class OrderStatusHistoryInline(admin.TabularInline):
