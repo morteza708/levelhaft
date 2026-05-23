@@ -1,5 +1,5 @@
 from django.db import models
-from jalali_date import datetime2jalali
+from config.jalali import format_jalali_datetime
 
 # Create your models here.
 
@@ -60,4 +60,4 @@ class ContactMessage(models.Model):
 
     @property
     def created_at_jalali(self):
-        return datetime2jalali(self.created_at).strftime('%Y/%m/%d - %H:%M')
+        return format_jalali_datetime(self.created_at, fmt='%Y/%m/%d - %H:%M')

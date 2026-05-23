@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-import jdatetime
+from config.jalali import format_jalali_datetime
 
 class Wallet(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='wallet')
@@ -38,6 +38,6 @@ class WalletTransaction(models.Model):
         return f"{self.wallet.user.username} - {self.get_type_display()} - {self.amount} ریال"
 
     def get_jalali_created_at(self):
-        return jdatetime.datetime.fromgregorian(datetime=self.created_at).strftime('%Y/%m/%d %H:%M')
+        return format_jalali_datetime(self.created_at, fmt='%Y/%m/%d %H:%M')
     get_jalali_created_at.short_description = 'تاریخ (شمسی)'
 

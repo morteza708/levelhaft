@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import path, reverse
 from django.utils.html import format_html
 from jalali_date.admin import ModelAdminJalaliMixin
-from jalali_date import datetime2jalali
+from config.jalali import format_jalali_datetime
 
 from .models import BusinessDiscount, DiscountUsage
 from .report_services import (
@@ -152,7 +152,7 @@ class DiscountUsageAdmin(admin.ModelAdmin):
     amount_display.short_description = 'مبلغ تخفیف'
 
     def jalali_created_at(self, obj):
-        return datetime2jalali(obj.created_at).strftime('%Y/%m/%d %H:%M')
+        return format_jalali_datetime(obj.created_at, fmt='%Y/%m/%d %H:%M')
     jalali_created_at.short_description = 'تاریخ مصرف'
 
     def has_add_permission(self, request):

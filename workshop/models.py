@@ -3,7 +3,7 @@ from django_ckeditor_5.fields import CKEditor5Field
 from django_jalali.db import models as jmodels
 from django.conf import settings
 import random
-import jdatetime
+from config.jalali import format_jalali_datetime
 
 
 
@@ -61,7 +61,7 @@ class WorkshopRegistration(models.Model):
         verbose_name_plural = "ثبت نام‌های ورکشاپ"
 
     def get_jalali_created_at(self):
-        return jdatetime.datetime.fromgregorian(datetime=self.created_at).strftime('%Y/%m/%d %H:%M:%S')
+        return format_jalali_datetime(self.created_at)
     get_jalali_created_at.short_description = 'تاریخ ثبت نام'
 
     def __str__(self):
@@ -108,5 +108,5 @@ class WorkshopRegistrationHistory(models.Model):
         return f"تغییر وضعیت ثبت‌نام {self.registration.user.get_full_name()} از {self.old_status} به {self.new_status}"
 
     def get_jalali_changed_at(self):
-        return jdatetime.datetime.fromgregorian(datetime=self.changed_at).strftime('%Y/%m/%d %H:%M:%S')
+        return format_jalali_datetime(self.changed_at)
     get_jalali_changed_at.short_description = 'تاریخ تغییر'

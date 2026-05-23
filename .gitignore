@@ -106,6 +106,8 @@ CLAUDE.md
 DEPLOYMENT.md
 README.md
 ERROR_PAGES_README.md
+.cursor
+BUSINESS_DISCOUNTS_GUIDE.md
 # Backup files
 *.bak
 *.backup

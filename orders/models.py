@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django_jalali.db import models as jmodels
 import jdatetime
+from config.jalali import format_jalali_datetime
 from products.models import Product
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -64,11 +65,11 @@ class Order(models.Model):
         return f"سفارش {self.order_number} - {self.user.get_full_name()}"
 
     def get_jalali_created_at(self):
-        return jdatetime.datetime.fromgregorian(datetime=self.created_at).strftime('%Y/%m/%d %H:%M:%S')
+        return format_jalali_datetime(self.created_at)
     get_jalali_created_at.short_description = 'تاریخ ثبت'
 
     def get_jalali_updated_at(self):
-        return jdatetime.datetime.fromgregorian(datetime=self.updated_at).strftime('%Y/%m/%d %H:%M:%S')
+        return format_jalali_datetime(self.updated_at)
     get_jalali_updated_at.short_description = 'تاریخ بروزرسانی'
 
     def save(self, *args, **kwargs):
@@ -127,7 +128,7 @@ class OrderStatusHistory(models.Model):
         return f"تغییر وضعیت سفارش {self.order.order_number} از {self.old_status} به {self.new_status}"
 
     def get_jalali_changed_at(self):
-        return jdatetime.datetime.fromgregorian(datetime=self.changed_at).strftime('%Y/%m/%d %H:%M:%S')
+        return format_jalali_datetime(self.changed_at)
     get_jalali_changed_at.short_description = 'تاریخ تغییر' 
 
 
@@ -161,9 +162,9 @@ class PaymentMethod(models.Model):
         return f"{self.get_payment_type_display()} - {self.amount:,} ریال"
 
     def get_jalali_created_at(self):
-        return jdatetime.datetime.fromgregorian(datetime=self.created_at).strftime('%Y/%m/%d %H:%M:%S')
+        return format_jalali_datetime(self.created_at)
     get_jalali_created_at.short_description = 'تاریخ ایجاد'
 
     def get_jalali_updated_at(self):
-        return jdatetime.datetime.fromgregorian(datetime=self.updated_at).strftime('%Y/%m/%d %H:%M:%S')
+        return format_jalali_datetime(self.updated_at)
     get_jalali_updated_at.short_description = 'تاریخ بروزرسانی' 

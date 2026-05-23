@@ -116,7 +116,7 @@
                     </tr>
                     <tr>
                         <td class="text-muted">تاریخ ثبت:</td>
-                        <td>{{ order.created_at|date:"Y/m/d H:i" }}</td>
+                        <td>{{ order.get_jalali_created_at }}</td>
                     </tr>
                     <tr>
                         <td class="text-muted">وضعیت پرداخت:</td>

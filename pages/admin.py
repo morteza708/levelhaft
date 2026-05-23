@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import ContactMessage, SliderSlide
-from jalali_date import datetime2jalali
+from config.jalali import format_jalali_datetime
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
@@ -63,5 +63,5 @@ class ContactMessageAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
     def created_at_jalali(self, obj):
-        return datetime2jalali(obj.created_at).strftime('%Y/%m/%d - %H:%M')
+        return format_jalali_datetime(obj.created_at, fmt='%Y/%m/%d - %H:%M')
     created_at_jalali.short_description = "تاریخ ارسال"
