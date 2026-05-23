@@ -8,6 +8,7 @@ from jalali_date.admin import ModelAdminJalaliMixin
 from config.jalali import format_jalali_datetime
 
 from .models import BusinessDiscount, DiscountUsage
+from .report_export import discount_report_excel_response
 from .report_services import (
     apply_report_filters,
     build_code_summary,
@@ -95,6 +96,11 @@ class BusinessDiscountAdmin(ModelAdminJalaliMixin, admin.ModelAdmin):
                 self.admin_site.admin_view(self.discount_reports_view),
                 name='business_discounts_businessdiscount_reports',
             ),
+            path(
+                'reports/export/',
+                self.admin_site.admin_view(self.discount_reports_export_view),
+                name='business_discounts_businessdiscount_reports_export',
+            ),
         ]
         return custom_urls + urls
 
@@ -138,6 +144,9 @@ class BusinessDiscountAdmin(ModelAdminJalaliMixin, admin.ModelAdmin):
             'query_string': query_string,
         }
         return render(request, 'admin/business_discounts/discount_reports.html', context)
+
+    def discount_reports_export_view(self, request):
+        return discount_report_excel_response(request)
 
 
 @admin.register(DiscountUsage)

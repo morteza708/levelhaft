@@ -1,12 +1,16 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Order, OrderItem, OrderStatusHistory, PaymentMethod
+from import_export.fields import Field
+
 from accounts.helper import send_message
+from config.import_export_utils import BaseExportResource, ExportOnlyModelAdmin
+from config.jalali import format_jalali_datetime
 import logging
-from import_export.admin import ImportExportModelAdmin
-from import_export import resources
+
+from .models import Order, OrderItem, OrderStatusHistory, PaymentMethod
 
 logger = logging.getLogger(__name__)
+
 
 class PaymentMethodInline(admin.TabularInline):
     model = PaymentMethod
@@ -14,45 +18,98 @@ class PaymentMethodInline(admin.TabularInline):
     readonly_fields = ['created_at', 'updated_at']
     fields = ['payment_type', 'amount', 'status', 'transaction_id', 'created_at', 'updated_at']
 
-class OrderResource(resources.ModelResource):
+
+class OrderResource(BaseExportResource):
+    order_number = Field(attribute='order_number', column_name='شماره سفارش')
+    user_phone = Field(column_name='شماره موبایل')
+    user_email = Field(column_name='ایمیل')
+    status = Field(column_name='وضعیت سفارش')
+    payment_status = Field(column_name='وضعیت پرداخت')
+    total_amount = Field(attribute='total_amount', column_name='مبلغ کل')
+    discount_amount = Field(attribute='discount_amount', column_name='مبلغ تخفیف')
+    discount_code = Field(column_name='کد تخفیف')
+    final_amount = Field(attribute='final_amount', column_name='مبلغ نهایی')
+    unpaid_amount = Field(attribute='unpaid_amount', column_name='مبلغ پرداخت‌نشده')
+    receiver_name = Field(attribute='receiver_name', column_name='نام گیرنده')
+    receiver_phone = Field(attribute='receiver_phone', column_name='تلفن گیرنده')
+    receiver_city = Field(attribute='receiver_city', column_name='شهر')
+    receiver_postal_code = Field(attribute='receiver_postal_code', column_name='کد پستی')
+    tracking_code = Field(attribute='tracking_code', column_name='کد رهگیری')
+    created_at = Field(column_name='تاریخ ثبت')
+    wallet_amount = Field(column_name='مبلغ کیف پول')
+    wallet_status = Field(column_name='وضعیت کیف پول')
+    gateway_amount = Field(column_name='مبلغ درگاه')
+    gateway_status = Field(column_name='وضعیت درگاه')
+    gateway_transaction = Field(column_name='شماره تراکنش درگاه')
+
     class Meta:
         model = Order
-        fields = ('order_number', 'user__phone_number', 'user__email', 'status', 'payment_status', 
-                 'total_amount', 'discount_amount', 'final_amount', 'unpaid_amount',
-                 'receiver_name', 'receiver_phone', 'receiver_address', 'receiver_city', 
-                 'receiver_postal_code', 'notes', 'tracking_code', 'created_at')
+        fields = (
+            'order_number', 'user_phone', 'user_email', 'status', 'payment_status',
+            'total_amount', 'discount_amount', 'discount_code', 'final_amount', 'unpaid_amount',
+            'receiver_name', 'receiver_phone', 'receiver_city', 'receiver_postal_code',
+            'tracking_code', 'created_at',
+            'wallet_amount', 'wallet_status', 'gateway_amount', 'gateway_status', 'gateway_transaction',
+        )
         export_order = fields
 
-    def get_export_headers(self):
-        headers = super().get_export_headers()
-        # اضافه کردن هدرهای مربوط به روش‌های پرداخت
-        headers.extend([
-            'روش پرداخت کیف پول',
-            'مبلغ پرداختی کیف پول',
-            'وضعیت پرداخت کیف پول',
-            'روش پرداخت درگاه',
-            'مبلغ پرداختی درگاه',
-            'وضعیت پرداخت درگاه',
-            'شماره تراکنش درگاه'
-        ])
-        return headers
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'user', 'business_discount',
+        ).prefetch_related('payments')
 
-    def export_obj(self, obj):
-        data = super().export_obj(obj)
-        # اضافه کردن اطلاعات روش‌های پرداخت
-        wallet_payment = obj.payments.filter(payment_type='wallet').first()
-        gateway_payment = obj.payments.filter(payment_type='gateway').first()
-        
-        data.update({
-            'روش پرداخت کیف پول': wallet_payment.get_payment_type_display() if wallet_payment else '',
-            'مبلغ پرداختی کیف پول': wallet_payment.amount if wallet_payment else '',
-            'وضعیت پرداخت کیف پول': wallet_payment.get_status_display() if wallet_payment else '',
-            'روش پرداخت درگاه': gateway_payment.get_payment_type_display() if gateway_payment else '',
-            'مبلغ پرداختی درگاه': gateway_payment.amount if gateway_payment else '',
-            'وضعیت پرداخت درگاه': gateway_payment.get_status_display() if gateway_payment else '',
-            'شماره تراکنش درگاه': gateway_payment.transaction_id if gateway_payment else ''
-        })
-        return data
+    def dehydrate_user_phone(self, order):
+        return order.user.phone_number
+
+    def dehydrate_user_email(self, order):
+        return order.user.email or ''
+
+    def dehydrate_status(self, order):
+        return order.get_status_display()
+
+    def dehydrate_payment_status(self, order):
+        return order.get_payment_status_display()
+
+    def dehydrate_discount_code(self, order):
+        if order.business_discount_id:
+            return order.business_discount.code
+        return ''
+
+    def dehydrate_created_at(self, order):
+        return format_jalali_datetime(order.created_at, fmt='%Y/%m/%d %H:%M')
+
+    def _wallet_payment(self, order):
+        for payment in order.payments.all():
+            if payment.payment_type == 'wallet':
+                return payment
+        return None
+
+    def _gateway_payment(self, order):
+        for payment in order.payments.all():
+            if payment.payment_type == 'gateway':
+                return payment
+        return None
+
+    def dehydrate_wallet_amount(self, order):
+        payment = self._wallet_payment(order)
+        return payment.amount if payment else ''
+
+    def dehydrate_wallet_status(self, order):
+        payment = self._wallet_payment(order)
+        return payment.get_status_display() if payment else ''
+
+    def dehydrate_gateway_amount(self, order):
+        payment = self._gateway_payment(order)
+        return payment.amount if payment else ''
+
+    def dehydrate_gateway_status(self, order):
+        payment = self._gateway_payment(order)
+        return payment.get_status_display() if payment else ''
+
+    def dehydrate_gateway_transaction(self, order):
+        payment = self._gateway_payment(order)
+        return payment.transaction_id if payment and payment.transaction_id else ''
+
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -60,6 +117,7 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
     readonly_fields = ['total_price']
     fields = ['product', 'quantity', 'unit_price', 'total_price']
+
 
 class OrderStatusHistoryInline(admin.TabularInline):
     model = OrderStatusHistory
@@ -70,8 +128,9 @@ class OrderStatusHistoryInline(admin.TabularInline):
     def has_add_permission(self, request, obj=None):
         return False
 
+
 @admin.register(Order)
-class OrderAdmin(ImportExportModelAdmin):
+class OrderAdmin(ExportOnlyModelAdmin):
     resource_class = OrderResource
     list_display = [
         'order_number', 'user', 'status', 'payment_status',
@@ -110,7 +169,7 @@ class OrderAdmin(ImportExportModelAdmin):
 
     def final_amount_display(self, obj):
         return format_html('<span style="direction:ltr">{}</span>', f"{obj.final_amount:,}")
-    final_amount_display.short_description = "مبلغ نهایی (ریال)"
+    final_amount_display.short_description = 'مبلغ نهایی (ریال)'
 
     def get_jalali_created_at(self, obj):
         return obj.get_jalali_created_at()
@@ -121,30 +180,28 @@ class OrderAdmin(ImportExportModelAdmin):
     get_jalali_updated_at.short_description = 'تاریخ بروزرسانی'
 
     def save_model(self, request, obj, form, change):
-        if change:  # فقط برای به‌روزرسانی
+        if change:
             try:
                 old_obj = Order.objects.get(pk=obj.pk)
-                # اگر وضعیت به shipped تغییر کرده باشد
                 if old_obj.status != 'shipped' and obj.status == 'shipped':
-                    # ارسال پیامک به مشتری
-                    message = f'.'
                     send_message(
                         obj.user.phone_number,
-                        message,
-                        template='order-send-confirmation'
+                        '.',
+                        template='order-send-confirmation',
                     )
-                    logger.info(f"📤 پیامک ارسال سفارش برای {obj.order_number} ارسال شد")
+                    logger.info('پیامک ارسال سفارش برای %s', obj.order_number)
             except Order.DoesNotExist:
                 pass
-        
+
         if change and 'status' in form.changed_data:
             OrderStatusHistory.objects.create(
                 order=obj,
                 old_status=form.initial['status'],
                 new_status=obj.status,
-                changed_by=request.user
+                changed_by=request.user,
             )
         super().save_model(request, obj, form, change)
+
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
@@ -154,12 +211,13 @@ class OrderItemAdmin(admin.ModelAdmin):
     readonly_fields = ['total_price']
 
     def unit_price_display(self, obj):
-        return f"{obj.unit_price:,}"
-    unit_price_display.short_description = "قیمت واحد (ریال)"
+        return f'{obj.unit_price:,}'
+    unit_price_display.short_description = 'قیمت واحد (ریال)'
 
     def total_price_display(self, obj):
-        return f"{obj.total_price:,}"
-    total_price_display.short_description = "قیمت کل (ریال)"
+        return f'{obj.total_price:,}'
+    total_price_display.short_description = 'قیمت کل (ریال)'
+
 
 @admin.register(OrderStatusHistory)
 class OrderStatusHistoryAdmin(admin.ModelAdmin):
@@ -168,9 +226,10 @@ class OrderStatusHistoryAdmin(admin.ModelAdmin):
     search_fields = ['order__order_number']
     readonly_fields = ['changed_at', 'changed_by']
 
+
 @admin.register(PaymentMethod)
 class PaymentMethodAdmin(admin.ModelAdmin):
     list_display = ['order', 'payment_type', 'amount', 'status', 'transaction_id', 'created_at']
     list_filter = ['payment_type', 'status', 'created_at']
     search_fields = ['order__order_number', 'transaction_id']
-    readonly_fields = ['created_at', 'updated_at'] 
+    readonly_fields = ['created_at', 'updated_at']

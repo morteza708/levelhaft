@@ -229,9 +229,15 @@
             <h2 class="discount-report-title">گزارش تخفیف‌های بیزنس</h2>
             <p class="discount-report-subtitle">فقط سفارش‌های پرداخت‌شده و لغونشده در جمع‌ها لحاظ می‌شوند.</p>
         </div>
-        <a href="{% url 'admin:business_discounts_businessdiscount_changelist' %}" class="discount-report-btn">
-            بازگشت به کدهای تخفیف
-        </a>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'admin:business_discounts_businessdiscount_reports_export' %}?{{ query_string }}"
+               class="discount-report-btn primary">
+                خروجی Excel
+            </a>
+            <a href="{% url 'admin:business_discounts_businessdiscount_changelist' %}" class="discount-report-btn">
+                بازگشت به کدهای تخفیف
+            </a>
+        </div>
     </div>
 
     <div class="discount-report-card">

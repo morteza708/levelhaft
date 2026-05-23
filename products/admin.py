@@ -8,8 +8,16 @@ from django.utils.html import format_html
 from .forms import ProductForm, ProductAdminForm
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from import_export.admin import ImportExportModelAdmin
-from import_export import resources
+from import_export.fields import Field
+from django.core.exceptions import ObjectDoesNotExist
+
+from config.import_export_utils import (
+    BooleanFaWidget,
+    SafeImportExportModelAdmin,
+    SafeImportResource,
+    bool_fa,
+    normalize_digits,
+)
 from .utils import convert_to_english_digits
 
 def format_price(value):
@@ -22,14 +30,80 @@ class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
 
-class ProductResource(resources.ModelResource):
+class ProductResource(SafeImportResource):
+    barcode = Field(attribute='barcode', column_name='بارکد')
+    name = Field(attribute='name', column_name='نام محصول')
+    price_level_1 = Field(attribute='price_level_1', column_name='قیمت بیوتیشن')
+    price_level_2 = Field(attribute='price_level_2', column_name='قیمت عادی')
+    stock = Field(attribute='stock', column_name='موجودی')
+    is_featured = Field(
+        attribute='is_featured',
+        column_name='محصول ویژه',
+        widget=BooleanFaWidget(),
+    )
+    show_on_home = Field(
+        attribute='show_on_home',
+        column_name='نمایش در خانه',
+        widget=BooleanFaWidget(),
+    )
+    brand_name = Field(column_name='برند')
+    line_name = Field(column_name='لاین')
+    usage_type_name = Field(column_name='نوع مصرف')
+    model_name = Field(column_name='مدل')
+    volume_value = Field(attribute='volume_value', column_name='حجم')
+    volume_unit_name = Field(column_name='واحد حجم')
+
     class Meta:
         model = Product
-        fields = ('barcode', 'name', 'brand__name', 'line__name', 'usage_type__name', 
-                 'model__name', 'volume_value', 'volume_unit__name', 'short_description',
-                 'price_level_1', 'price_level_2', 'stock', 'is_featured', 'show_on_home',
-                 'created_at')
-        export_order = fields
+        import_id_fields = ('barcode',)
+        # فقط فیلدهای قابل به‌روزرسانی در import
+        fields = (
+            'barcode', 'name', 'price_level_1', 'price_level_2',
+            'stock', 'is_featured', 'show_on_home',
+        )
+        export_order = (
+            'barcode', 'name', 'brand_name', 'line_name', 'usage_type_name', 'model_name',
+            'volume_value', 'volume_unit_name', 'price_level_1', 'price_level_2',
+            'stock', 'is_featured', 'show_on_home',
+        )
+
+    def before_import_row(self, row, **kwargs):
+        barcode = normalize_digits(row.get('بارکد', ''))
+        if barcode:
+            row['بارکد'] = barcode
+        super().before_import_row(row, **kwargs)
+
+    def get_instance(self, instance_loader, row):
+        instance = super().get_instance(instance_loader, row)
+        if instance is None or instance.pk is None:
+            raise ObjectDoesNotExist(f'محصول با بارکد {row.get("بارکد")} یافت نشد.')
+        return instance
+
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'brand', 'line', 'usage_type', 'model', 'volume_unit',
+        )
+
+    def dehydrate_brand_name(self, product):
+        return product.brand.name if product.brand_id else ''
+
+    def dehydrate_line_name(self, product):
+        return product.line.name if product.line_id else ''
+
+    def dehydrate_usage_type_name(self, product):
+        return product.usage_type.name if product.usage_type_id else ''
+
+    def dehydrate_model_name(self, product):
+        return product.model.name if product.model_id else ''
+
+    def dehydrate_volume_unit_name(self, product):
+        return product.volume_unit.name if product.volume_unit_id else ''
+
+    def dehydrate_is_featured(self, product):
+        return bool_fa(product.is_featured)
+
+    def dehydrate_show_on_home(self, product):
+        return bool_fa(product.show_on_home)
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
@@ -70,7 +144,7 @@ class VolumeUnitAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 @admin.register(Product)
-class ProductAdmin(ImportExportModelAdmin):
+class ProductAdmin(SafeImportExportModelAdmin):
     resource_class = ProductResource
     form = ProductAdminForm
     prepopulated_fields = {'slug': ('name',)}

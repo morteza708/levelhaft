@@ -61,4 +61,5 @@ django-cache-url==3.4.5
 django-js-asset==3.1.2
 django-nine==0.2.7
 tablib==3.8.0
+openpyxl==3.1.5
 text-unidecode==1.3
