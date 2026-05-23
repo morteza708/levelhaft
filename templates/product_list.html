@@ -95,6 +95,22 @@ html, body {
         box-shadow: 0 6px 32px rgba(40,167,69,0.13) !important;
         transform: translateY(-3px) scale(1.03);
     }
+    .product-card.is-unavailable:hover {
+        transform: none !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+    }
+    .product-card .product-stock-label {
+        font-size: 0.92rem !important;
+        min-height: 38px !important;
+        color: #b02a37 !important;
+        border: 1.5px solid #f1aeb5 !important;
+        background: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 100%) !important;
+        box-shadow: 0 4px 14px rgba(176, 42, 55, 0.18) !important;
+    }
+    .product-card .product-stock-label span,
+    .product-card .product-stock-label i {
+        color: #b02a37 !important;
+    }
 }
 </style>
 {% endblock %}
@@ -131,14 +147,8 @@ html, body {
         <div class="product-grid">
             {% for product in products %}
             <div class="product-col">
-                <div class="product-card">
-                    <a href="{% url 'products:product_detail' product.slug %}" class="product-image">
-                        {% if product.images.all %}
-                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
-                        {% else %}
-                            <img src="{% static 'img/no-image.png' %}" alt="بدون تصویر">
-                        {% endif %}
-                    </a>
+                <div class="product-card{% if product.stock <= 0 %} is-unavailable{% endif %}">
+                    {% include 'products/includes/product_card_image.html' %}
                     <div class="product-title">
                         <a href="{% url 'products:product_detail' product.slug %}" class="text-decoration-none text-dark">
                             {{ product.name }}
@@ -147,26 +157,7 @@ html, body {
                     <div class="product-brand-line">
                         {{ product.brand.name }}{% if product.line.name %} - {{ product.line.name }}{% endif %}
                     </div>
-                    {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
-                        {% if request.user.is_authenticated and request.user.profile.is_beautician %}
-                            <div class="product-price">
-                                {{ product.price_level_1|intcomma:False|default:"قیمت ناموجود" }} ریال
-                            </div>
-                        {% else %}
-                            <div class="beautician-badge">
-                                <i class="fas fa-spa"></i>
-                                <span>بیوتیشن</span>
-                            </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="product-price">
-                            {% if request.user.is_authenticated and request.user.profile.is_beautician %}
-                                {{ product.price_level_1|intcomma:False|default:"قیمت ناموجود" }} ریال
-                            {% else %}
-                                {{ product.price_level_2|intcomma:False|default:"قیمت ناموجود" }} ریال
-                            {% endif %}
-                        </div>
-                    {% endif %}
+                    {% include 'products/includes/product_card_price.html' with card_user=request.user %}
                 </div>
             </div>
             {% empty %}
@@ -176,57 +167,11 @@ html, body {
             {% endfor %}
         </div>
 
-        {% if products.paginator.num_pages > 1 %}
-        <div class="row mt-4">
+        <div class="row mt-2">
             <div class="col-12">
-                <nav aria-label="صفحه‌بندی محصولات">
-                    <ul class="pagination justify-content-center">
-                        {% if products.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ products.previous_page_number }}{% if current_usage_type %}&usage_type={{ current_usage_type }}{% endif %}" aria-label="قبلی">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span>قبلی</span>
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span>قبلی</span>
-                                </span>
-                            </li>
-                        {% endif %}
-
-                        {% for num in products.paginator.page_range %}
-                            {% if products.number == num %}
-                                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                            {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ num }}{% if current_usage_type %}&usage_type={{ current_usage_type }}{% endif %}">{{ num }}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if products.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ products.next_page_number }}{% if current_usage_type %}&usage_type={{ current_usage_type }}{% endif %}" aria-label="بعدی">
-                                    <span>بعدی</span>
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">
-                                    <span>بعدی</span>
-                                    <span aria-hidden="true">&raquo;</span>
-                                </span>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+                {% include 'products/includes/pagination.html' with page_obj=products page_query_extra=page_query_extra %}
             </div>
         </div>
-        {% endif %}
     </div>
 </section>
 {% endblock content %}

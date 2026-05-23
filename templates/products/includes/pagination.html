@@ -1,0 +1,93 @@
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="product-pagination mt-4" aria-label="صفحه‌بندی">
+    {# دسکتاپ: شماره صفحات فشرده #}
+    <ul class="pagination product-pagination-desktop justify-content-center flex-wrap mb-0">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?{% if page_query_extra %}{{ page_query_extra }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="صفحه قبلی">
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                <span class="d-none d-md-inline">قبلی</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">
+                <i class="fas fa-chevron-right"></i>
+                <span class="d-none d-md-inline">قبلی</span>
+            </span>
+        </li>
+        {% endif %}
+
+        {% if page_obj.number > 3 %}
+        <li class="page-item">
+            <a class="page-link" href="?{% if page_query_extra %}{{ page_query_extra }}&{% endif %}page=1">1</a>
+        </li>
+        {% if page_obj.number > 4 %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if page_query_extra %}{{ page_query_extra }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+        {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="?{% if page_query_extra %}{{ page_query_extra }}&{% endif %}page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        </li>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?{% if page_query_extra %}{{ page_query_extra }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="صفحه بعدی">
+                <span class="d-none d-md-inline">بعدی</span>
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">
+                <span class="d-none d-md-inline">بعدی</span>
+                <i class="fas fa-chevron-left"></i>
+            </span>
+        </li>
+        {% endif %}
+    </ul>
+
+    {# موبایل: فقط قبلی / صفحه فعلی / بعدی #}
+    <div class="product-pagination-mobile">
+        {% if page_obj.has_previous %}
+        <a class="product-pagination-mobile-btn" href="?{% if page_query_extra %}{{ page_query_extra }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="صفحه قبلی">
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </a>
+        {% else %}
+        <span class="product-pagination-mobile-btn is-disabled" aria-hidden="true">
+            <i class="fas fa-chevron-right"></i>
+        </span>
+        {% endif %}
+
+        <span class="product-pagination-mobile-status">
+            صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a class="product-pagination-mobile-btn" href="?{% if page_query_extra %}{{ page_query_extra }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="صفحه بعدی">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </a>
+        {% else %}
+        <span class="product-pagination-mobile-btn is-disabled" aria-hidden="true">
+            <i class="fas fa-chevron-left"></i>
+        </span>
+        {% endif %}
+    </div>
+</nav>
+{% endif %}

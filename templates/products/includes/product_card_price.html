@@ -1,0 +1,26 @@
+{% load humanize %}
+{% if product.stock <= 0 %}
+    <div class="product-stock-label" aria-label="ناموجود">
+        <i class="fas fa-box-open" aria-hidden="true"></i>
+        <span>ناموجود</span>
+    </div>
+{% elif product.usage_type.name == 'مصرف سالن (Cabin)' %}
+    {% if card_user.is_authenticated and card_user.profile.is_beautician %}
+        <div class="product-price">
+            {{ product.price_level_1|intcomma:False|default:"-" }} ریال
+        </div>
+    {% else %}
+        <div class="beautician-badge">
+            <i class="fas fa-spa"></i>
+            <span>بیوتیشن</span>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="product-price">
+        {% if card_user.is_authenticated and card_user.profile.is_beautician %}
+            {{ product.price_level_1|intcomma:False|default:"-" }} ریال
+        {% else %}
+            {{ product.price_level_2|intcomma:False|default:"-" }} ریال
+        {% endif %}
+    </div>
+{% endif %}

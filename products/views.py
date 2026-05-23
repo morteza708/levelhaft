@@ -42,6 +42,12 @@ def upload_file(request):
     })
 
 
+def _pagination_query_extra(request):
+    params = request.GET.copy()
+    params.pop('page', None)
+    return params.urlencode()
+
+
 def line_products(request, slug):
     # دریافت لاین با اطلاعات برند
     line = get_object_or_404(
@@ -106,7 +112,8 @@ def line_products(request, slug):
     context = {
         'line': line,
         'products': products,
-        'current_usage_type': usage_type
+        'current_usage_type': usage_type,
+        'page_query_extra': _pagination_query_extra(request),
     }
     return render(request, 'product_list.html', context)
 
@@ -309,6 +316,7 @@ def product_search(request):
         'query': query,
         'current_usage_type': usage_type,
         'is_consult': False,
+        'page_query_extra': _pagination_query_extra(request),
     }
     return render(request, 'products/search_results.html', context)
 
@@ -359,6 +367,7 @@ def consult_search(request):
         'skin_type_id': skin_type_id,
         'skin_condition_id': skin_condition_id,
         'model_id': model_id,
+        'page_query_extra': _pagination_query_extra(request),
     }
     return render(request, 'products/search_results.html', context)
 

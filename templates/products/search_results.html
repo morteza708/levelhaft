@@ -42,14 +42,8 @@
     <div class="product-grid">
         {% for product in products %}
         <div class="product-col">
-            <div class="product-card">
-                <a href="{% url 'products:product_detail' product.slug %}" class="product-image">
-                    {% if product.images.all %}
-                        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
-                    {% else %}
-                        <img src="{% static 'img/no-image.png' %}" alt="بدون تصویر">
-                    {% endif %}
-                </a>
+            <div class="product-card{% if product.stock <= 0 %} is-unavailable{% endif %}">
+                {% include 'products/includes/product_card_image.html' %}
                 <div class="product-title">
                     <a href="{% url 'products:product_detail' product.slug %}" class="text-decoration-none text-dark">
                         {{ product.name }}
@@ -58,26 +52,7 @@
                 <div class="product-brand-line">
                     {{ product.brand.name }}{% if product.line.name %} - {{ product.line.name }}{% endif %}
                 </div>
-                {% if product.usage_type.name == 'مصرف سالن (Cabin)' %}
-                    {% if user.is_authenticated and user.profile.is_beautician %}
-                        <div class="product-price">
-                            {{ product.price_level_1|floatformat:"0"|intcomma:False }} ریال
-                        </div>
-                    {% else %}
-                        <div class="beautician-badge">
-                            <i class="fas fa-spa"></i>
-                            <span>بیوتیشن</span>
-                        </div>
-                    {% endif %}
-                {% else %}
-                    <div class="product-price">
-                        {% if user.is_authenticated and user.profile.is_beautician %}
-                            {{ product.price_level_1|floatformat:"0"|intcomma:False }} ریال
-                        {% else %}
-                            {{ product.price_level_2|floatformat:"0"|intcomma:False }} ریال
-                        {% endif %}
-                    </div>
-                {% endif %}
+                {% include 'products/includes/product_card_price.html' with card_user=user %}
             </div>
         </div>
         {% empty %}
@@ -89,32 +64,6 @@
         {% endfor %}
     </div>
 
-    {% if products.has_other_pages %}
-    <nav aria-label="Page navigation" class="mt-4">
-        <ul class="pagination justify-content-center">
-            {% if products.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?q={{ query }}&usage_type={{ current_usage_type }}&page={{ products.previous_page_number }}">
-                    <i class="fas fa-chevron-right"></i>
-                </a>
-            </li>
-            {% endif %}
-            
-            {% for num in products.paginator.page_range %}
-            <li class="page-item {% if products.number == num %}active{% endif %}">
-                <a class="page-link" href="?q={{ query }}&usage_type={{ current_usage_type }}&page={{ num }}">{{ num }}</a>
-            </li>
-            {% endfor %}
-            
-            {% if products.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?q={{ query }}&usage_type={{ current_usage_type }}&page={{ products.next_page_number }}">
-                    <i class="fas fa-chevron-left"></i>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
-    {% endif %}
+    {% include 'products/includes/pagination.html' with page_obj=products page_query_extra=page_query_extra %}
 </div>
-{% endblock %} 
+{% endblock %}
