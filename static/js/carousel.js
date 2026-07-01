@@ -32,23 +32,27 @@ if ($(".tf-sw-top_bar").length > 0) {
 }
 
 if ($(".tf-sw-slideshow").length > 0) {
-  var preview = $(".tf-sw-slideshow").data("preview");
-  var mobile = $(".tf-sw-slideshow").data("mobile");
-  var spacing = $(".tf-sw-slideshow").data("space");
+  var preview = $(".tf-sw-slideshow").data("preview") || 3;
+  var tablet = $(".tf-sw-slideshow").data("tablet") || 2;
+  var mobile = $(".tf-sw-slideshow").data("mobile") || 1;
+  var spacing = $(".tf-sw-slideshow").data("space") || 0;
   var loop = $(".tf-sw-slideshow").data("loop");
   var play = $(".tf-sw-slideshow").data("auto-play");
   var delay = $(".tf-sw-slideshow").data("delay");
   var speed = $(".tf-sw-slideshow").data("speed");
   var swiper = new Swiper(".tf-sw-slideshow", {
-    autoplay: {
-      delay: delay,
-      disableOnInteraction: false,
-      pauseOnMouseEnter: true,
-    },
-    autoplay: play,
+    autoplay: play
+      ? {
+          delay: delay,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        }
+      : false,
     slidesPerView: mobile,
     loop: loop,
-    spaceBetween: spacing,
+    spaceBetween: 0,
+    roundLengths: true,
+    watchOverflow: true,
     speed: speed,
     pagination: {
       el: ".sw-pagination-slider",
@@ -61,7 +65,22 @@ if ($(".tf-sw-slideshow").length > 0) {
     },
     breakpoints: {
       768: {
+        slidesPerView: tablet,
+        spaceBetween: spacing,
+        roundLengths: true,
+      },
+      992: {
         slidesPerView: preview,
+        spaceBetween: spacing,
+        roundLengths: true,
+      },
+    },
+    on: {
+      init: function () {
+        this.update();
+      },
+      resize: function () {
+        this.update();
       },
     },
   });

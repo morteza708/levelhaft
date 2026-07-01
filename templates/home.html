@@ -7,6 +7,60 @@
 <style>
     .tf-slideshow {
         position: relative;
+        overflow: hidden;
+    }
+    .tf-slideshow .tf-sw-slideshow {
+        overflow: hidden;
+        width: 100%;
+    }
+    .tf-slideshow .tf-sw-slideshow .swiper-slide {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box;
+    }
+    .tf-slideshow .tf-sw-slideshow .collection-item,
+    .tf-slideshow .tf-sw-slideshow .collection-inner,
+    .tf-slideshow .tf-sw-slideshow .collection-image,
+    .tf-slideshow .tf-sw-slideshow .img-style,
+    .tf-slideshow .tf-sw-slideshow .collection-image img {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block;
+    }
+    @media (max-width: 767px) {
+        .tf-slideshow .tf-sw-slideshow {
+            overflow: hidden !important;
+        }
+        .tf-slideshow .tf-sw-slideshow .swiper-wrapper {
+            align-items: stretch;
+        }
+        .tf-slideshow .tf-sw-slideshow .swiper-slide {
+            width: 100% !important;
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+        }
+        .tf-slideshow .tf-sw-slideshow .collection-item,
+        .tf-slideshow .tf-sw-slideshow .collection-inner,
+        .tf-slideshow .tf-sw-slideshow .collection-image,
+        .tf-slideshow .tf-sw-slideshow .img-style {
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+        .tf-slideshow .tf-sw-slideshow .collection-image img,
+        .tf-slideshow .tf-sw-slideshow .img-style img {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            margin: 0 !important;
+            object-fit: cover !important;
+        }
+        .slider-cosmetic .collection-image img,
+        .slider-cosmetic img {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
     }
     .navigation-next-slider {
         position: absolute;
@@ -145,9 +199,9 @@
         box-shadow: 0 6px 32px rgba(40,167,69,0.13) !important;
         transform: translateY(-3px) scale(1.03);
     }
-    /* فاصله بین کارت‌ها در اسلایدر موبایل کمتر شود */
+    /* فاصله بین کارت‌ها فقط در اسلایدر محصولات (نه بنر اصلی) */
     @media (max-width: 576px) {
-        .swiper .swiper-slide {
+        .tf-sw-product-sell .swiper-slide {
             margin-right: 6px !important;
             margin-left: 6px !important;
         }
