@@ -81,12 +81,21 @@ coverage.xml
 
 # Environments
 .env
+.env.*
+!.env.example
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Credentials & secrets
+*.pem
+*.key
+credentials.json
+secrets.json
+liara.json
 
 # Media files
 media/
@@ -99,14 +108,12 @@ brand-logos/
 # Static files (for development)
 staticfiles/
 
-# Documentation files
+# Local / internal docs (not for public repo)
 .windsurfrules
 .superdesign/
 CLAUDE.md
 DEPLOYMENT.md
-README.md
 ERROR_PAGES_README.md
-.cursor
 BUSINESS_DISCOUNTS_GUIDE.md
 # Backup files
 *.bak

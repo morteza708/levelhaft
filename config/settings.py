@@ -113,11 +113,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'level_haft_db',
-            'USER': 'postgres',
-            'PASSWORD': '708708',
-            'HOST': 'localhost',
-            'PORT': '5432',
+            'NAME': os.environ.get('DB_NAME', 'level_haft_db'),
+            'USER': os.environ.get('DB_USER', 'postgres'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
         }
     }
 
@@ -312,7 +312,7 @@ CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 CKEDITOR_5_UPLOAD_PATH = "uploads/"
 
 # Admin phone number for notifications
-ADMIN_PHONE = '09059762196'  # Replace with actual admin phone number
+ADMIN_PHONE = os.environ.get('ADMIN_PHONE', '')
 
 # Cart settings
 CART_SESSION_ID = 'cart'
